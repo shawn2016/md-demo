@@ -1,2 +1,3106 @@
-"use strict";var DEFAULT_CONFIG={track_url:"http://localhost:3300/",debug:!1,local_storage:{type:"localStorage",name:"",disable:!1,secure_cookie:!1,cross_subdomain_cookie:!1,cookie_expiration:1e3},loaded:function(){},track_type:"img",SPA:{is:!1,mode:"hash"},pageview:!0,truncateLength:-1,session_interval_mins:30,auto_visualization_src:"http://localhost:3300/build/plugins/auto_visualization/main.js"},CONFIG={DEBUG:!1,LIB_VERSION:"0.1.0"},SYSTEM_EVENT_TYPE="se",BUSSINESS_EVENT_TYPE="be",SYSTEM_EVENT_OBJECT={smart_session_start:{data_type:SYSTEM_EVENT_TYPE},smart_session_close:{data_type:SYSTEM_EVENT_TYPE},smart_pv:{data_type:SYSTEM_EVENT_TYPE},smart_ad_click:{data_type:SYSTEM_EVENT_TYPE},smart_activate:{data_type:SYSTEM_EVENT_TYPE},smart_abtest:{data_type:SYSTEM_EVENT_TYPE},smart_error:{data_type:SYSTEM_EVENT_TYPE},smart_u_signup:{data_type:SYSTEM_EVENT_TYPE},smart_u_login:{data_type:SYSTEM_EVENT_TYPE},smart_u_logout:{data_type:SYSTEM_EVENT_TYPE},smart_u_property:{data_type:SYSTEM_EVENT_TYPE}},PEOPLE_RESERVED_PROPERTY=["$deviceUdid","$toekn"],PEOPLE_PROPERTY_ID="smart_user_property",_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},classCallCheck=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},createClass=function(){function i(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,t,n){return t&&i(e.prototype,t),n&&i(e,n),e}}(),previousDevice=window.device,device={},changeOrientationList=[];window.device=device;var documentElement=window.document.documentElement,userAgent=window.navigator.userAgent.toLowerCase(),television=["googletv","viera","smarttv","internet.tv","netcast","nettv","appletv","boxee","kylo","roku","dlnadoc","roku","pov_tv","hbbtv","ce-html"];function find(e){return-1!==userAgent.indexOf(e)}function hasClass(e){return documentElement.className.match(new RegExp(e,"i"))}function addClass(e){var t=null;hasClass(e)||(t=documentElement.className.replace(/^\s+|\s+$/g,""),documentElement.className=t+" "+e)}function removeClass(e){hasClass(e)&&(documentElement.className=documentElement.className.replace(" "+e,""))}function handleOrientation(){device.landscape()?(removeClass("portrait"),addClass("landscape"),walkOnChangeOrientationList("landscape")):(removeClass("landscape"),addClass("portrait"),walkOnChangeOrientationList("portrait")),setOrientationCache()}function walkOnChangeOrientationList(e){for(var t in changeOrientationList)changeOrientationList[t](e)}device.macos=function(){return find("mac")},device.ios=function(){return device.iphone()||device.ipod()||device.ipad()},device.iphone=function(){return!device.windows()&&find("iphone")},device.ipod=function(){return find("ipod")},device.ipad=function(){return find("ipad")},device.android=function(){return!device.windows()&&find("android")},device.androidPhone=function(){return device.android()&&find("mobile")},device.androidTablet=function(){return device.android()&&!find("mobile")},device.blackberry=function(){return find("blackberry")||find("bb10")||find("rim")},device.blackberryPhone=function(){return device.blackberry()&&!find("tablet")},device.blackberryTablet=function(){return device.blackberry()&&find("tablet")},device.windows=function(){return find("windows")},device.windowsPhone=function(){return device.windows()&&find("phone")},device.windowsTablet=function(){return device.windows()&&find("touch")&&!device.windowsPhone()},device.fxos=function(){return(find("(mobile")||find("(tablet"))&&find(" rv:")},device.fxosPhone=function(){return device.fxos()&&find("mobile")},device.fxosTablet=function(){return device.fxos()&&find("tablet")},device.meego=function(){return find("meego")},device.cordova=function(){return window.cordova&&"file:"===location.protocol},device.nodeWebkit=function(){return"object"===_typeof(window.process)},device.mobile=function(){return device.androidPhone()||device.iphone()||device.ipod()||device.windowsPhone()||device.blackberryPhone()||device.fxosPhone()||device.meego()},device.tablet=function(){return device.ipad()||device.androidTablet()||device.blackberryTablet()||device.windowsTablet()||device.fxosTablet()},device.desktop=function(){return!device.tablet()&&!device.mobile()},device.television=function(){for(var e=0;e<television.length;){if(find(television[e]))return!0;e++}return!1},device.portrait=function(){return screen.orientation&&Object.prototype.hasOwnProperty.call(window,"onorientationchange")?screen.orientation.type.includes("portrait"):1<window.innerHeight/window.innerWidth},device.landscape=function(){return screen.orientation&&Object.prototype.hasOwnProperty.call(window,"onorientationchange")?screen.orientation.type.includes("landscape"):window.innerHeight/window.innerWidth<1},device.noConflict=function(){return window.device=previousDevice,this},device.ios()?device.ipad()?addClass("ios ipad tablet"):device.iphone()?addClass("ios iphone mobile"):device.ipod()&&addClass("ios ipod mobile"):device.macos()?addClass("macos desktop"):device.android()?device.androidTablet()?addClass("android tablet"):addClass("android mobile"):device.blackberry()?device.blackberryTablet()?addClass("blackberry tablet"):addClass("blackberry mobile"):device.windows()?device.windowsTablet()?addClass("windows tablet"):device.windowsPhone()?addClass("windows mobile"):addClass("windows desktop"):device.fxos()?device.fxosTablet()?addClass("fxos tablet"):addClass("fxos mobile"):device.meego()?addClass("meego mobile"):device.nodeWebkit()?addClass("node-webkit"):device.television()?addClass("television"):device.desktop()&&addClass("desktop"),device.cordova()&&addClass("cordova"),device.onChangeOrientation=function(e){"function"==typeof e&&changeOrientationList.push(e)};var orientationEvent="resize";function findMatch(e){for(var t=0;t<e.length;t++)if(device[e[t]]())return e[t];return"unknown"}function setOrientationCache(){device.orientation=findMatch(["portrait","landscape"])}Object.prototype.hasOwnProperty.call(window,"onorientationchange")&&(orientationEvent="orientationchange"),window.addEventListener?window.addEventListener(orientationEvent,handleOrientation,!1):window.attachEvent?window.attachEvent(orientationEvent,handleOrientation):window[orientationEvent]=handleOrientation,handleOrientation(),device.type=findMatch(["mobile","tablet","desktop"]),device.os=findMatch(["ios","iphone","ipad","ipod","android","blackberry","windows","fxos","meego","television"]),setOrientationCache();var utf8Encode=function(e){var t,n,i,r,o="";for(t=n=0,i=(e=(e+"").replace(/\r\n/g,"\n").replace(/\r/g,"\n")).length,r=0;r<i;r++){var a=e.charCodeAt(r),s=null;a<128?n++:s=127<a&&a<2048?String.fromCharCode(a>>6|192,63&a|128):String.fromCharCode(a>>12|224,a>>6&63|128,63&a|128),null!==s&&(t<n&&(o+=e.substring(t,n)),o+=s,t=n=r+1)}return t<n&&(o+=e.substring(t,e.length)),o},base64Encode=function(e){var t,n,i,r,o,a="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",s=0,c=0,l="",u=[];if(!e)return e;for(e=utf8Encode(e);t=(o=e.charCodeAt(s++)<<16|e.charCodeAt(s++)<<8|e.charCodeAt(s++))>>18&63,n=o>>12&63,i=o>>6&63,r=63&o,u[c++]=a.charAt(t)+a.charAt(n)+a.charAt(i)+a.charAt(r),s<e.length;);switch(l=u.join(""),e.length%3){case 1:l=l.slice(0,-2)+"==";break;case 2:l=l.slice(0,-1)+"="}return l},win$1=void 0;function toString(e){return Object.prototype.toString.call(e)}function isObject(e){return"[object Object]"===toString(e)}function isFunction(e){return"[object Function]"===toString(e)}function each(e,t){for(var n=0,i=e.length;n<i&&!1!==t.call(e,e[n],n);n++);}win$1="undefined"==typeof window?{navigator:{userAgent:""},location:{pathname:"",href:""},document:{},screen:{width:"",height:""}}:window;var NA_VERSION="-1",external=win$1.external,userAgent$1=win$1.navigator.userAgent||"",appVersion=win$1.navigator.appVersion||"",vendor=win$1.navigator.vendor||"",detector={},re_msie=/\b(?:msie |ie |trident\/[0-9].*rv[ :])([0-9.]+)/,re_blackberry_10=/\bbb10\b.+?\bversion\/([\d.]+)/,re_blackberry_6_7=/\bblackberry\b.+\bversion\/([\d.]+)/,re_blackberry_4_5=/\bblackberry\d+\/([\d.]+)/,DEVICES=[["nokia",function(e){return-1!==e.indexOf("nokia ")?/\bnokia ([0-9]+)?/:/\bnokia([a-z0-9]+)?/}],["samsung",function(e){return-1!==e.indexOf("samsung")?/\bsamsung(?:[ \-](?:sgh|gt|sm))?-([a-z0-9]+)/:/\b(?:sgh|sch|gt|sm)-([a-z0-9]+)/}],["wp",function(e){return-1!==e.indexOf("windows phone ")||-1!==e.indexOf("xblwp")||-1!==e.indexOf("zunewp")||-1!==e.indexOf("windows ce")}],["pc","windows"],["ipad","ipad"],["ipod","ipod"],["iphone",/\biphone\b|\biph(\d)/],["mac","macintosh"],["mi",/\bmi[ \-]?([a-z0-9 ]+(?= build|\)))/],["hongmi",/\bhm\b|redmi[ \-]?([a-z0-9]+)/],["aliyun",/\baliyunos\b(?:[\-](\d+))?/],["meizu",function(e){return 0<=e.indexOf("meizu")?/\bmeizu[\/ ]([a-z0-9]+)\b/:/\bm([0-9cx]{1,4})\b/}],["nexus",/\bnexus ([0-9s.]+)/],["huawei",function(e){var t=/\bmediapad (.+?)(?= build\/huaweimediapad\b)/;return-1!==e.indexOf("huawei-huawei")?/\bhuawei\-huawei\-([a-z0-9\-]+)/:t.test(e)?t:/\bhuawei[ _\-]?([a-z0-9]+)/}],["lenovo",function(e){return-1!==e.indexOf("lenovo-lenovo")?/\blenovo\-lenovo[ \-]([a-z0-9]+)/:/\blenovo[ \-]?([a-z0-9]+)/}],["zte",function(e){return/\bzte\-[tu]/.test(e)?/\bzte-[tu][ _\-]?([a-su-z0-9\+]+)/:/\bzte[ _\-]?([a-su-z0-9\+]+)/}],["vivo",/\bvivo(?: ([a-z0-9]+))?/],["htc",function(e){return/\bhtc[a-z0-9 _\-]+(?= build\b)/.test(e)?/\bhtc[ _\-]?([a-z0-9 ]+(?= build))/:/\bhtc[ _\-]?([a-z0-9 ]+)/}],["oppo",/\boppo[_]([a-z0-9]+)/],["konka",/\bkonka[_\-]([a-z0-9]+)/],["sonyericsson",/\bmt([a-z0-9]+)/],["coolpad",/\bcoolpad[_ ]?([a-z0-9]+)/],["lg",/\blg[\-]([a-z0-9]+)/],["android",/\bandroid\b|\badr\b/],["blackberry",function(e){return 0<=e.indexOf("blackberry")?/\bblackberry\s?(\d+)/:"bb10"}]],OS=[["wp",function(e){return-1!==e.indexOf("windows phone ")?/\bwindows phone (?:os )?([0-9.]+)/:-1!==e.indexOf("xblwp")?/\bxblwp([0-9.]+)/:-1!==e.indexOf("zunewp")?/\bzunewp([0-9.]+)/:"windows phone"}],["windows",/\bwindows nt ([0-9.]+)/],["macosx",/\bmac os x ([0-9._]+)/],["iOS",function(e){return/\bcpu(?: iphone)? os /.test(e)?/\bcpu(?: iphone)? os ([0-9._]+)/:-1!==e.indexOf("iph os ")?/\biph os ([0-9_]+)/:/\bios\b/}],["yunos",/\baliyunos ([0-9.]+)/],["Android",function(e){return 0<=e.indexOf("android")?/\bandroid[ \/-]?([0-9.x]+)?/:0<=e.indexOf("adr")?0<=e.indexOf("mqqbrowser")?/\badr[ ]\(linux; u; ([0-9.]+)?/:/\badr(?:[ ]([0-9.]+))?/:"android"}],["chromeos",/\bcros i686 ([0-9.]+)/],["linux","linux"],["windowsce",/\bwindows ce(?: ([0-9.]+))?/],["symbian",/\bsymbian(?:os)?\/([0-9.]+)/],["blackberry",function(e){var t=e.match(re_blackberry_10)||e.match(re_blackberry_6_7)||e.match(re_blackberry_4_5);return t?{version:t[1]}:"blackberry"}]],ENGINE=[["edgehtml",/edge\/([0-9.]+)/],["trident",re_msie],["blink",function(){return"chrome"in win$1&&"CSS"in win$1&&/\bapplewebkit[\/]?([0-9.+]+)/}],["webkit",/\bapplewebkit[\/]?([0-9.+]+)/],["gecko",function(e){var t;if(t=e.match(/\brv:([\d\w.]+).*\bgecko\/(\d+)/))return{version:t[1]+"."+t[2]}}],["presto",/\bpresto\/([0-9.]+)/],["androidwebkit",/\bandroidwebkit\/([0-9.]+)/],["coolpadwebkit",/\bcoolpadwebkit\/([0-9.]+)/],["u2",/\bu2\/([0-9.]+)/],["u3",/\bu3\/([0-9.]+)/]],BROWSER=[["edge",/edge\/([0-9.]+)/],["sogou",function(e){return 0<=e.indexOf("sogoumobilebrowser")?/sogoumobilebrowser\/([0-9.]+)/:0<=e.indexOf("sogoumse")||/ se ([0-9.x]+)/}],["theworld",function(){var e=checkTW360External("theworld");return void 0!==e?e:"theworld"}],["360",function(e){var t=checkTW360External("360se");return void 0!==t?t:-1!==e.indexOf("360 aphone browser")?/\b360 aphone browser \(([^\)]+)\)/:/\b360(?:se|ee|chrome|browser)\b/}],["maxthon",function(){try{if(external&&(external.mxVersion||external.max_version))return{version:external.mxVersion||external.max_version}}catch(e){}return/\b(?:maxthon|mxbrowser)(?:[ \/]([0-9.]+))?/}],["micromessenger",/\bmicromessenger\/([\d.]+)/],["qq",/\bm?qqbrowser\/([0-9.]+)/],["green","greenbrowser"],["tt",/\btencenttraveler ([0-9.]+)/],["liebao",function(e){if(0<=e.indexOf("liebaofast"))return/\bliebaofast\/([0-9.]+)/;if(-1===e.indexOf("lbbrowser"))return!1;var t;try{external&&external.LiebaoGetVersion&&(t=external.LiebaoGetVersion())}catch(e){}return{version:t||NA_VERSION}}],["tao",/\btaobrowser\/([0-9.]+)/],["coolnovo",/\bcoolnovo\/([0-9.]+)/],["saayaa","saayaa"],["baidu",/\b(?:ba?idubrowser|baiduhd)[ \/]([0-9.x]+)/],["ie",re_msie],["mi",/\bmiuibrowser\/([0-9.]+)/],["opera",function(e){var t=/\bopera.+version\/([0-9.ab]+)/;return t.test(e)?t:/\bopr\/([0-9.]+)/}],["oupeng",/\boupeng\/([0-9.]+)/],["yandex",/yabrowser\/([0-9.]+)/],["ali-ap",function(e){return 0<e.indexOf("aliapp")?/\baliapp\(ap\/([0-9.]+)\)/:/\balipayclient\/([0-9.]+)\b/}],["ali-ap-pd",/\baliapp\(ap-pd\/([0-9.]+)\)/],["ali-am",/\baliapp\(am\/([0-9.]+)\)/],["ali-tb",/\baliapp\(tb\/([0-9.]+)\)/],["ali-tb-pd",/\baliapp\(tb-pd\/([0-9.]+)\)/],["ali-tm",/\baliapp\(tm\/([0-9.]+)\)/],["ali-tm-pd",/\baliapp\(tm-pd\/([0-9.]+)\)/],["uc",function(e){return 0<=e.indexOf("ucbrowser/")?/\bucbrowser\/([0-9.]+)/:0<=e.indexOf("ubrowser/")?/\bubrowser\/([0-9.]+)/:/\buc\/[0-9]/.test(e)?/\buc\/([0-9.]+)/:0<=e.indexOf("ucweb")?/\bucweb([0-9.]+)?/:/\b(?:ucbrowser|uc)\b/}],["chrome",/ (?:chrome|crios|crmo)\/([0-9.]+)/],["android",function(e){if(-1!==e.indexOf("android"))return/\bversion\/([0-9.]+(?: beta)?)/}],["blackberry",function(e){var t=e.match(re_blackberry_10)||e.match(re_blackberry_6_7)||e.match(re_blackberry_4_5);return t?{version:t[1]}:"blackberry"}],["safari",/\bversion\/([0-9.]+(?: beta)?)(?: mobile(?:\/[a-z0-9]+)?)? safari\//],["webview",/\bcpu(?: iphone)? os (?:[0-9._]+).+\bapplewebkit\b/],["firefox",/\bfirefox\/([0-9.ab]+)/],["nokia",/\bnokiabrowser\/([0-9.]+)/]];function checkTW360External(e){if(external)try{var t=external.twGetRunPath.toLowerCase(),n=external.twGetSecurityID(win$1),i=external.twGetVersion(n);if(t&&-1===t.indexOf(e))return!1;if(i)return{version:i}}catch(e){}}function IEMode(e){if(!re_msie.test(e))return null;var t,n,i,r,o;if(-1!==e.indexOf("trident/")&&(t=/\btrident\/([0-9.]+)/.exec(e))&&2<=t.length){i=t[1];var a=t[1].split(".");a[0]=parseInt(a[0],10)+4,o=a.join(".")}r=(t=re_msie.exec(e))[1];var s=t[1].split(".");return void 0===o&&(o=r),s[0]=parseInt(s[0],10)-4,n=s.join("."),void 0===i&&(i=n),{browserVersion:o,browserMode:r,engineVersion:i,engineMode:n,compatible:i!==n}}function detect(e,t,n){var i=isFunction(t)?t.call(null,n):t;if(!i)return null;var r={name:e,version:NA_VERSION,codename:""},o=toString(i);if(!0===i)return r;if("[object String]"===o){if(-1!==n.indexOf(i))return r}else{if(isObject(i))return i.hasOwnProperty("version")&&(r.version=i.version),r;if(i.exec){var a=i.exec(n);if(a)return 2<=a.length&&a[1]?r.version=a[1].replace(/_/g,"."):r.version=NA_VERSION,r}}}var na={name:"",version:""};function init(n,e,t,i){var r=na;each(e,function(e){var t=detect(e[0],e[1],n);if(t)return r=t,!1}),t.call(i,r.name,r.version)}var parse=function(e){e=(e||"").toLowerCase();var r={};init(e,DEVICES,function(e,t){var n=parseFloat(t);r.device={name:e,version:n,fullVersion:t},r.device[e]=n},r),init(e,OS,function(e,t){var n=parseFloat(t);r.os={name:e,version:n,fullVersion:t},r.os[e]=n},r);var o=IEMode(e);return init(e,ENGINE,function(e,t){var n=t;o&&(t=o.engineVersion||o.engineMode,n=o.engineMode);var i=parseFloat(t);r.engine={name:e,version:i,fullVersion:t,mode:parseFloat(n),fullMode:n,compatible:!!o&&o.compatible},r.engine[e]=i},r),init(e,BROWSER,function(e,t){var n=t;o&&("ie"===e&&(t=o.browserVersion),n=o.browserMode);var i=parseFloat(t);r.browser={name:e,version:i,fullVersion:t,mode:parseFloat(n),fullMode:n,compatible:!!o&&o.compatible},r.browser[e]=i},r),r},detector$1=detector=parse(userAgent$1+" "+appVersion+" "+vendor),win=void 0;win="undefined"==typeof window?{navigator:{userAgent:""},location:{pathname:"",href:""},document:{URL:""},screen:{width:"",height:""}}:window;var breaker={},_={each:function(e,t,n){if(null!=e)if(Array.prototype.forEach&&e.forEach===Array.prototype.forEach)e.forEach(t,n);else if(e.length===+e.length){for(var i=0,r=e.length;i<r;i++)if(i in e&&t.call(n,e[i],i,e)===breaker)return}else for(var o in e)if(e.hasOwnProperty.call(e,o)&&t.call(n,e[o],o,e)===breaker)return},extend:function(n){return _.each(Array.prototype.slice.call(arguments,1),function(e){for(var t in e)void 0!==e[t]&&(n[t]=e[t])}),n},isObject:function(e){return e===Object(e)&&!_.isArray(e)},isUndefined:function(e){return void 0===e},isArguments:function(e){return!(!e||!hasOwnProperty.call(e,"callee"))},toArray:function(e){return e?e.toArray?e.toArray():_.isArray(e)?Array.prototype.slice.call(e):_.isArguments(e)?Array.prototype.slice.call(e):_.values(e):[]},values:function(e){var t=[];return null===e||_.each(e,function(e){t[t.length]=e}),t},JSONDecode:function(e){try{return JSON.parse(e)}catch(e){return{}}},JSONEncode:function(e){try{return JSON.stringify(e)}catch(e){return""}},isFunction:function(e){var t=!1;return"function"==typeof e&&(t=!0),t},base64Encode:function(e){return base64Encode(e)},sha1:function(e){return""},truncate:function(e,n){var i=void 0;return"string"==typeof e?i=e.slice(0,n):_.isArray(e)?(i=[],_.each(e,function(e){i.push(_.truncate(e,n))})):_.isObject(e)?(i={},_.each(e,function(e,t){i[t]=_.truncate(e,n)})):i=e,i},isNumber:function(e){return"[object Number]"==Object.prototype.toString.call(e)},isString:function(e){return"[object String]"==Object.prototype.toString.call(e)},HTTPBuildQuery:function(e,t){var n=void 0,i=void 0,r=[];return _.isUndefined(t)&&(t="&"),_.each(e,function(e,t){n=encodeURIComponent(e.toString()),i=encodeURIComponent(t),r[r.length]=i+"="+n}),r.join(t)},trim:function(e){if(e)return e.replace(/(^\s*)|(\s*$)/g,"")},checkTime:function(e){return!!e&&!!/^(\d{4})-(\d{2})-(\d{2})$/.test(e)},getHost:function(e){var t="",n=(e=e||document.URL).match(/.*\:\/\/([^\/]*).*/);return n&&(t=n[1]),t},getQueryParam:function(e,t){var n=t.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]"),i=new RegExp("[\\?&]"+n+"=([^&#]*)").exec(e);return null===i||i&&"string"!=typeof i[1]&&i[1].length?"":decodeURIComponent(i[1]).replace(/\+/g," ")},deleteEmptyProperty:function(e){if(this.isObject(e)){for(var t in e)e.hasOwnProperty(t)&&(null!==e[t]&&!this.isUndefined(e[t])&&""!==e[t]||delete e[t]);return e}}};_.isArray=Array.isArray||function(e){return"[object Array]"===Object.prototype.toString.apply(e)},_.loadScript=function(e){e=_.extend({success:function(){},error:function(){},appendCall:function(e){document.getElementsByTagName("head")[0].appendChild(e)}},e);var t=null;"css"===e.type&&((t=document.createElement("link")).rel="stylesheet",t.href=e.url),"js"===e.type&&((t=document.createElement("script")).async="async",t.setAttribute("charset","UTF-8"),t.src=e.url,t.type="text/javascript"),t.onload=t.onreadystatechange=function(){this.readyState&&"loaded"!==this.readyState&&"complete"!==this.readyState||(e.success(),t.onload=t.onreadystatechange=null)},t.onerror=function(){e.error(),t.onerror=null},e.appendCall(t)},_.register_event=function(){function s(e){return e&&(e.preventDefault=s.preventDefault,e.stopPropagation=s.stopPropagation),e}return s.preventDefault=function(){this.returnValue=!1},s.stopPropagation=function(){this.cancelBubble=!0},function(e,t,n,i,r){if(e)if(e.addEventListener&&!i)e.addEventListener(t,n,!!r);else{var o="on"+t,a=e[o];e[o]=function(r,o,a){return function(e){if(e=e||s(window.event)){var t,n,i=!0;return _.isFunction(a)&&(t=a(e)),n=o.call(r,e),!1!==t&&!1!==n||(i=!1),i}}}(e,n,a)}else console.error("No valid element provided to register_event")}}(),_.register_hash_event=function(e){_.register_event(window,"hashchange",e)},_.info={domain:function(e){var t=e.split("/");return 3<=t.length?t[2]:""},deviceModel:function(){var e="";if(device.android()){var t=win.navigator.userAgent.split(";"),n=t.indexOf("Build/");-1<n&&(e=t[n].substring(0,t[n].indexOf("Build/")))}else device.ios()&&device.iphone()&&(e="iPhone");return e},properties:function(){var e={"5.0":"Win2000",5.1:"WinXP",5.2:"Win2003","6.0":"WindowsVista",6.1:"Win7",6.2:"Win8",6.3:"Win8.1","10.0":"Win10"},t=device.type,n=_.trim(this.deviceModel()),i=device.windows(),r=detector$1.os.name+" "+detector$1.os.fullVersion;return i&&e[detector$1.os.fullVersion]&&(r=e[detector$1.os.fullVersion]),{deviceModel:n,deviceOs:detector$1.os.name,deviceOsVersion:r,devicePlatform:t,browser:detector$1.browser.name,browserVersion:detector$1.browser.fullVersion,title:win.document.title||"",urlPath:win.location.pathname||"",currentUrl:document.URL,currentDomain:this.domain(document.URL),referrer:win.document.referrer,referringDomain:this.domain(win.document.referrer),language:win.navigator.language||"",screenWidth:win.screen.width,screenHeight:win.screen.height}}},_.innerEvent={on:function(e,t){this._list||(this._list={}),this._list[e]||(this._list[e]=[]),this._list[e].push(t)},off:function(e){this._list||(this._list={}),this._list[e]&&delete this._list[e]},trigger:function(){var e=Array.prototype.slice.call(arguments),t=e[0],n=this._list&&this._list[t];if(n&&0!==n.length)for(var i=0;i<n.length;i++)"function"==typeof n[i]&&n[i].apply(this,e)}},_.sendRequest=function(e,t,n,i){if(n._=(new Date).getTime().toString(),"img"===t){e+="?"+_.HTTPBuildQuery(n);var r=document.createElement("img");r.src=e,r.width=1,r.height=1,_.isFunction(i)&&i(0),r.onload=function(){this.onload=null},r.onerror=function(){this.onerror=null},r.onabort=function(){this.onabort=null}}else"get"===t?(e+="?"+_.HTTPBuildQuery(n),_.ajax.get(e,i)):"post"===t&&_.ajax.get(e,n,i)},_.ajax={post:function(e,t,n,i){var r=this;r.callback=n||function(e){};try{var o=new XMLHttpRequest;o.open("POST",e,!0),o.setRequestHeader("Content-type","application/json"),o.withCredentials=!0,o.ontimeout=function(){r.callback({status:0,error:!0,message:"request "+e+" time out"})},o.onreadystatechange=function(){if(4===o.readyState)if(200===o.status)r.callback(_.JSONDecode(o.responseText));else{var e="Bad HTTP status: "+o.status+" "+o.statusText;r.callback({status:0,error:!0,message:e})}},o.timeout=i||5e3,o.send(_.JSONEncode(t))}catch(e){}},get:function(e,t){try{var n=new XMLHttpRequest;n.open("GET",e,!0),n.withCredentials=!0,n.onreadystatechange=function(){if(4===n.readyState)if(200===n.status)t&&t(n.responseText);else if(t){var e="Bad HTTP status: "+n.status+" "+n.statusText;t({status:0,error:!0,message:e})}},n.send(null)}catch(e){}}},_.UUID=function(){function n(){for(var e=1*new Date,t=0;e==1*new Date;)t++;return e.toString(16)+t.toString(16)}return function(){var e=String(screen.height*screen.width);e=e&&/\d{5,}/.test(e)?e.toString(16):String(31242*Math.random()).replace(".","").slice(0,8);var t=n()+"-"+Math.random().toString(16).replace(".","")+"-"+function(){var e,t,n=navigator.userAgent,r=[],i=0;function o(e,t){var n,i=0;for(n=0;n<t.length;n++)i|=r[n]<<8*n;return e^i}for(e=0;e<n.length;e++)t=n.charCodeAt(e),r.unshift(255&t),4<=r.length&&(i=o(i,r),r=[]);return 0<r.length&&(i=o(i,r)),i.toString(16)}()+"-"+e+"-"+n();return t||(String(Math.random())+String(Math.random())+String(Math.random())).slice(2,15)}}(),_.localStorage={error:function(e){console.error("localStorage error: "+e)},get:function(e){try{return window.localStorage.getItem(e)}catch(e){_.localStorage.error(e)}return null},parse:function(e){try{return _.JSONDecode(_.localStorage.get(e))||{}}catch(e){}return null},set:function(e,t){try{window.localStorage.setItem(e,t)}catch(e){_.localStorage.error(e)}},remove:function(e){try{window.localStorage.removeItem(e)}catch(e){_.localStorage.error(e)}}},_.cookie={get:function(e){for(var t=e+"=",n=document.cookie.split(";"),i=0;i<n.length;i++){for(var r=n[i];" "==r.charAt(0);)r=r.substring(1,r.length);if(0===r.indexOf(t))return decodeURIComponent(r.substring(t.length,r.length))}return null},parse:function(e){var t;try{t=_.JSONDecode(_.cookie.get(e))||{}}catch(e){}return t},set_seconds:function(e,t,n,i,r){var o="",a="",s="";if(i){var c=document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),l=c?c[0]:"";o=l?"; domain=."+l:""}if(n){var u=new Date;u.setTime(u.getTime()+1e3*n),a="; expires="+u.toGMTString()}r&&(s="; secure"),document.cookie=e+"="+encodeURIComponent(t)+a+"; path=/"+o+s},set:function(e,t,n,i,r){var o="",a="",s="";if(i){var c=document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),l=c?c[0]:"";o=l?"; domain=."+l:""}if(n){var u=new Date;u.setTime(u.getTime()+24*n*60*60*1e3),a="; expires="+u.toGMTString()}r&&(s="; secure");var d=e+"="+encodeURIComponent(t)+a+"; path=/"+o+s;return document.cookie=d},remove:function(e,t){_.cookie.set(e,"",-1,t)}};var windowConsole=win.console,console={log:function(){if(CONFIG.DEBUG&&!_.isUndefined(windowConsole)&&windowConsole)try{windowConsole.log.apply(windowConsole,arguments)}catch(e){_.each(arguments,function(e){windowConsole.log(e)})}},error:function(){if(CONFIG.DEBUG&&!_.isUndefined(windowConsole)&&windowConsole){var t=["DATracker error:"].concat(_.toArray(arguments));try{windowConsole.error.apply(windowConsole,t)}catch(e){_.each(t,function(e){windowConsole.error(e)})}}}},USER_TRACK=function(){function t(e){classCallCheck(this,t),this.instance=e,this.local_storage=this.instance.local_storage}return createClass(t,[{key:"_is_reserved_property",value:function(e){return-1<PEOPLE_RESERVED_PROPERTY.indexOf("prop")}},{key:"_send_request",value:function(e,t){_.isFunction(t)||(t=function(){}),e=e||{};var n={dataType:SYSTEM_EVENT_TYPE,deviceId:this.instance.get_device_id(),userId:this.instance.get_property("user_id"),time:(new Date).getTime(),sdkType:"js",eventId:PEOPLE_PROPERTY_ID,persistedTime:this.instance.get_property("persistedTime"),pageOpenScene:"Browser",attributes:e};n=_.extend({},n,this.instance.channel.get_channel_params());var i=this.instance._get_config("truncateLength"),r=n;_.isNumber(i)&&0<i&&(r=_.truncate(n,i)),console.log("上报的数据（截取后）:",r);var o=this.instance._get_config("track_url"),a=this.instance._get_config("track_type");"img"===a&&(o+="track.gif"),_.sendRequest(o,a,{data:_.base64Encode(_.JSONEncode(r)),token:this.instance._get_config("token")},function(e){t(e,n)})}},{key:"set",value:function(e,t,n){var i=this,r={};return _.isObject(e)?(_.each(e,function(e,t){i._is_reserved_property(t)||(r[t]=e)}),n=t):r[e]=t,this._send_request(r,n)}}]),t}(),EVENT_TRACK=function(){function t(e){var n=this;classCallCheck(this,t),this.instance=e,this.local_storage=this.instance.local_storage,this.local_storage.register_once({updatedTime:0,sessionStartTime:0}),this.local_storage.register({sessionReferrer:document.referrer});var i=document.URL;_.innerEvent.on("singlePage:change",function(e,t){n.local_storage.register({sessionReferrer:i}),i=document.URL})}return createClass(t,[{key:"_check_channel",value:function(){var e=this.instance.get_property("sessionReferrer"),t=!1;return _.getHost(e)!==window.location.host&&(t=!0),t}},{key:"_event_is_disabled",value:function(e){return!1}},{key:"_start_new_session",value:function(){this.local_storage.register({sessionUuid:_.UUID(),sessionStartTime:(new Date).getTime()}),this.track("smart_session_start")}},{key:"_close_cur_session",value:function(){var e=(new Date).getTime()-1,t=this.instance.get_property("sessionStartTime"),n=this.instance.get_property("LASTEVENT");n&&n.time&&(e=n.time+1);var i=e-t;0<=i&&this.track("smart_session_close",{sessionCloseTime:e,sessionTotalLength:i})}},{key:"_session",value:function(e){var t=1*this.instance.get_property("sessionStartTime")/1e3,n=1*this.instance.get_property("updatedTime")/1e3,i=(new Date).getTime(),r=1*i/1e3,o=this._check_channel();(0==t||r>n+60*this.instance._get_config("session_interval_mins")||o)&&(0==t||this._close_cur_session(),this._start_new_session()),this.local_storage.register({updatedTime:i}),_.isFunction(e)&&e()}},{key:"_signup",value:function(e){var t=this.instance.get_property("userId");t!==e&&(t&&this.logout(),this.track("smart_u_signup",{anonymousId:t,newUserId:e}))}},{key:"time_event",value:function(e){_.isUndefined(e)?console.error("事件耗时监听器需要一个事件名称"):this._event_is_disabled(e)||this.local_storage.set_event_timer(e,(new Date).getTime())}},{key:"track_pv",value:function(e,t){var n=this;this._session(function(){n.track("smart_pv",_.extend({},e),t)})}},{key:"track",value:function(e,t,n,i){if(_.isUndefined(e))console.error("上报数据需要一个事件名称");else if(_.isFunction(n)||(n=function(){}),this._event_is_disabled(e))n(0);else{this.local_storage.load(),t=t||{};var r=_.JSONDecode(_.JSONEncode(t))||{},o=void 0,a=this.local_storage.remove_event_timer(e);_.isUndefined(a)||(o=(new Date).getTime()-a);var s=BUSSINESS_EVENT_TYPE;i?s=i:SYSTEM_EVENT_OBJECT[e]&&(s=SYSTEM_EVENT_OBJECT[e].data_type);var c=(new Date).getTime();"smart_session_close"===e&&(c=t.sessionCloseTime,delete r.sessionCloseTime,delete r.sessionTotalLength),r=_.extend({},this.instance.get_property("superProperties"),r);var l={dataType:s,userId:this.instance.get_property("userId"),sdkType:"js",sdkVersion:CONFIG.LIB_VERSION,eventId:e,time:c,persistedTime:this.instance.get_property("persistedTime"),deviceId:this.instance.get_device_id(),pageOpenScene:"Browser",token:this.instance._get_config("token"),costTime:o,sessionTotalLength:t.sessionTotalLength,sessionUuid:this.instance.get_property("sessionUuid"),attributes:r};if(l=_.extend({},l,_.info.properties()),l=_.extend({},l,this.instance.channel.get_channel_params()),s===BUSSINESS_EVENT_TYPE&&this._check_channel()&&this.local_storage.register({sessionReferrer:document.URL}),this.instance._get_config("SPA").is||0<["smart_activate","smart_session_close"].indexOf(e)&&this.local_storage.register({sessionReferrer:document.URL}),this.instance._get_config("SPA").is){var u=this.instance.get_property("sessionReferrer");u!==l.referrer&&(l.referrer=u,l.referringDomain=_.info.domain(u))}var d=this.instance._get_config("truncateLength"),h=l;_.isNumber(d)&&0<d&&(h=_.truncate(l,d)),console.log("上报的数据（截取后）:",h);var f=this.instance._get_config("track_url"),p=this.instance._get_config("track_type");"img"===p&&(f+="track.gif"),_.sendRequest(f,p,{data:_.base64Encode(_.JSONEncode(h)),token:this.instance._get_config("token")},function(e){n(e,l)}),-1===["smart_session_start","smart_session_close","smart_activate"].indexOf(e)&&this._session(),-1===["smart_session_start","smart_session_close"].indexOf(e)&&this.local_storage.register({LASTEVENT:{eventId:e,time:c}})}}},{key:"login",value:function(e){this._signup(e),this.local_storage.register({userId:e}),this.track("smart_u_login")}},{key:"logout",value:function(){this.local_storage.unregister("userId"),this.track("smart_u_logout")}}]),t}(),LOCAL_STORAGE=function(){function n(e){classCallCheck(this,n);var t=e.local_storage;if(_.isObject(t)){this.name=t.name||"smart_"+e.token+"_sdk";"localStorage"===(t.type||"cookie")&&function(){var t=!0;try{var e="__smartssupport__",n="smart_web_data_sdk";_.localStorage.set(e,n),_.localStorage.get(e)!==n&&(t=!1),_.localStorage.remove(e)}catch(e){t=!1}return t||console.error("localStorage 不支持，自动退回到cookie存储方式"),t}()?this.storage=_.localStorage:this.storage=_.cookie,this.load(),this.update_config(t),this.upgrade(),this.save()}else console.error("local_storage配置设置错误")}return createClass(n,[{key:"load",value:function(){var e=this.storage.parse(this.name);e&&(this.props=_.extend({},e))}},{key:"update_config",value:function(e){this.default_expiry=this.expire_days=e.cookie_expiration,this.set_disabled(e.disable),this.set_cross_subdomain(e.cross_subdomain_cookie),this.set_secure(e.secure_cookie)}},{key:"set_disabled",value:function(e){this.disabled=e,this.disabled&&this.remove()}},{key:"remove",value:function(){this.storage.remove(this.name,!1),this.storage.remove(this.name,!0)}},{key:"clear",value:function(){this.remove(),this.props={}}},{key:"set_cross_subdomain",value:function(e){e!==this.cross_subdomain&&(this.cross_subdomain=e,this.remove(),this.save())}},{key:"set_secure",value:function(e){e!==this.secure&&(this.secure=!!e,this.remove(),this.save())}},{key:"upgrade",value:function(e){var t=void 0;this.storage===_.localStorage&&(t=_.cookie.parse(this.name),_.cookie.remove(this.name),_.cookie.remove(this.name,!0),t&&this.register_once(t))}},{key:"save",value:function(){this.disabled||this.storage.set(this.name,_.JSONEncode(this.props),this.expire_days,this.cross_subdomain,this.secure)}},{key:"register",value:function(e,t){return!!_.isObject(e)&&(this.expire_days=void 0===t?this.default_expiry:t,_.extend(this.props,e),this.save(),!0)}},{key:"register_once",value:function(e,n,t){return!!_.isObject(e)&&(void 0===n&&(n="None"),this.expire_days=void 0===t?this.default_expiry:t,_.each(e,function(e,t){this.props[t]&&this.props[t]!==n||(this.props[t]=e)},this),this.save(),!0)}},{key:"unregister",value:function(e){e in this.props&&(delete this.props[e],this.save())}},{key:"set_event_timer",value:function(e,t){var n=this.props.costTime||{};n[e]=t,this.props.costTime=n,this.save()}},{key:"remove_event_timer",value:function(e){var t=(this.props.costTime||{})[e];return _.isUndefined(t)||(delete this.props.costTime[e],this.save()),t}}]),n}();function on(e,t,n){if(e[t]){var i=e[t];e[t]=function(){var e=Array.prototype.slice.call(arguments);n.apply(this,e),i.apply(this,e)}}else e[t]=function(){var e=Array.prototype.slice.call(arguments);n.apply(this,e)}}function getPath(){return location.pathname+location.search}var SPA={config:{mode:"hash",track_replace_state:!1,callback_fn:function(){}},init:function(e){this.config=_.extend(this.config,e||{}),this.path=getPath(),this.url=document.URL,this.event()},event:function(){if("history"===this.config.mode){if(!history.pushState||!window.addEventListener)return;on(history,"pushState",this.pushStateOverride.bind(this)),on(history,"replaceState",this.replaceStateOverride.bind(this)),window.addEventListener("popstate",this.handlePopState.bind(this))}else"hash"===this.config.mode&&_.register_hash_event(this.handleHashState.bind(this))},pushStateOverride:function(){this.handleUrlChange(!0)},replaceStateOverride:function(){this.handleUrlChange(!1)},handlePopState:function(){this.handleUrlChange(!0)},handleHashState:function(){this.handleUrlChange(!0)},handleUrlChange:function(n){var i=this;setTimeout(function(){if("hash"===i.config.mode)_.isFunction(i.config.callback_fn)&&(i.config.callback_fn.call(),_.innerEvent.trigger("singlePage:change",{oldUrl:i.url,nowUrl:document.URL}),i.url=document.URL);else if("history"===i.config.mode){var e=i.path,t=getPath();e!=t&&i.shouldTrackUrlChange(t,e)&&(i.path=t,(n||i.config.track_replace_state)&&"function"==typeof i.config.callback_fn&&(i.config.callback_fn.call(),_.innerEvent.trigger("singlePage:change",{oldUrl:i.url,nowUrl:document.URL}),i.url=document.URL))}},0)},shouldTrackUrlChange:function(e,t){return!(!e||!t)}},CHANNEL=function(){function t(e){classCallCheck(this,t),this.instance=e,this.channel_params={},this.cookie_name="smart_"+this.instance._get_config("token")+"_c",this._set_channel_params()}return createClass(t,[{key:"_change",value:function(){}},{key:"_set_channel_params",value:function(){if(this._check_chennel())this.channel_params=this._url_channel_params(),this._save();else{var e=_.cookie.get(this.cookie_name);e&&(this.channel_params=_.JSONDecode(e))}}},{key:"_url_channel_params",value:function(){var e="utm_source utm_medium utm_campaign utm_content utm_term promotional_id".split(" "),t="",n={};return _.each(e,function(e){(t=_.getQueryParam(document.URL,e))&&(n[e]=t)}),n}},{key:"_check_chennel",value:function(){var e=this._url_channel_params(),t=!1;return e.utm_source&&e.utm_medium&&e.utm_campaign&&e.promotional_id&&(t=!0),t}},{key:"_save",value:function(){this._check_chennel()&&_.cookie.set(this.cookie_name,_.JSONEncode(this.channel_params),30,this.instance._get_config("local_storage").cross_subdomain_cookie)}},{key:"check_ad_click",value:function(){var e=!1,t=_.getQueryParam(document.URL,"t_re");return this._check_chennel()&&document.referrer&&!t&&(e=!0),e}},{key:"get_channel_params",value:function(){this._set_channel_params();var e={utmSource:this.channel_params.utm_source,utmMedium:this.channel_params.utm_medium,promotionalID:this.channel_params.promotional_id,utmCampaign:this.channel_params.utm_campaign,utmContent:this.channel_params.utm_content,utmTerm:this.channel_params.utm_term};return _.deleteEmptyProperty(e)}}]),t}(),LOAD_CONTROL_JS=function(){function t(e){classCallCheck(this,t),this.instance=e,this._load_js()}return createClass(t,[{key:"_load_js",value:function(){}},{key:"_load_visualization",value:function(){}},{key:"is_visualization",value:function(){}}]),t}(),SMARTLib=function(){function n(e,t){classCallCheck(this,n),this.__loaded=!0,this._=_,this.config={},this._set_config(_.extend({},DEFAULT_CONFIG,CONFIG,t,{token:e})),this.local_storage=new LOCAL_STORAGE(this.config),this._loaded(),this.load_control_js=new LOAD_CONTROL_JS(this),this.event=new EVENT_TRACK(this),this.user=new USER_TRACK(this),this.channel=new CHANNEL(this),this._set_device_id(),this.channel.check_ad_click()&&this._ad_click(),this._track_pv(),this.local_storage.register_once({persistedTime:(new Date).getTime()},""),this._get_config("SPA").is&&this._SPA()}return createClass(n,[{key:"_ad_click",value:function(){this.track_event("smart_ad_click")}},{key:"_track_pv",value:function(e,t){this._get_config("pageview")?this.event.track_pv(e,t):this.event._session()}},{key:"_SPA",value:function(){var e=this;SPA.init({mode:this._get_config("SPA").mode,callback_fn:function(){e._track_pv()}})}},{key:"_set_config",value:function(e){_.isObject(e)&&(this.config=_.extend(this.config,e),CONFIG.DEBUG=CONFIG.DEBUG||this._get_config("debug"))}},{key:"_get_config",value:function(e){return this.config[e]}},{key:"_loaded",value:function(){try{this._get_config("loaded")(this)}catch(e){console.error(e)}}},{key:"_set_device_id",value:function(){var e={};return this.get_device_id()||(this.local_storage.register_once({deviceId:_.UUID()},""),e=this.track_event("smart_activate")),e}},{key:"get_device_id",value:function(){return this.get_property("deviceId")}},{key:"get_property",value:function(e){return this.local_storage.props[e]}},{key:"time_event",value:function(e){this.event.time_event(e)}},{key:"track_pv",value:function(e,t){this.event.track_pv(e,t)}},{key:"track_event",value:function(e,t,n,i){this.event.track(e,t,n,i)}},{key:"register_event_super_properties",value:function(e,t){var n={},i=this.get_property("superProperties");_.isObject(e)?_.each(e,function(e,t){n[t]=e}):n[e]=t,i=_.extend({},i,n),this.local_storage.register({superProperties:i})}},{key:"register_event_super_properties_once",value:function(e,t){var n={},i=this.get_property("superProperties");_.isObject(e)?_.each(e,function(e,t){n[t]=e}):n[e]=t,i=_.extend({},n,i),this.local_storage.register({superProperties:i})}},{key:"unregister_event_super_properties",value:function(e){if(_.isString(e)){var t=this.get_property("superProperties");_.isObject(t)&&(delete t[e],this.local_storage.register({superProperties:t}))}}},{key:"clear_event_super_properties",value:function(){this.local_storage.register({superProperties:{}})}},{key:"current_event_super_properties",value:function(){return this.get_property("superProperties")}},{key:"login",value:function(e){this.event.login(e)}},{key:"logout",value:function(){this.event.logout()}}]),n}(),LoaderSync=function(){function e(){classCallCheck(this,e),window.smart=this}return createClass(e,[{key:"init",value:function(e,t){this.__loaded||(this.instance=new SMARTLib(e,t),this.instance.init=this.init,window.smart=this.instance)}}]),e}(),index=new LoaderSync;module.exports=index;
+'use strict';
+
+// 默认配置
+var DEFAULT_CONFIG = {
+  // 上报服务器域名配置
+  'track_url': 'http://localhost:3300/',
+  // debug启动配置
+  'debug': false,
+  // 本地存储配置
+  'local_storage': {
+    // 存储方式  localStorage || cookie
+    'type': 'localStorage',
+    // 存储名称
+    'name': '',
+    // 关闭存储功能
+    'disable': false,
+    // cookie存储时，采用安全的存储方式，即：
+    //当secure属性设置为true时，cookie只有在https协议下才能上传到服务器，而在http协议下是没法上传的，所以也不会被窃听
+    'secure_cookie': false,
+    // cookie存储时，跨主域名存储配置
+    'cross_subdomain_cookie': false,
+    // cookie方法存储时，配置保存过期时间
+    'cookie_expiration': 1000
+  },
+  // 初始化sdk时触发的方法
+  'loaded': function loaded() {},
+  // 上报数据实现形式  post, get, img
+  'track_type': 'img',
+  // 单页面应用配置
+  'SPA': {
+    // 开启SPA配置
+    'is': false,
+    // SPA 实现类型，hash || history
+    'mode': 'hash'
+  },
+  // PV指标自动触发配置
+  'pageview': true,
+  // 上报数据前，每个字段长度截取配置，默认不截取
+  'truncateLength': -1,
+  // 会话超时时长，默认30分钟
+  'session_interval_mins': 30,
+  // 远程拉取可视化圈选插件地址
+  'auto_visualization_src': 'http://localhost:3300/build/plugins/auto_visualization/main.js'
+};
+
+// 配置
+var CONFIG = {
+  DEBUG: false,
+  LIB_VERSION: '0.1.0'
+};
+
+// 系统事件类型（事件分为：系统事件和业务事件）
+var SYSTEM_EVENT_TYPE = 'se';
+
+// 业务事件类型
+var BUSSINESS_EVENT_TYPE = 'be';
+
+// 系统事件列表
+var SYSTEM_EVENT_OBJECT = {
+  // 会话开始事件
+  'smart_session_start': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 会话结束事件
+  'smart_session_close': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // PV事件
+  'smart_pv': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 广告点击事件
+  'smart_ad_click': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 用户首次访问网站事件
+  'smart_activate': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // A/B 测试事件
+  'smart_abtest': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 异常错误事件
+  'smart_error': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 用户注册事件
+  'smart_u_signup': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 用户登录事件
+  'smart_u_login': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 用户登出事件
+  'smart_u_logout': {
+    'data_type': SYSTEM_EVENT_TYPE
+  },
+  // 用户属性设置事件
+  'smart_u_property': {
+    'data_type': SYSTEM_EVENT_TYPE
+  }
+};
+
+// People类系统保留属性，用户设置这些属性将无法成功
+var PEOPLE_RESERVED_PROPERTY = ['$deviceUdid', '$toekn'];
+
+// People类属性事件id，全局唯一
+var PEOPLE_PROPERTY_ID = 'smart_user_property';
+
+// 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
+// 若url上推广的参数不一致，请修改对应右边的值（一一对应）
+// 注意：系统暂时未支持自定义配置（TODO）,若要改动，请到文件 src/channel.js 修改。
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+// Save the previous value of the device variable.
+var previousDevice = window.device;
+
+var device = {};
+
+var changeOrientationList = [];
+
+// Add device as a global object.
+window.device = device;
+
+// The <html> element.
+var documentElement = window.document.documentElement;
+
+// The client user agent string.
+// Lowercase, so we can use the more efficient indexOf(), instead of Regex
+var userAgent = window.navigator.userAgent.toLowerCase();
+
+// Detectable television devices.
+var television = ['googletv', 'viera', 'smarttv', 'internet.tv', 'netcast', 'nettv', 'appletv', 'boxee', 'kylo', 'roku', 'dlnadoc', 'roku', 'pov_tv', 'hbbtv', 'ce-html'];
+
+// Main functions
+// --------------
+
+device.macos = function () {
+  return find('mac');
+};
+
+device.ios = function () {
+  return device.iphone() || device.ipod() || device.ipad();
+};
+
+device.iphone = function () {
+  return !device.windows() && find('iphone');
+};
+
+device.ipod = function () {
+  return find('ipod');
+};
+
+device.ipad = function () {
+  return find('ipad');
+};
+
+device.android = function () {
+  return !device.windows() && find('android');
+};
+
+device.androidPhone = function () {
+  return device.android() && find('mobile');
+};
+
+device.androidTablet = function () {
+  return device.android() && !find('mobile');
+};
+
+device.blackberry = function () {
+  return find('blackberry') || find('bb10') || find('rim');
+};
+
+device.blackberryPhone = function () {
+  return device.blackberry() && !find('tablet');
+};
+
+device.blackberryTablet = function () {
+  return device.blackberry() && find('tablet');
+};
+
+device.windows = function () {
+  return find('windows');
+};
+
+device.windowsPhone = function () {
+  return device.windows() && find('phone');
+};
+
+device.windowsTablet = function () {
+  return device.windows() && find('touch') && !device.windowsPhone();
+};
+
+device.fxos = function () {
+  return (find('(mobile') || find('(tablet')) && find(' rv:');
+};
+
+device.fxosPhone = function () {
+  return device.fxos() && find('mobile');
+};
+
+device.fxosTablet = function () {
+  return device.fxos() && find('tablet');
+};
+
+device.meego = function () {
+  return find('meego');
+};
+
+device.cordova = function () {
+  return window.cordova && location.protocol === 'file:';
+};
+
+device.nodeWebkit = function () {
+  return _typeof(window.process) === 'object';
+};
+
+device.mobile = function () {
+  return device.androidPhone() || device.iphone() || device.ipod() || device.windowsPhone() || device.blackberryPhone() || device.fxosPhone() || device.meego();
+};
+
+device.tablet = function () {
+  return device.ipad() || device.androidTablet() || device.blackberryTablet() || device.windowsTablet() || device.fxosTablet();
+};
+
+device.desktop = function () {
+  return !device.tablet() && !device.mobile();
+};
+
+device.television = function () {
+  var i = 0;
+  while (i < television.length) {
+    if (find(television[i])) {
+      return true;
+    }
+    i++;
+  }
+  return false;
+};
+
+device.portrait = function () {
+  if (screen.orientation && Object.prototype.hasOwnProperty.call(window, 'onorientationchange')) {
+    return screen.orientation.type.includes('portrait');
+  }
+  return window.innerHeight / window.innerWidth > 1;
+};
+
+device.landscape = function () {
+  if (screen.orientation && Object.prototype.hasOwnProperty.call(window, 'onorientationchange')) {
+    return screen.orientation.type.includes('landscape');
+  }
+  return window.innerHeight / window.innerWidth < 1;
+};
+
+// Public Utility Functions
+// ------------------------
+
+// Run device.js in noConflict mode,
+// returning the device variable to its previous owner.
+device.noConflict = function () {
+  window.device = previousDevice;
+  return this;
+};
+
+// Private Utility Functions
+// -------------------------
+
+// Simple UA string search
+function find(needle) {
+  return userAgent.indexOf(needle) !== -1;
+}
+
+// Check if documentElement already has a given class.
+function hasClass(className) {
+  return documentElement.className.match(new RegExp(className, 'i'));
+}
+
+// Add one or more CSS classes to the <html> element.
+function addClass(className) {
+  var currentClassNames = null;
+  if (!hasClass(className)) {
+    currentClassNames = documentElement.className.replace(/^\s+|\s+$/g, '');
+    documentElement.className = currentClassNames + ' ' + className;
+  }
+}
+
+// Remove single CSS class from the <html> element.
+function removeClass(className) {
+  if (hasClass(className)) {
+    documentElement.className = documentElement.className.replace(' ' + className, '');
+  }
+}
+
+// HTML Element Handling
+// ---------------------
+
+// Insert the appropriate CSS class based on the _user_agent.
+
+if (device.ios()) {
+  if (device.ipad()) {
+    addClass('ios ipad tablet');
+  } else if (device.iphone()) {
+    addClass('ios iphone mobile');
+  } else if (device.ipod()) {
+    addClass('ios ipod mobile');
+  }
+} else if (device.macos()) {
+  addClass('macos desktop');
+} else if (device.android()) {
+  if (device.androidTablet()) {
+    addClass('android tablet');
+  } else {
+    addClass('android mobile');
+  }
+} else if (device.blackberry()) {
+  if (device.blackberryTablet()) {
+    addClass('blackberry tablet');
+  } else {
+    addClass('blackberry mobile');
+  }
+} else if (device.windows()) {
+  if (device.windowsTablet()) {
+    addClass('windows tablet');
+  } else if (device.windowsPhone()) {
+    addClass('windows mobile');
+  } else {
+    addClass('windows desktop');
+  }
+} else if (device.fxos()) {
+  if (device.fxosTablet()) {
+    addClass('fxos tablet');
+  } else {
+    addClass('fxos mobile');
+  }
+} else if (device.meego()) {
+  addClass('meego mobile');
+} else if (device.nodeWebkit()) {
+  addClass('node-webkit');
+} else if (device.television()) {
+  addClass('television');
+} else if (device.desktop()) {
+  addClass('desktop');
+}
+
+if (device.cordova()) {
+  addClass('cordova');
+}
+
+// Orientation Handling
+// --------------------
+
+// Handle device orientation changes.
+function handleOrientation() {
+  if (device.landscape()) {
+    removeClass('portrait');
+    addClass('landscape');
+    walkOnChangeOrientationList('landscape');
+  } else {
+    removeClass('landscape');
+    addClass('portrait');
+    walkOnChangeOrientationList('portrait');
+  }
+  setOrientationCache();
+}
+
+function walkOnChangeOrientationList(newOrientation) {
+  for (var index in changeOrientationList) {
+    changeOrientationList[index](newOrientation);
+  }
+}
+
+device.onChangeOrientation = function (cb) {
+  if (typeof cb == 'function') {
+    changeOrientationList.push(cb);
+  }
+};
+
+// Detect whether device supports orientationchange event,
+// otherwise fall back to the resize event.
+var orientationEvent = 'resize';
+if (Object.prototype.hasOwnProperty.call(window, 'onorientationchange')) {
+  orientationEvent = 'orientationchange';
+}
+
+// Listen for changes in orientation.
+if (window.addEventListener) {
+  window.addEventListener(orientationEvent, handleOrientation, false);
+} else if (window.attachEvent) {
+  window.attachEvent(orientationEvent, handleOrientation);
+} else {
+  window[orientationEvent] = handleOrientation;
+}
+
+handleOrientation();
+
+// Public functions to get the current value of type, os, or orientation
+// ---------------------------------------------------------------------
+
+function findMatch(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (device[arr[i]]()) {
+      return arr[i];
+    }
+  }
+  return 'unknown';
+}
+
+device.type = findMatch(['mobile', 'tablet', 'desktop']);
+device.os = findMatch(['ios', 'iphone', 'ipad', 'ipod', 'android', 'blackberry', 'windows', 'fxos', 'meego', 'television']);
+
+function setOrientationCache() {
+  device.orientation = findMatch(['portrait', 'landscape']);
+}
+
+setOrientationCache();
+
+var utf8Encode = function utf8Encode(string) {
+  string = (string + '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+  var utftext = '',
+      start,
+      end;
+  var stringl = 0,
+      n;
+
+  start = end = 0;
+  stringl = string.length;
+
+  for (n = 0; n < stringl; n++) {
+    var c1 = string.charCodeAt(n);
+    var enc = null;
+
+    if (c1 < 128) {
+      end++;
+    } else if (c1 > 127 && c1 < 2048) {
+      enc = String.fromCharCode(c1 >> 6 | 192, c1 & 63 | 128);
+    } else {
+      enc = String.fromCharCode(c1 >> 12 | 224, c1 >> 6 & 63 | 128, c1 & 63 | 128);
+    }
+    if (enc !== null) {
+      if (end > start) {
+        utftext += string.substring(start, end);
+      }
+      utftext += enc;
+      start = end = n + 1;
+    }
+  }
+
+  if (end > start) {
+    utftext += string.substring(start, string.length);
+  }
+
+  return utftext;
+};
+
+var base64Encode = function base64Encode(data) {
+  var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  var o1,
+      o2,
+      o3,
+      h1,
+      h2,
+      h3,
+      h4,
+      bits,
+      i = 0,
+      ac = 0,
+      enc = '',
+      tmp_arr = [];
+
+  if (!data) {
+    return data;
+  }
+
+  data = utf8Encode(data);
+
+  do {
+    // pack three octets into four hexets
+    o1 = data.charCodeAt(i++);
+    o2 = data.charCodeAt(i++);
+    o3 = data.charCodeAt(i++);
+
+    bits = o1 << 16 | o2 << 8 | o3;
+
+    h1 = bits >> 18 & 0x3f;
+    h2 = bits >> 12 & 0x3f;
+    h3 = bits >> 6 & 0x3f;
+    h4 = bits & 0x3f;
+
+    // use hexets to index into b64, and append result to encoded string
+    tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+  } while (i < data.length);
+
+  enc = tmp_arr.join('');
+
+  switch (data.length % 3) {
+    case 1:
+      enc = enc.slice(0, -2) + '==';
+      break;
+    case 2:
+      enc = enc.slice(0, -1) + '=';
+      break;
+  }
+
+  return enc;
+};
+
+// 兼容单元测试环境
+var win$1 = void 0;
+if (typeof window === 'undefined') {
+    win$1 = {
+        navigator: {
+            userAgent: ''
+        },
+        location: {
+            pathname: '',
+            href: ''
+        },
+        document: {},
+        screen: {
+            width: '',
+            height: ''
+        }
+    };
+} else {
+    win$1 = window;
+}
+
+function toString(object) {
+    return Object.prototype.toString.call(object);
+}
+
+function isObject(object) {
+    return toString(object) === "[object Object]";
+}
+
+function isFunction(object) {
+    return toString(object) === "[object Function]";
+}
+
+function each(object, factory) {
+    for (var i = 0, l = object.length; i < l; i++) {
+        if (factory.call(object, object[i], i) === false) {
+            break;
+        }
+    }
+}
+
+var NA_VERSION = "-1";
+var external = win$1.external;
+var userAgent$1 = win$1.navigator.userAgent || "";
+var appVersion = win$1.navigator.appVersion || "";
+var vendor = win$1.navigator.vendor || "";
+var detector = {};
+
+var re_msie = /\b(?:msie |ie |trident\/[0-9].*rv[ :])([0-9.]+)/;
+var re_blackberry_10 = /\bbb10\b.+?\bversion\/([\d.]+)/;
+var re_blackberry_6_7 = /\bblackberry\b.+\bversion\/([\d.]+)/;
+var re_blackberry_4_5 = /\bblackberry\d+\/([\d.]+)/;
+
+// http://zakwu.me/2015/12/15/an-zhuo-shou-ji-uashou-ji/ 参考
+// 硬件设备信息识别表达式。
+// 使用数组可以按优先级排序。
+var DEVICES = [["nokia", function (ua) {
+    // 不能将两个表达式合并，因为可能出现 "nokia; nokia 960"
+    // 这种情况下会优先识别出 nokia/-1
+    if (ua.indexOf("nokia ") !== -1) {
+        return (/\bnokia ([0-9]+)?/
+        );
+    } else {
+        return (/\bnokia([a-z0-9]+)?/
+        );
+    }
+}],
+// 三星有 Android 和 WP 设备。
+["samsung", function (ua) {
+    if (ua.indexOf("samsung") !== -1) {
+        return (/\bsamsung(?:[ \-](?:sgh|gt|sm))?-([a-z0-9]+)/
+        );
+    } else {
+        return (/\b(?:sgh|sch|gt|sm)-([a-z0-9]+)/
+        );
+    }
+}], ["wp", function (ua) {
+    return ua.indexOf("windows phone ") !== -1 || ua.indexOf("xblwp") !== -1 || ua.indexOf("zunewp") !== -1 || ua.indexOf("windows ce") !== -1;
+}], ["pc", "windows"], ["ipad", "ipad"],
+// ipod 规则应置于 iphone 之前。
+["ipod", "ipod"], ["iphone", /\biphone\b|\biph(\d)/], ["mac", "macintosh"],
+// 小米
+["mi", /\bmi[ \-]?([a-z0-9 ]+(?= build|\)))/],
+// 红米
+["hongmi", /\bhm\b|redmi[ \-]?([a-z0-9]+)/], ["aliyun", /\baliyunos\b(?:[\-](\d+))?/], ["meizu", function (ua) {
+    return ua.indexOf("meizu") >= 0 ? /\bmeizu[\/ ]([a-z0-9]+)\b/ : /\bm([0-9cx]{1,4})\b/;
+}], ["nexus", /\bnexus ([0-9s.]+)/], ["huawei", function (ua) {
+    var re_mediapad = /\bmediapad (.+?)(?= build\/huaweimediapad\b)/;
+    if (ua.indexOf("huawei-huawei") !== -1) {
+        return (/\bhuawei\-huawei\-([a-z0-9\-]+)/
+        );
+    } else if (re_mediapad.test(ua)) {
+        return re_mediapad;
+    } else {
+        return (/\bhuawei[ _\-]?([a-z0-9]+)/
+        );
+    }
+}], ["lenovo", function (ua) {
+    if (ua.indexOf("lenovo-lenovo") !== -1) {
+        return (/\blenovo\-lenovo[ \-]([a-z0-9]+)/
+        );
+    } else {
+        return (/\blenovo[ \-]?([a-z0-9]+)/
+        );
+    }
+}],
+// 中兴
+["zte", function (ua) {
+    if (/\bzte\-[tu]/.test(ua)) {
+        return (/\bzte-[tu][ _\-]?([a-su-z0-9\+]+)/
+        );
+    } else {
+        return (/\bzte[ _\-]?([a-su-z0-9\+]+)/
+        );
+    }
+}],
+// 步步高
+["vivo", /\bvivo(?: ([a-z0-9]+))?/], ["htc", function (ua) {
+    if (/\bhtc[a-z0-9 _\-]+(?= build\b)/.test(ua)) {
+        return (/\bhtc[ _\-]?([a-z0-9 ]+(?= build))/
+        );
+    } else {
+        return (/\bhtc[ _\-]?([a-z0-9 ]+)/
+        );
+    }
+}], ["oppo", /\boppo[_]([a-z0-9]+)/], ["konka", /\bkonka[_\-]([a-z0-9]+)/], ["sonyericsson", /\bmt([a-z0-9]+)/], ["coolpad", /\bcoolpad[_ ]?([a-z0-9]+)/], ["lg", /\blg[\-]([a-z0-9]+)/], ["android", /\bandroid\b|\badr\b/], ["blackberry", function (ua) {
+    if (ua.indexOf("blackberry") >= 0) {
+        return (/\bblackberry\s?(\d+)/
+        );
+    }
+    return "bb10";
+}]];
+// 操作系统信息识别表达式
+var OS = [["wp", function (ua) {
+    if (ua.indexOf("windows phone ") !== -1) {
+        return (/\bwindows phone (?:os )?([0-9.]+)/
+        );
+    } else if (ua.indexOf("xblwp") !== -1) {
+        return (/\bxblwp([0-9.]+)/
+        );
+    } else if (ua.indexOf("zunewp") !== -1) {
+        return (/\bzunewp([0-9.]+)/
+        );
+    }
+    return "windows phone";
+}], ["windows", /\bwindows nt ([0-9.]+)/], ["macosx", /\bmac os x ([0-9._]+)/], ["iOS", function (ua) {
+    if (/\bcpu(?: iphone)? os /.test(ua)) {
+        return (/\bcpu(?: iphone)? os ([0-9._]+)/
+        );
+    } else if (ua.indexOf("iph os ") !== -1) {
+        return (/\biph os ([0-9_]+)/
+        );
+    } else {
+        return (/\bios\b/
+        );
+    }
+}], ["yunos", /\baliyunos ([0-9.]+)/], ["Android", function (ua) {
+    if (ua.indexOf("android") >= 0) {
+        return (/\bandroid[ \/-]?([0-9.x]+)?/
+        );
+    } else if (ua.indexOf("adr") >= 0) {
+        if (ua.indexOf("mqqbrowser") >= 0) {
+            return (/\badr[ ]\(linux; u; ([0-9.]+)?/
+            );
+        } else {
+            return (/\badr(?:[ ]([0-9.]+))?/
+            );
+        }
+    }
+    return "android";
+    //return /\b(?:android|\badr)(?:[\/\- ](?:\(linux; u; )?)?([0-9.x]+)?/;
+}], ["chromeos", /\bcros i686 ([0-9.]+)/], ["linux", "linux"], ["windowsce", /\bwindows ce(?: ([0-9.]+))?/], ["symbian", /\bsymbian(?:os)?\/([0-9.]+)/], ["blackberry", function (ua) {
+    var m = ua.match(re_blackberry_10) || ua.match(re_blackberry_6_7) || ua.match(re_blackberry_4_5);
+    return m ? { version: m[1] } : "blackberry";
+}]];
+//浏览器内核
+var ENGINE = [["edgehtml", /edge\/([0-9.]+)/], ["trident", re_msie], ["blink", function () {
+    return "chrome" in win$1 && "CSS" in win$1 && /\bapplewebkit[\/]?([0-9.+]+)/;
+}], ["webkit", /\bapplewebkit[\/]?([0-9.+]+)/], ["gecko", function (ua) {
+    var match;
+    if (match = ua.match(/\brv:([\d\w.]+).*\bgecko\/(\d+)/)) {
+        return {
+            version: match[1] + "." + match[2]
+        };
+    }
+}], ["presto", /\bpresto\/([0-9.]+)/], ["androidwebkit", /\bandroidwebkit\/([0-9.]+)/], ["coolpadwebkit", /\bcoolpadwebkit\/([0-9.]+)/], ["u2", /\bu2\/([0-9.]+)/], ["u3", /\bu3\/([0-9.]+)/]];
+var BROWSER = [
+// Microsoft Edge Browser, Default browser in Windows 10.
+["edge", /edge\/([0-9.]+)/],
+// Sogou.
+["sogou", function (ua) {
+    if (ua.indexOf("sogoumobilebrowser") >= 0) {
+        return (/sogoumobilebrowser\/([0-9.]+)/
+        );
+    } else if (ua.indexOf("sogoumse") >= 0) {
+        return true;
+    }
+    return (/ se ([0-9.x]+)/
+    );
+}],
+// TheWorld (世界之窗)
+// 由于裙带关系，TheWorld API 与 360 高度重合。
+// 只能通过 UA 和程序安装路径中的应用程序名来区分。
+// TheWorld 的 UA 比 360 更靠谱，所有将 TheWorld 的规则放置到 360 之前。
+["theworld", function () {
+    var x = checkTW360External("theworld");
+    if (typeof x !== "undefined") {
+        return x;
+    }
+    return "theworld";
+}],
+// 360SE, 360EE.
+["360", function (ua) {
+    var x = checkTW360External("360se");
+    if (typeof x !== "undefined") {
+        return x;
+    }
+    if (ua.indexOf("360 aphone browser") !== -1) {
+        return (/\b360 aphone browser \(([^\)]+)\)/
+        );
+    }
+    return (/\b360(?:se|ee|chrome|browser)\b/
+    );
+}],
+// Maxthon
+["maxthon", function () {
+    try {
+        if (external && (external.mxVersion || external.max_version)) {
+            return {
+                version: external.mxVersion || external.max_version
+            };
+        }
+    } catch (ex) {/* */
+    }
+    return (/\b(?:maxthon|mxbrowser)(?:[ \/]([0-9.]+))?/
+    );
+}], ["micromessenger", /\bmicromessenger\/([\d.]+)/], ["qq", /\bm?qqbrowser\/([0-9.]+)/], ["green", "greenbrowser"], ["tt", /\btencenttraveler ([0-9.]+)/], ["liebao", function (ua) {
+    if (ua.indexOf("liebaofast") >= 0) {
+        return (/\bliebaofast\/([0-9.]+)/
+        );
+    }
+    if (ua.indexOf("lbbrowser") === -1) {
+        return false;
+    }
+    var version;
+    try {
+        if (external && external.LiebaoGetVersion) {
+            version = external.LiebaoGetVersion();
+        }
+    } catch (ex) {/* */
+    }
+    return {
+        version: version || NA_VERSION
+    };
+}], ["tao", /\btaobrowser\/([0-9.]+)/], ["coolnovo", /\bcoolnovo\/([0-9.]+)/], ["saayaa", "saayaa"],
+// 有基于 Chromniun 的急速模式和基于 IE 的兼容模式。必须在 IE 的规则之前。
+["baidu", /\b(?:ba?idubrowser|baiduhd)[ \/]([0-9.x]+)/],
+// 后面会做修复版本号，这里只要能识别是 IE 即可。
+["ie", re_msie], ["mi", /\bmiuibrowser\/([0-9.]+)/],
+// Opera 15 之后开始使用 Chromniun 内核，需要放在 Chrome 的规则之前。
+["opera", function (ua) {
+    var re_opera_old = /\bopera.+version\/([0-9.ab]+)/;
+    var re_opera_new = /\bopr\/([0-9.]+)/;
+    return re_opera_old.test(ua) ? re_opera_old : re_opera_new;
+}], ["oupeng", /\boupeng\/([0-9.]+)/], ["yandex", /yabrowser\/([0-9.]+)/],
+// 支付宝手机客户端
+["ali-ap", function (ua) {
+    if (ua.indexOf("aliapp") > 0) {
+        return (/\baliapp\(ap\/([0-9.]+)\)/
+        );
+    } else {
+        return (/\balipayclient\/([0-9.]+)\b/
+        );
+    }
+}],
+// 支付宝平板客户端
+["ali-ap-pd", /\baliapp\(ap-pd\/([0-9.]+)\)/],
+// 支付宝商户客户端
+["ali-am", /\baliapp\(am\/([0-9.]+)\)/],
+// 淘宝手机客户端
+["ali-tb", /\baliapp\(tb\/([0-9.]+)\)/],
+// 淘宝平板客户端
+["ali-tb-pd", /\baliapp\(tb-pd\/([0-9.]+)\)/],
+// 天猫手机客户端
+["ali-tm", /\baliapp\(tm\/([0-9.]+)\)/],
+// 天猫平板客户端
+["ali-tm-pd", /\baliapp\(tm-pd\/([0-9.]+)\)/],
+// UC 浏览器，可能会被识别为 Android 浏览器，规则需要前置。
+// UC 桌面版浏览器携带 Chrome 信息，需要放在 Chrome 之前。
+["uc", function (ua) {
+    if (ua.indexOf("ucbrowser/") >= 0) {
+        return (/\bucbrowser\/([0-9.]+)/
+        );
+    } else if (ua.indexOf("ubrowser/") >= 0) {
+        return (/\bubrowser\/([0-9.]+)/
+        );
+    } else if (/\buc\/[0-9]/.test(ua)) {
+        return (/\buc\/([0-9.]+)/
+        );
+    } else if (ua.indexOf("ucweb") >= 0) {
+        // `ucweb/2.0` is compony info.
+        // `UCWEB8.7.2.214/145/800` is browser info.
+        return (/\bucweb([0-9.]+)?/
+        );
+    } else {
+        return (/\b(?:ucbrowser|uc)\b/
+        );
+    }
+}], ["chrome", / (?:chrome|crios|crmo)\/([0-9.]+)/],
+// Android 默认浏览器。该规则需要在 safari 之前。
+["android", function (ua) {
+    if (ua.indexOf("android") === -1) {
+        return;
+    }
+    return (/\bversion\/([0-9.]+(?: beta)?)/
+    );
+}], ["blackberry", function (ua) {
+    var m = ua.match(re_blackberry_10) || ua.match(re_blackberry_6_7) || ua.match(re_blackberry_4_5);
+    return m ? { version: m[1] } : "blackberry";
+}], ["safari", /\bversion\/([0-9.]+(?: beta)?)(?: mobile(?:\/[a-z0-9]+)?)? safari\//],
+// 如果不能被识别为 Safari，则猜测是 WebView。
+["webview", /\bcpu(?: iphone)? os (?:[0-9._]+).+\bapplewebkit\b/], ["firefox", /\bfirefox\/([0-9.ab]+)/], ["nokia", /\bnokiabrowser\/([0-9.]+)/]];
+// 针对同源的 TheWorld 和 360 的 external 对象进行检测。
+// @param {String} key, 关键字，用于检测浏览器的安装路径中出现的关键字。
+// @return {Undefined,Boolean,Object} 返回 undefined 或 false 表示检测未命中。
+function checkTW360External(key) {
+    if (!external) {
+        return;
+    } // return undefined.
+    try {
+        //        360安装路径：
+        //        C:%5CPROGRA~1%5C360%5C360se3%5C360SE.exe
+        var runpath = external.twGetRunPath.toLowerCase();
+        // 360SE 3.x ~ 5.x support.
+        // 暴露的 external.twGetVersion 和 external.twGetSecurityID 均为 undefined。
+        // 因此只能用 try/catch 而无法使用特性判断。
+        var security = external.twGetSecurityID(win$1);
+        var version = external.twGetVersion(security);
+
+        if (runpath && runpath.indexOf(key) === -1) {
+            return false;
+        }
+        if (version) {
+            return { version: version };
+        }
+    } catch (ex) {/* */
+    }
+}
+// 解析使用 Trident 内核的浏览器的 `浏览器模式` 和 `文档模式` 信息。
+// @param {String} ua, userAgent string.
+// @return {Object}
+function IEMode(ua) {
+    if (!re_msie.test(ua)) {
+        return null;
+    }
+
+    var m, engineMode, engineVersion, browserMode, browserVersion;
+
+    // IE8 及其以上提供有 Trident 信息，
+    // 默认的兼容模式，UA 中 Trident 版本不发生变化。
+    if (ua.indexOf("trident/") !== -1) {
+        m = /\btrident\/([0-9.]+)/.exec(ua);
+        if (m && m.length >= 2) {
+            // 真实引擎版本。
+            engineVersion = m[1];
+            var v_version = m[1].split(".");
+            v_version[0] = parseInt(v_version[0], 10) + 4;
+            browserVersion = v_version.join(".");
+        }
+    }
+
+    m = re_msie.exec(ua);
+    browserMode = m[1];
+    var v_mode = m[1].split(".");
+    if (typeof browserVersion === "undefined") {
+        browserVersion = browserMode;
+    }
+    v_mode[0] = parseInt(v_mode[0], 10) - 4;
+    engineMode = v_mode.join(".");
+    if (typeof engineVersion === "undefined") {
+        engineVersion = engineMode;
+    }
+
+    return {
+        browserVersion: browserVersion,
+        browserMode: browserMode,
+        engineVersion: engineVersion,
+        engineMode: engineMode,
+        compatible: engineVersion !== engineMode
+    };
+}
+// UserAgent Detector.
+// @param {String} ua, userAgent.
+// @param {Object} expression
+// @return {Object}
+//    返回 null 表示当前表达式未匹配成功。
+function detect(name, expression, ua) {
+    var expr = isFunction(expression) ? expression.call(null, ua) : expression;
+    if (!expr) {
+        return null;
+    }
+    var info = {
+        name: name,
+        version: NA_VERSION,
+        codename: ""
+    };
+    var t = toString(expr);
+    if (expr === true) {
+        return info;
+    } else if (t === "[object String]") {
+        if (ua.indexOf(expr) !== -1) {
+            return info;
+        }
+    } else if (isObject(expr)) {
+        // Object
+        if (expr.hasOwnProperty("version")) {
+            info.version = expr.version;
+        }
+        return info;
+    } else if (expr.exec) {
+        // RegExp
+        var m = expr.exec(ua);
+        if (m) {
+            if (m.length >= 2 && m[1]) {
+                info.version = m[1].replace(/_/g, ".");
+            } else {
+                info.version = NA_VERSION;
+            }
+            return info;
+        }
+    }
+}
+
+var na = { name: "", version: "" };
+// 初始化识别。
+function init(ua, patterns, factory, detector) {
+    var detected = na;
+    each(patterns, function (pattern) {
+        var d = detect(pattern[0], pattern[1], ua);
+        if (d) {
+            detected = d;
+            return false;
+        }
+    });
+    factory.call(detector, detected.name, detected.version);
+}
+// 解析 UserAgent 字符串
+// @param {String} ua, userAgent string.
+// @return {Object}
+var parse = function parse(ua) {
+    ua = (ua || "").toLowerCase();
+    var d = {};
+
+    init(ua, DEVICES, function (name, version) {
+        var v = parseFloat(version);
+        d.device = {
+            name: name,
+            version: v,
+            fullVersion: version
+        };
+        d.device[name] = v;
+    }, d);
+
+    init(ua, OS, function (name, version) {
+        var v = parseFloat(version);
+        d.os = {
+            name: name,
+            version: v,
+            fullVersion: version
+        };
+        d.os[name] = v;
+    }, d);
+
+    var ieCore = IEMode(ua);
+
+    init(ua, ENGINE, function (name, version) {
+        var mode = version;
+        // IE 内核的浏览器，修复版本号及兼容模式。
+        if (ieCore) {
+            version = ieCore.engineVersion || ieCore.engineMode;
+            mode = ieCore.engineMode;
+        }
+        var v = parseFloat(version);
+        d.engine = {
+            name: name,
+            version: v,
+            fullVersion: version,
+            mode: parseFloat(mode),
+            fullMode: mode,
+            compatible: ieCore ? ieCore.compatible : false
+        };
+        d.engine[name] = v;
+    }, d);
+
+    init(ua, BROWSER, function (name, version) {
+        var mode = version;
+        // IE 内核的浏览器，修复浏览器版本及兼容模式。
+        if (ieCore) {
+            // 仅修改 IE 浏览器的版本，其他 IE 内核的版本不修改。
+            if (name === "ie") {
+                version = ieCore.browserVersion;
+            }
+            mode = ieCore.browserMode;
+        }
+        var v = parseFloat(version);
+        d.browser = {
+            name: name,
+            version: v,
+            fullVersion: version,
+            mode: parseFloat(mode),
+            fullMode: mode,
+            compatible: ieCore ? ieCore.compatible : false
+        };
+        d.browser[name] = v;
+    }, d);
+    return d;
+};
+
+detector = parse(userAgent$1 + " " + appVersion + " " + vendor);
+
+var detector$1 = detector;
+
+var win = void 0;
+if (typeof window === 'undefined') {
+  win = {
+    navigator: {
+      userAgent: ''
+    },
+    location: {
+      pathname: '',
+      href: ''
+    },
+    document: {
+      URL: ''
+    },
+    screen: {
+      width: '',
+      height: ''
+    }
+  };
+} else {
+  win = window;
+}
+
+var breaker = {};
+
+var _ = {
+  each: function each(obj, iterator, context) {
+    if (obj === null || obj === undefined) {
+      return;
+    }
+    if (Array.prototype.forEach && obj.forEach === Array.prototype.forEach) {
+      obj.forEach(iterator, context);
+    } else if (obj.length === +obj.length) {
+      for (var i = 0, l = obj.length; i < l; i++) {
+        if (i in obj && iterator.call(context, obj[i], i, obj) === breaker) {
+          return;
+        }
+      }
+    } else {
+      for (var key in obj) {
+        if (obj.hasOwnProperty.call(obj, key)) {
+          if (iterator.call(context, obj[key], key, obj) === breaker) {
+            return;
+          }
+        }
+      }
+    }
+  },
+  extend: function extend(obj) {
+    _.each(Array.prototype.slice.call(arguments, 1), function (source) {
+      for (var prop in source) {
+        if (source[prop] !== void 0) {
+          obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
+  },
+  isObject: function isObject(obj) {
+    return obj === Object(obj) && !_.isArray(obj);
+  },
+  isUndefined: function isUndefined(obj) {
+    return obj === void 0;
+  },
+  isArguments: function isArguments(obj) {
+    return !!(obj && hasOwnProperty.call(obj, 'callee'));
+  },
+  toArray: function toArray(iterable) {
+    if (!iterable) {
+      return [];
+    }
+    if (iterable.toArray) {
+      return iterable.toArray();
+    }
+    if (_.isArray(iterable)) {
+      return Array.prototype.slice.call(iterable);
+    }
+    if (_.isArguments(iterable)) {
+      return Array.prototype.slice.call(iterable);
+    }
+    return _.values(iterable);
+  },
+  values: function values(obj) {
+    var results = [];
+    if (obj === null) {
+      return results;
+    }
+    _.each(obj, function (value) {
+      results[results.length] = value;
+    });
+    return results;
+  },
+
+  // 转化成json
+  JSONDecode: function JSONDecode(string) {
+    try {
+      return JSON.parse(string);
+    } catch (error) {
+      return {};
+    }
+  },
+
+  // json转化为string
+  JSONEncode: function JSONEncode(json) {
+    try {
+      return JSON.stringify(json);
+    } catch (error) {
+      return '';
+    }
+  },
+
+  // 判断类型是否为function
+  isFunction: function isFunction(fn) {
+    var bool = false;
+    if (typeof fn === 'function') {
+      bool = true;
+    }
+    return bool;
+  },
+  base64Encode: function base64Encode$$1(str) {
+    return base64Encode(str);
+  },
+  sha1: function sha1$$1(str) {
+    return '';
+  },
+
+  // 对象的字段值截取
+  truncate: function truncate(obj, length) {
+    var ret = void 0;
+    if (typeof obj === 'string') {
+      ret = obj.slice(0, length);
+    } else if (_.isArray(obj)) {
+      ret = [];
+      _.each(obj, function (val) {
+        ret.push(_.truncate(val, length));
+      });
+    } else if (_.isObject(obj)) {
+      ret = {};
+      _.each(obj, function (val, key) {
+        ret[key] = _.truncate(val, length);
+      });
+    } else {
+      ret = obj;
+    }
+    return ret;
+  },
+  isNumber: function isNumber(obj) {
+    return Object.prototype.toString.call(obj) == '[object Number]';
+  },
+  isString: function isString(str) {
+    return Object.prototype.toString.call(str) == '[object String]';
+  },
+  HTTPBuildQuery: function HTTPBuildQuery(formdata, arg_separator) {
+    var use_val = void 0,
+        use_key = void 0,
+        tmp_arr = [];
+
+    if (_.isUndefined(arg_separator)) {
+      arg_separator = '&';
+    }
+
+    _.each(formdata, function (val, key) {
+      use_val = encodeURIComponent(val && val.toString());
+      use_key = encodeURIComponent(key);
+      tmp_arr[tmp_arr.length] = use_key + '=' + use_val;
+    });
+
+    return tmp_arr.join(arg_separator);
+  },
+
+  // 删除左右两端的空格
+  trim: function trim(str) {
+    if (!str) return;
+    return str.replace(/(^\s*)|(\s*$)/g, "");
+  },
+
+  // 验证yyyy-MM-dd日期格式
+  checkTime: function checkTime(timeString) {
+    var reg = /^(\d{4})-(\d{2})-(\d{2})$/;
+    if (timeString) {
+      if (!reg.test(timeString)) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  },
+
+  // 返回指定url的域名
+  // 若不传入url，返回当前网页的域名
+  getHost: function getHost(url) {
+    var host = '';
+    if (!url) {
+      url = document.URL;
+    }
+    var regex = /.*\:\/\/([^\/]*).*/;
+    var match = url.match(regex);
+    if (match) {
+      host = match[1];
+    }
+    return host;
+  },
+
+  // 获取url上指定参数的值
+  getQueryParam: function getQueryParam(url, param) {
+    var target = param.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+    var regexS = '[\\?&]' + target + '=([^&#]*)';
+    var regex = new RegExp(regexS);
+    var results = regex.exec(url);
+    if (results === null || results && typeof results[1] !== 'string' && results[1].length) {
+      return '';
+    } else {
+      return decodeURIComponent(results[1]).replace(/\+/g, ' ');
+    }
+  },
+
+  // 删除对象中空字段
+  deleteEmptyProperty: function deleteEmptyProperty(obj) {
+    if (!this.isObject(obj)) {
+      return;
+    }
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (obj[key] === null || this.isUndefined(obj[key]) || obj[key] === "") {
+          delete obj[key];
+        }
+      }
+    }
+    return obj;
+  }
+};
+_.isArray = Array.isArray || function (obj) {
+  return Object.prototype.toString.apply(obj) === '[object Array]';
+};
+
+_.loadScript = function (para) {
+  para = _.extend({
+    success: function success() {},
+    error: function error() {},
+    appendCall: function appendCall(g) {
+      document.getElementsByTagName('head')[0].appendChild(g);
+    }
+  }, para);
+
+  var g = null;
+  if (para.type === 'css') {
+    g = document.createElement('link');
+    g.rel = 'stylesheet';
+    g.href = para.url;
+  }
+  if (para.type === 'js') {
+    g = document.createElement('script');
+    g.async = 'async';
+    g.setAttribute('charset', 'UTF-8');
+    g.src = para.url;
+    g.type = 'text/javascript';
+  }
+  g.onload = g.onreadystatechange = function () {
+    if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+      para.success();
+      g.onload = g.onreadystatechange = null;
+    }
+  };
+  g.onerror = function () {
+    para.error();
+    g.onerror = null;
+  };
+  // if iframe
+  para.appendCall(g);
+};
+
+_.register_event = function () {
+  // written by Dean Edwards, 2005
+  // with input from Tino Zijdel - crisp@xs4all.nl
+  // with input from Carl Sverre - mail@carlsverre.com
+  // with input from DATracker
+  // http://dean.edwards.name/weblog/2005/10/add-event/
+  // https://gist.github.com/1930440
+
+  /**
+   * @param {Object} element
+   * @param {string} type
+   * @param {function(...[*])} handler
+   * @param {boolean=} oldSchool
+   * @param {boolean=} useCapture
+   */
+  var register_event = function register_event(element, type, handler, oldSchool, useCapture) {
+    if (!element) {
+      console.error('No valid element provided to register_event');
+      return;
+    }
+
+    if (element.addEventListener && !oldSchool) {
+      element.addEventListener(type, handler, !!useCapture);
+    } else {
+      var ontype = 'on' + type;
+      var old_handler = element[ontype]; // can be undefined
+      element[ontype] = makeHandler(element, handler, old_handler);
+    }
+  };
+
+  function makeHandler(element, new_handler, old_handlers) {
+    var handler = function handler(event) {
+      event = event || fixEvent(window.event);
+
+      // this basically happens in firefox whenever another script
+      // overwrites the onload callback and doesn't pass the event
+      // object to previously defined callbacks.  All the browsers
+      // that don't define window.event implement addEventListener
+      // so the dom_loaded handler will still be fired as usual.
+      if (!event) {
+        return undefined;
+      }
+
+      var ret = true;
+      var old_result, new_result;
+
+      if (_.isFunction(old_handlers)) {
+        old_result = old_handlers(event);
+      }
+      new_result = new_handler.call(element, event);
+
+      if (false === old_result || false === new_result) {
+        ret = false;
+      }
+
+      return ret;
+    };
+
+    return handler;
+  }
+
+  function fixEvent(event) {
+    if (event) {
+      event.preventDefault = fixEvent.preventDefault;
+      event.stopPropagation = fixEvent.stopPropagation;
+    }
+    return event;
+  }
+  fixEvent.preventDefault = function () {
+    this.returnValue = false;
+  };
+  fixEvent.stopPropagation = function () {
+    this.cancelBubble = true;
+  };
+
+  return register_event;
+}();
+
+_.register_hash_event = function (callback) {
+  _.register_event(window, 'hashchange', callback);
+};
+
+// 客户端基本属性
+_.info = {
+  domain: function domain(referrer) {
+    var split = referrer.split('/');
+    if (split.length >= 3) {
+      return split[2];
+    }
+    return '';
+  },
+
+  // 设备型号
+  deviceModel: function deviceModel() {
+    var deviceModel = '';
+    if (device.android()) {
+      var sss = win.navigator.userAgent.split(";");
+      var i = sss.indexOf("Build/");
+      if (i > -1) {
+        deviceModel = sss[i].substring(0, sss[i].indexOf("Build/"));
+      }
+    } else if (device.ios()) {
+      if (device.iphone()) {
+        deviceModel = 'iPhone';
+      }
+    }
+    return deviceModel;
+  },
+  properties: function properties() {
+    var windowsOs = {
+      '5.0': 'Win2000',
+      '5.1': 'WinXP',
+      '5.2': 'Win2003',
+      '6.0': 'WindowsVista',
+      '6.1': 'Win7',
+      '6.2': 'Win8',
+      '6.3': 'Win8.1',
+      '10.0': 'Win10'
+    };
+    var devicePlatform = device.type;
+    var deviceModel = _.trim(this.deviceModel());
+    var isWindows = device.windows();
+    var deviceOsVersion = detector$1.os.name + ' ' + detector$1.os.fullVersion;
+    if (isWindows) {
+      if (windowsOs[detector$1.os.fullVersion]) {
+        deviceOsVersion = windowsOs[detector$1.os.fullVersion];
+      }
+    }
+    return {
+      // 设备型号
+      deviceModel: deviceModel,
+      // 操作系统
+      deviceOs: detector$1.os.name,
+      // 操作系统版本
+      deviceOsVersion: deviceOsVersion,
+      // 设备平台
+      devicePlatform: devicePlatform,
+      // 浏览器名称
+      browser: detector$1.browser.name,
+      // 浏览器版本
+      browserVersion: detector$1.browser.fullVersion,
+      // 页面标题
+      title: win.document.title || '',
+      // 页面路径
+      urlPath: win.location.pathname || '',
+      // 页面url
+      currentUrl: document.URL,
+      // 域名
+      currentDomain: this.domain(document.URL),
+      // referrer 数据来源
+      referrer: win.document.referrer,
+      // referrer 域名
+      referringDomain: this.domain(win.document.referrer),
+      // 本地语言
+      language: win.navigator.language || '',
+      // 客户端分辨率 width
+      screenWidth: win.screen.width,
+      // 客户端分辨率 height
+      screenHeight: win.screen.height
+    };
+  }
+};
+
+// 消息订阅/推送
+_.innerEvent = {
+  /**
+   * 订阅
+   *  */
+  on: function on(key, fn) {
+    if (!this._list) {
+      this._list = {};
+    }
+    if (!this._list[key]) {
+      this._list[key] = [];
+    }
+    this._list[key].push(fn);
+  },
+  off: function off(key) {
+    if (!this._list) {
+      this._list = {};
+    }
+    if (!this._list[key]) {
+      return;
+    } else {
+      delete this._list[key];
+    }
+  },
+  /**
+   * 推送
+   */
+  trigger: function trigger() {
+    var args = Array.prototype.slice.call(arguments);
+    var key = args[0];
+    var arrFn = this._list && this._list[key];
+    if (!arrFn || arrFn.length === 0) {
+      return;
+    }
+    for (var i = 0; i < arrFn.length; i++) {
+      if (typeof arrFn[i] == 'function') {
+        arrFn[i].apply(this, args);
+      }
+    }
+  }
+};
+
+// 发送数据
+_.sendRequest = function (url, type, data, callback) {
+  data['_'] = new Date().getTime().toString();
+  if (type === 'img') {
+    url += '?' + _.HTTPBuildQuery(data);
+    var img = document.createElement('img');
+    img.src = url;
+    img.width = 1;
+    img.height = 1;
+    if (_.isFunction(callback)) {
+      callback(0);
+    }
+    img.onload = function () {
+      this.onload = null;
+    };
+    img.onerror = function () {
+      this.onerror = null;
+    };
+    img.onabort = function () {
+      this.onabort = null;
+    };
+  } else if (type === 'get') {
+    url += '?' + _.HTTPBuildQuery(data);
+    _.ajax.get(url, callback);
+  } else if (type === 'post') {
+    _.ajax.get(url, data, callback);
+  }
+};
+
+_.ajax = {
+  post: function post(url, options, callback, timeout) {
+    var that = this;
+    that.callback = callback || function (params) {};
+    try {
+      var req = new XMLHttpRequest();
+      req.open('POST', url, true);
+      req.setRequestHeader("Content-type", "application/json");
+      req.withCredentials = true;
+      req.ontimeout = function () {
+        that.callback({ status: 0, error: true, message: 'request ' + url + ' time out' });
+      };
+      req.onreadystatechange = function () {
+        if (req.readyState === 4) {
+          if (req.status === 200) {
+            that.callback(_.JSONDecode(req.responseText));
+          } else {
+            var message = 'Bad HTTP status: ' + req.status + ' ' + req.statusText;
+            that.callback({ status: 0, error: true, message: message });
+          }
+        }
+      };
+      req.timeout = timeout || 5000;
+      req.send(_.JSONEncode(options));
+    } catch (e) {}
+  },
+  get: function get(url, callback) {
+    try {
+      var req = new XMLHttpRequest();
+      req.open('GET', url, true);
+      req.withCredentials = true;
+      req.onreadystatechange = function () {
+        if (req.readyState === 4) {
+          if (req.status === 200) {
+            if (callback) {
+              callback(req.responseText);
+            }
+          } else {
+            if (callback) {
+              var message = 'Bad HTTP status: ' + req.status + ' ' + req.statusText;
+              callback({ status: 0, error: true, message: message });
+            }
+          }
+        }
+      };
+      req.send(null);
+    } catch (e) {}
+  }
+};
+
+// uuid
+_.UUID = function () {
+  var T = function T() {
+    var d = 1 * new Date(),
+        i = 0;
+    while (d == 1 * new Date()) {
+      i++;
+    }
+    return d.toString(16) + i.toString(16);
+  };
+  var R = function R() {
+    return Math.random().toString(16).replace('.', '');
+  };
+  var UA = function UA(n) {
+    var ua = navigator.userAgent,
+        i,
+        ch,
+        buffer = [],
+        ret = 0;
+
+    function xor(result, byte_array) {
+      var j,
+          tmp = 0;
+      for (j = 0; j < byte_array.length; j++) {
+        tmp |= buffer[j] << j * 8;
+      }
+      return result ^ tmp;
+    }
+
+    for (i = 0; i < ua.length; i++) {
+      ch = ua.charCodeAt(i);
+      buffer.unshift(ch & 0xFF);
+      if (buffer.length >= 4) {
+        ret = xor(ret, buffer);
+        buffer = [];
+      }
+    }
+
+    if (buffer.length > 0) {
+      ret = xor(ret, buffer);
+    }
+
+    return ret.toString(16);
+  };
+
+  return function () {
+    // 有些浏览器取个屏幕宽度都异常...
+    var se = String(screen.height * screen.width);
+    if (se && /\d{5,}/.test(se)) {
+      se = se.toString(16);
+    } else {
+      se = String(Math.random() * 31242).replace('.', '').slice(0, 8);
+    }
+    var val = T() + '-' + R() + '-' + UA() + '-' + se + '-' + T();
+    if (val) {
+      return val;
+    } else {
+      return (String(Math.random()) + String(Math.random()) + String(Math.random())).slice(2, 15);
+    }
+  };
+}();
+
+// 存储方法封装 localStorage  cookie
+_.localStorage = {
+  error: function error(msg) {
+    console.error('localStorage error: ' + msg);
+  },
+
+  get: function get(name) {
+    try {
+      return window.localStorage.getItem(name);
+    } catch (err) {
+      _.localStorage.error(err);
+    }
+    return null;
+  },
+
+  parse: function parse(name) {
+    try {
+      return _.JSONDecode(_.localStorage.get(name)) || {};
+    } catch (err) {
+      // noop
+    }
+    return null;
+  },
+
+  set: function set(name, value) {
+    try {
+      window.localStorage.setItem(name, value);
+    } catch (err) {
+      _.localStorage.error(err);
+    }
+  },
+
+  remove: function remove(name) {
+    try {
+      window.localStorage.removeItem(name);
+    } catch (err) {
+      _.localStorage.error(err);
+    }
+  }
+};
+_.cookie = {
+  get: function get(name) {
+    var nameEQ = name + '=';
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1, c.length);
+      }
+      if (c.indexOf(nameEQ) === 0) {
+        return decodeURIComponent(c.substring(nameEQ.length, c.length));
+      }
+    }
+    return null;
+  },
+
+  parse: function parse(name) {
+    var cookie;
+    try {
+      cookie = _.JSONDecode(_.cookie.get(name)) || {};
+    } catch (err) {
+      // noop
+    }
+    return cookie;
+  },
+
+  set_seconds: function set_seconds(name, value, seconds, cross_subdomain, is_secure) {
+    var cdomain = '',
+        expires = '',
+        secure = '';
+
+    if (cross_subdomain) {
+      var matches = document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),
+          domain = matches ? matches[0] : '';
+
+      cdomain = domain ? '; domain=.' + domain : '';
+    }
+
+    if (seconds) {
+      var date = new Date();
+      date.setTime(date.getTime() + seconds * 1000);
+      expires = '; expires=' + date.toGMTString();
+    }
+
+    if (is_secure) {
+      secure = '; secure';
+    }
+
+    document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/' + cdomain + secure;
+  },
+
+  set: function set(name, value, days, cross_subdomain, is_secure) {
+    var cdomain = '',
+        expires = '',
+        secure = '';
+
+    if (cross_subdomain) {
+      var matches = document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),
+          domain = matches ? matches[0] : '';
+
+      cdomain = domain ? '; domain=.' + domain : '';
+    }
+
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = '; expires=' + date.toGMTString();
+    }
+
+    if (is_secure) {
+      secure = '; secure';
+    }
+
+    var new_cookie_val = name + '=' + encodeURIComponent(value) + expires + '; path=/' + cdomain + secure;
+    document.cookie = new_cookie_val;
+    return new_cookie_val;
+  },
+
+  remove: function remove(name, cross_subdomain) {
+    _.cookie.set(name, '', -1, cross_subdomain);
+  }
+};
+
+var windowConsole = win.console;
+var console = {
+  /** @type {function(...[*])} */
+  log: function log() {
+    if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
+      try {
+        windowConsole.log.apply(windowConsole, arguments);
+      } catch (err) {
+        _.each(arguments, function (arg) {
+          windowConsole.log(arg);
+        });
+      }
+    }
+  },
+  /** @type {function(...[*])} */
+  error: function error() {
+    if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
+      var args = ['DATracker error:'].concat(_.toArray(arguments));
+      try {
+        windowConsole.error.apply(windowConsole, args);
+      } catch (err) {
+        _.each(args, function (arg) {
+          windowConsole.error(arg);
+        });
+      }
+    }
+  }
+};
+
+var USER_TRACK = function () {
+  function USER_TRACK(instance) {
+    classCallCheck(this, USER_TRACK);
+
+    this.instance = instance;
+    this['local_storage'] = this.instance['local_storage'];
+  }
+  /**
+   * 检测设置的属性是否为系统保留属性
+   * @param {String} prop 
+   */
+
+
+  createClass(USER_TRACK, [{
+    key: '_is_reserved_property',
+    value: function _is_reserved_property(prop) {
+      return PEOPLE_RESERVED_PROPERTY.indexOf('prop') > -1;
+    }
+    /**
+     * 上报用户属性数据
+     * @param {Object} properties 
+     * @param {Function} callback 
+     */
+
+  }, {
+    key: '_send_request',
+    value: function _send_request(properties, callback) {
+      if (!_.isFunction(callback)) {
+        callback = function callback() {};
+      }
+
+      properties = properties || {};
+
+      var data = {
+        dataType: SYSTEM_EVENT_TYPE,
+        // 客户端唯一凭证(设备凭证)
+        deviceId: this.instance.get_device_id(),
+        userId: this.instance.get_property('user_id'),
+        // 上报时间
+        time: new Date().getTime(),
+        // sdk类型 （js，小程序、安卓、IOS、server、pc）
+        sdkType: 'js',
+        // 属性事件id
+        eventId: PEOPLE_PROPERTY_ID,
+        // 用户首次访问时间
+        persistedTime: this.instance.get_property('persistedTime'),
+        // 页面打开场景, 默认 Browser
+        pageOpenScene: 'Browser',
+        // 自定义用户属性
+        attributes: properties
+      };
+
+      // 合并渠道推广信息
+      data = _.extend({}, data, this.instance['channel'].get_channel_params());
+
+      // 上报数据对象字段截取
+      var truncateLength = this.instance._get_config('truncateLength');
+      var truncated_data = data;
+      if (_.isNumber(truncateLength) && truncateLength > 0) {
+        truncated_data = _.truncate(data, truncateLength);
+      }
+
+      console.log('上报的数据（截取后）:', truncated_data);
+
+      var callback_fn = function callback_fn(response) {
+        callback(response, data);
+      };
+      var url = this.instance._get_config('track_url');
+
+      // 数据上报方式
+      var track_type = this.instance._get_config('track_type');
+      if (track_type === 'img') {
+        url += 'track.gif';
+      }
+      _.sendRequest(url, track_type, { data: _.base64Encode(_.JSONEncode(truncated_data)), token: this.instance._get_config('token') }, callback_fn);
+    }
+    /**
+     * 设置用户属性
+     * @param {*} prop 
+     * @param {*} to 
+     * @param {*} callback 
+     */
+
+  }, {
+    key: 'set',
+    value: function set$$1(prop, to, callback) {
+      var _this = this;
+
+      var set_props = {};
+      if (_.isObject(prop)) {
+        _.each(prop, function (v, k) {
+          // 不是系统保留属性
+          if (!_this._is_reserved_property(k)) {
+            set_props[k] = v;
+          }
+        });
+        callback = to;
+      } else {
+        set_props[prop] = to;
+      }
+      return this._send_request(set_props, callback);
+    }
+  }]);
+  return USER_TRACK;
+}();
+
+var EVENT_TRACK = function () {
+  function EVENT_TRACK(instance) {
+    var _this = this;
+
+    classCallCheck(this, EVENT_TRACK);
+
+    this.instance = instance;
+    this['local_storage'] = this.instance['local_storage'];
+    // 初始化时间(事件相关)
+    this['local_storage'].register_once({
+      updatedTime: 0,
+      sessionStartTime: 0
+    });
+    // 将当前的referrer保存到本地缓存
+    this['local_storage'].register({
+      sessionReferrer: document.referrer
+    });
+
+    var mark_page_url = document.URL;
+    // 单页面触发PV事件时，设置 referrer
+    _.innerEvent.on('singlePage:change', function (eventName, urlParams) {
+      _this['local_storage'].register({
+        sessionReferrer: mark_page_url
+      });
+      mark_page_url = document.URL;
+    });
+  }
+  /**
+   *
+   * 判断是否为其它渠道
+   */
+
+
+  createClass(EVENT_TRACK, [{
+    key: '_check_channel',
+    value: function _check_channel() {
+      var referrer = this.instance.get_property('sessionReferrer');
+      var is_other_channel = false;
+      // 若本地缓存的referrer 的host跟当前页不一样，那么可以确定是其它渠道进来的
+      if (_.getHost(referrer) !== window.location.host) {
+        is_other_channel = true;
+      }
+      return is_other_channel;
+    }
+    /**
+     * TODO
+     * 判断指定事件是否被禁止上报
+     * @param {String} event_name
+     * @returns {Boolean} 
+     */
+
+  }, {
+    key: '_event_is_disabled',
+    value: function _event_is_disabled(event_name) {
+      return false;
+    }
+    /**
+     * 打开新会话
+     */
+
+  }, {
+    key: '_start_new_session',
+    value: function _start_new_session() {
+      this['local_storage'].register({
+        sessionUuid: _.UUID(),
+        sessionStartTime: new Date().getTime()
+      });
+      this.track('smart_session_start');
+    }
+    /**
+     * TODO
+     * 关闭当前会话
+     */
+
+  }, {
+    key: '_close_cur_session',
+    value: function _close_cur_session() {
+      /*
+       为了便于绘制用户事件发生轨迹图，区分会话close和最后一次事件触发时间的顺序，会话关闭时间需要做些微调
+       1. 如果本地拿到了上次（非会话事件）事件的触发时间，time = this.instance.get_property('LASTEVENT').time + 1;
+       2. 如果未拿到，time = new Date().getTime() - 1;
+      */
+      var time = new Date().getTime() - 1;
+      var sessionStartTime = this.instance.get_property('sessionStartTime');
+      var LASTEVENT = this.instance.get_property('LASTEVENT');
+      if (LASTEVENT && LASTEVENT.time) {
+        time = LASTEVENT.time + 1;
+      }
+      var sessionTotalLength = time - sessionStartTime;
+      if (sessionTotalLength >= 0) {
+        this.track('smart_session_close', {
+          sessionCloseTime: time,
+          sessionTotalLength: sessionTotalLength
+        });
+      }
+    }
+    /**
+     * 判断会话重新开启
+     * 判断条件：会话首次开始、指定的一段时间内用户无事件操作、其它渠道进来
+    */
+
+  }, {
+    key: '_session',
+    value: function _session(callback) {
+      var session_start_time = 1 * this.instance.get_property('sessionStartTime') / 1000;
+      var updated_time = 1 * this.instance.get_property('updatedTime') / 1000;
+      var now_date_time_ms = new Date().getTime();
+      var now_date_time_se = 1 * now_date_time_ms / 1000;
+      // 其它渠道判断
+      var other_channel_Bool = this._check_channel();
+      //会话结束判断
+      if (session_start_time === 0 || now_date_time_se > updated_time + 60 * this.instance._get_config('session_interval_mins') || other_channel_Bool) {
+        // 当会话首次开始时，不用发送会话关闭事件
+        if (session_start_time === 0) {
+          // 新打开一个会话
+          this._start_new_session();
+        } else {
+          this._close_cur_session();
+          this._start_new_session();
+        }
+      }
+      // 更新本地的最后事件操作时间
+      this['local_storage'].register({
+        updatedTime: now_date_time_ms
+      });
+      // 执行回调方法
+      if (_.isFunction(callback)) {
+        callback();
+      }
+    }
+    /**
+     * 用户注册
+     * @param {String} user_id 
+     */
+
+  }, {
+    key: '_signup',
+    value: function _signup(user_id) {
+      // 默认是空值,若有值则调用退出
+      var anonymous_id = this.instance.get_property('userId');
+      if (anonymous_id !== user_id) {
+        if (anonymous_id) {
+          this.logout();
+        }
+        this.track('smart_u_signup', {
+          anonymousId: anonymous_id,
+          newUserId: user_id
+        });
+      }
+    }
+    /**
+     * 设置一个指定事件的耗时监听器
+     * @param {String} event_name
+     */
+
+  }, {
+    key: 'time_event',
+    value: function time_event(event_name) {
+      if (_.isUndefined(event_name)) {
+        console.error('事件耗时监听器需要一个事件名称');
+        return;
+      }
+      // 被禁止的事件，无需监听
+      if (this._event_is_disabled(event_name)) {
+        return;
+      }
+      this['local_storage'].set_event_timer(event_name, new Date().getTime());
+    }
+    /**
+     * 发送PV事件，在此之前检测session
+     * @param {Object} properties  pv属性
+     * @param {*} callback 
+     */
+
+  }, {
+    key: 'track_pv',
+    value: function track_pv(properties, callback) {
+      var _this2 = this;
+
+      this._session(function () {
+        _this2.track('smart_pv', _.extend({}, properties), callback);
+      });
+    }
+    /**
+     * 追踪事件（上报用户事件触发数据）
+     * @param {String} event_name 事件名称（必须）
+     * @param {Object} properties 事件属性
+     * @param {Function} callback 上报后的回调方法
+     * @param {String} event_type 自定义事件类型
+     * @returns {Object} track_data 上报的数据
+     */
+
+  }, {
+    key: 'track',
+    value: function track(event_name, properties, callback, event_type) {
+      if (_.isUndefined(event_name)) {
+        console.error('上报数据需要一个事件名称');
+        return;
+      }
+      if (!_.isFunction(callback)) {
+        callback = function callback() {};
+      }
+      if (this._event_is_disabled(event_name)) {
+        callback(0);
+        return;
+      }
+      // 重新在本地取数据读取到缓存
+      this['local_storage'].load();
+      // 事件属性
+      properties = properties || {};
+      // 标记：传入的属性另存一份
+      var user_set_properties = _.JSONDecode(_.JSONEncode(properties)) || {};
+      var costTime = void 0;
+      // 移除该事件的耗时监听器，获取设置监听器的时间戳，计算耗时
+      var start_listen_timestamp = this['local_storage'].remove_event_timer(event_name);
+      if (!_.isUndefined(start_listen_timestamp)) {
+        costTime = new Date().getTime() - start_listen_timestamp;
+      }
+      // 事件类型设置
+      var data_type = BUSSINESS_EVENT_TYPE;
+      // 事件类型设置为传入了自定义事件类型
+      if (event_type) {
+        data_type = event_type;
+      } else
+        // 如果是内置事件,事件类型重新设置
+        if (SYSTEM_EVENT_OBJECT[event_name]) {
+          data_type = SYSTEM_EVENT_OBJECT[event_name].data_type;
+        }
+
+      // 事件触发时间
+      var time = new Date().getTime();
+      // 会话有时间差
+      // 触发的事件若是会话结束，触发时间要重新设置
+      // 若事件id为会话关闭，需要删除传入的自定义属性
+      if (event_name === 'smart_session_close') {
+        time = properties.sessionCloseTime;
+        delete user_set_properties['sessionCloseTime'];
+        delete user_set_properties['sessionTotalLength'];
+      }
+
+      // 设置通用的事件属性
+      user_set_properties = _.extend({}, this.instance.get_property('superProperties'), user_set_properties);
+
+      // 上报数据
+      var data = {
+        dataType: data_type,
+        userId: this.instance.get_property('userId'),
+        // sdk类型 （js，小程序、安卓、IOS、server、pc）
+        sdkType: 'js',
+        sdkVersion: CONFIG.LIB_VERSION,
+        // 事件名称
+        eventId: event_name,
+        // 事件触发时间
+        time: time,
+        // 用户首次访问时间
+        persistedTime: this.instance.get_property('persistedTime'),
+        // 客户端唯一凭证(设备凭证)
+        deviceId: this.instance.get_device_id(),
+        // 页面打开场景, 默认 Browser
+        pageOpenScene: 'Browser',
+        // 应用凭证
+        token: this.instance._get_config('token'),
+        costTime: costTime,
+        // 当前关闭的会话时长
+        sessionTotalLength: properties.sessionTotalLength,
+        // 当前会话id
+        sessionUuid: this.instance.get_property('sessionUuid'),
+        // 事件自定义属性
+        attributes: user_set_properties
+      };
+      // 合并客户端信息  
+      data = _.extend({}, data, _.info.properties());
+
+      // 合并渠道推广信息
+      data = _.extend({}, data, this.instance['channel'].get_channel_params());
+
+      //只有已访问页面后，sessionReferrer 重置
+      //如果不是内置事件，那么 sessionReferrer 重置
+      //如果是'da_activate'，那么 sessionReferrer 重置
+      //解决referrer 当是外链时，此时触发自定义事件，引起重启一个session问题。
+      if (data_type === BUSSINESS_EVENT_TYPE) {
+        // 其它渠道
+        if (this._check_channel()) {
+          this['local_storage'].register({
+            sessionReferrer: document.URL
+          });
+        }
+      }
+      if (!this.instance._get_config('SPA').is) {
+        if (['smart_activate', 'smart_session_close'].indexOf(event_name) > 0) {
+          this['local_storage'].register({
+            sessionReferrer: document.URL
+          });
+        }
+      }
+
+      // 当启动单页面后，切换页面，refer为空，此时做处理
+      if (this.instance._get_config('SPA').is) {
+        var sessionReferrer = this.instance.get_property('sessionReferrer');
+        if (sessionReferrer !== data['referrer']) {
+          data['referrer'] = sessionReferrer;
+          data['referringDomain'] = _.info.domain(sessionReferrer);
+        }
+      }
+
+      // 上报数据对象字段截取
+      var truncateLength = this.instance._get_config('truncateLength');
+      var truncated_data = data;
+      if (_.isNumber(truncateLength) && truncateLength > 0) {
+        truncated_data = _.truncate(data, truncateLength);
+      }
+
+      console.log('上报的数据（截取后）:', truncated_data);
+
+      var callback_fn = function callback_fn(response) {
+        callback(response, data);
+      };
+      var url = this.instance._get_config('track_url');
+      var track_type = this.instance._get_config('track_type');
+      if (track_type === 'img') {
+        url += 'track.gif';
+      }
+      _.sendRequest(url, track_type, { data: _.base64Encode(_.JSONEncode(truncated_data)), token: this.instance._get_config('token') }, callback_fn);
+
+      // 当触发的事件不是这些事件(smart_session_start,smart_session_close,smart_activate)时，触发检测 session 方法
+      if (['smart_session_start', 'smart_session_close', 'smart_activate'].indexOf(event_name) === -1) {
+        this._session();
+      }
+
+      // 保存最后一次用户触发事件（除了会话事件以外）的事件id以及时间，通过这个时间确定会话关闭时的时间
+      if (['smart_session_start', 'smart_session_close'].indexOf(event_name) === -1) {
+        this['local_storage'].register({
+          LASTEVENT: {
+            eventId: event_name,
+            time: time
+          }
+        });
+      }
+    }
+    /**
+     * 用户登录和注册时调用
+     * @param {String} user_id 
+     */
+
+  }, {
+    key: 'login',
+    value: function login(user_id) {
+      this._signup(user_id);
+      this['local_storage'].register({ 'userId': user_id });
+      this.track('smart_u_login');
+    }
+    // 清除本地用户信息，退出用户（选则调用）
+
+  }, {
+    key: 'logout',
+    value: function logout() {
+      this['local_storage'].unregister('userId');
+      this.track('smart_u_logout');
+    }
+  }]);
+  return EVENT_TRACK;
+}();
+
+var LOCAL_STORAGE = function () {
+  /**
+   * 
+   * @param {Object} config
+   */
+  function LOCAL_STORAGE(config) {
+    classCallCheck(this, LOCAL_STORAGE);
+
+    var local_storage = config['local_storage'];
+    if (_.isObject(local_storage)) {
+      this['name'] = local_storage['name'] || 'smart_' + config['token'] + '_sdk';
+      var storage_type = local_storage['type'] || 'cookie';
+
+      // 判断是否支持 localStorage
+      var localStorage_supported = function localStorage_supported() {
+        var supported = true;
+        try {
+          var key = '__smartssupport__',
+              val = 'smart_web_data_sdk';
+          _.localStorage.set(key, val);
+          if (_.localStorage.get(key) !== val) {
+            supported = false;
+          }
+          _.localStorage.remove(key);
+        } catch (error) {
+          supported = false;
+        }
+        if (!supported) {
+          console.error('localStorage 不支持，自动退回到cookie存储方式');
+        }
+        return supported;
+      };
+
+      if (storage_type === 'localStorage' && localStorage_supported()) {
+        this['storage'] = _.localStorage;
+      } else {
+        this['storage'] = _.cookie;
+      }
+
+      this.load();
+      this.update_config(local_storage);
+      // TODO: upgrade
+      this.upgrade();
+      this.save();
+    } else {
+      console.error('local_storage配置设置错误');
+    }
+  }
+  // 加载本地存储信息
+
+
+  createClass(LOCAL_STORAGE, [{
+    key: 'load',
+    value: function load() {
+      var localData = this['storage'].parse(this['name']);
+      if (localData) {
+        this['props'] = _.extend({}, localData);
+      }
+    }
+    // 更新配置信息
+
+  }, {
+    key: 'update_config',
+    value: function update_config(localStorageConfig) {
+      // 到期时间(cookie存储设置有效)
+      this.default_expiry = this.expire_days = localStorageConfig['cookie_expiration'];
+      this.set_disabled(localStorageConfig['disable']);
+      this.set_cross_subdomain(localStorageConfig['cross_subdomain_cookie']);
+      this.set_secure(localStorageConfig['secure_cookie']);
+    }
+    // 设置关闭本地保存操作，设置为关闭后，本地数据移除
+
+  }, {
+    key: 'set_disabled',
+    value: function set_disabled(disabled) {
+      this.disabled = disabled;
+      if (this.disabled) {
+        this.remove();
+      }
+    }
+    // 移除本地数据
+
+  }, {
+    key: 'remove',
+    value: function remove() {
+      // cookie存储时，移除二级域以及子域下的cookie,此时参数有两个
+      this.storage.remove(this.name, false);
+      this.storage.remove(this.name, true);
+    }
+    // 清除存储的数据
+
+  }, {
+    key: 'clear',
+    value: function clear() {
+      this.remove();
+      this['props'] = {};
+    }
+    /**
+     * 跨子域设置,cookie存储方式下有效
+     * @param {Boolean} cross_subdomain 
+     */
+
+  }, {
+    key: 'set_cross_subdomain',
+    value: function set_cross_subdomain(cross_subdomain) {
+      if (cross_subdomain !== this.cross_subdomain) {
+        this.cross_subdomain = cross_subdomain;
+        this.remove();
+        this.save();
+      }
+    }
+    /**
+     * cookie存储方式下有效
+     * cookie存储时，采用安全的方式存储数据，调用该方法后，重新保存数据
+     * 当secure属性设置为true时，cookie只有在https协议下才能上传到服务器，
+     * 而在http协议下是没法上传的，所以也不会被窃听
+     * @param {Boolean} secure 
+     */
+
+  }, {
+    key: 'set_secure',
+    value: function set_secure(secure) {
+      if (secure !== this.secure) {
+        this.secure = secure ? true : false;
+        this.remove();
+        this.save();
+      }
+    }
+    // sdk升级，旧的sdk存储数据移到新的sdk存储数据中，然后删除旧的存储数据（暂不实现）
+    // 存储方式改变，改为cookie切换到 localStorage
+
+  }, {
+    key: 'upgrade',
+    value: function upgrade(config) {
+      var old_cookie = void 0;
+      if (this.storage === _.localStorage) {
+        old_cookie = _.cookie.parse(this.name);
+        _.cookie.remove(this.name);
+        _.cookie.remove(this.name, true);
+
+        if (old_cookie) {
+          this.register_once(old_cookie);
+        }
+      }
+    }
+    // 数据保存到本地
+
+  }, {
+    key: 'save',
+    value: function save() {
+      // disabled配置为true, 数据不保存到本地
+      if (this.disabled) {
+        return;
+      }
+      this.storage.set(this['name'], _.JSONEncode(this['props']), this.expire_days, this.cross_subdomain, this.secure);
+    }
+    /**
+     * 缓存指定的数据，同时将该数据保存到本地
+     * @param {Object} props 
+     * @param {Number} days
+     * @returns {Boolean} 返回true表示成功
+     */
+
+  }, {
+    key: 'register',
+    value: function register(props, days) {
+      console.log('注册');
+      if (_.isObject(props)) {
+        this.expire_days = typeof days === 'undefined' ? this.default_expiry : days;
+        _.extend(this['props'], props);
+        this.save();
+        return true;
+      }
+      return false;
+    }
+    /**
+     * 只缓存一次指定的数据，下次设置该数据时不会覆盖前一次数据
+     * 若想更新已设置的属性值，那么default_value参数值要等于本地缓存数据中需重置的属性的值(默认值)
+     * this['props'][prop] === default_value   prop为需更新的属性
+     * @param {Object} props
+     * @param {*} default_value
+     * @param {Number} days
+     * @returns {Boolean} 返回true表示成功
+     */
+
+  }, {
+    key: 'register_once',
+    value: function register_once(props, default_value, days) {
+      if (_.isObject(props)) {
+        if (typeof default_value === 'undefined') {
+          default_value = 'None';
+        }
+        this.expire_days = typeof days === 'undefined' ? this.default_expiry : days;
+
+        _.each(props, function (val, prop) {
+          if (!this['props'][prop] || this['props'][prop] === default_value) {
+            this['props'][prop] = val;
+          }
+        }, this);
+
+        this.save();
+        return true;
+      }
+      return false;
+    }
+    /**
+     * 移除指定的缓存数据，同时也清除本地的对应数据
+     * @param {string} prop
+     */
+
+  }, {
+    key: 'unregister',
+    value: function unregister(prop) {
+      if (prop in this['props']) {
+        delete this['props'][prop];
+        this.save();
+      }
+    }
+    /**
+     * 设置一个事件计时器，记录用户触发指定事件需要的时间，同时保存到本地
+     * @param {String} event_name 该计时器的名称
+     * @param {Date} timestamp 该计时器开始时间戳
+     */
+
+  }, {
+    key: 'set_event_timer',
+    value: function set_event_timer(event_name, timestamp) {
+      var timers = this['props']['costTime'] || {};
+      timers[event_name] = timestamp;
+      this['props']['costTime'] = timers;
+      this.save();
+    }
+    /**
+     * 移除指定计时器，同时将本地存储的该计时器信息清除
+     * @param {String} event_name
+     * @returns {Date} 返回移除该计时器的时间戳
+     */
+
+  }, {
+    key: 'remove_event_timer',
+    value: function remove_event_timer(event_name) {
+      var timers = this['props']['costTime'] || {};
+      var timestamp = timers[event_name];
+      if (!_.isUndefined(timestamp)) {
+        delete this['props']['costTime'][event_name];
+        this.save();
+      }
+      return timestamp;
+    }
+  }]);
+  return LOCAL_STORAGE;
+}();
+
+/**
+ * 单页面模块
+ */
+function on(obj, event, callFn) {
+  if (obj[event]) {
+    var fn = obj[event];
+    obj[event] = function () {
+      var args = Array.prototype.slice.call(arguments);
+      callFn.apply(this, args);
+      fn.apply(this, args);
+    };
+  } else {
+    obj[event] = function () {
+      var args = Array.prototype.slice.call(arguments);
+      callFn.apply(this, args);
+    };
+  }
+}
+
+function getPath() {
+  return location.pathname + location.search;
+}
+
+var SPA = {
+  config: {
+    mode: 'hash',
+    track_replace_state: false,
+    callback_fn: function callback_fn() {}
+  },
+  init: function init(config) {
+    this.config = _.extend(this.config, config || {});
+    this.path = getPath();
+    this.url = document.URL;
+    this.event();
+  },
+  event: function event() {
+    if (this.config.mode === 'history') {
+      if (!history.pushState || !window.addEventListener) return;
+      on(history, 'pushState', this.pushStateOverride.bind(this));
+      on(history, 'replaceState', this.replaceStateOverride.bind(this));
+      window.addEventListener('popstate', this.handlePopState.bind(this));
+    } else if (this.config.mode === 'hash') {
+      _.register_hash_event(this.handleHashState.bind(this));
+    }
+  },
+  pushStateOverride: function pushStateOverride() {
+    this.handleUrlChange(true);
+  },
+  replaceStateOverride: function replaceStateOverride() {
+    this.handleUrlChange(false);
+  },
+  handlePopState: function handlePopState() {
+    this.handleUrlChange(true);
+  },
+  handleHashState: function handleHashState() {
+    this.handleUrlChange(true);
+  },
+  handleUrlChange: function handleUrlChange(historyDidUpdate) {
+    var _this = this;
+
+    setTimeout(function () {
+      if (_this.config.mode === 'hash') {
+        if (_.isFunction(_this.config.callback_fn)) {
+          _this.config.callback_fn.call();
+          _.innerEvent.trigger('singlePage:change', {
+            oldUrl: _this.url,
+            nowUrl: document.URL
+          });
+          _this.url = document.URL;
+        }
+      } else if (_this.config.mode === 'history') {
+        var oldPath = _this.path;
+        var newPath = getPath();
+        if (oldPath != newPath && _this.shouldTrackUrlChange(newPath, oldPath)) {
+          _this.path = newPath;
+          if (historyDidUpdate || _this.config.track_replace_state) {
+            if (typeof _this.config.callback_fn === 'function') {
+              _this.config.callback_fn.call();
+              _.innerEvent.trigger('singlePage:change', {
+                oldUrl: _this.url,
+                nowUrl: document.URL
+              });
+              _this.url = document.URL;
+            }
+          }
+        }
+      }
+    }, 0);
+  },
+  shouldTrackUrlChange: function shouldTrackUrlChange(newPath, oldPath) {
+    return !!(newPath && oldPath);
+  }
+};
+
+var CHANNEL = function () {
+  function CHANNEL(instance) {
+    classCallCheck(this, CHANNEL);
+
+    this.instance = instance;
+    // 渠道推广的参数信息
+    this.channel_params = {};
+    this.cookie_name = 'smart_' + this.instance._get_config('token') + '_c';
+    this._set_channel_params();
+  }
+  // 转变参数(TODO)
+
+
+  createClass(CHANNEL, [{
+    key: '_change',
+    value: function _change() {}
+    // 从url 或 本地cookie 拿取推广信息
+
+  }, {
+    key: '_set_channel_params',
+    value: function _set_channel_params() {
+      // 从url上拿取，此时还需保存到本地cookie
+      if (this._check_chennel()) {
+        this.channel_params = this._url_channel_params();
+        this._save();
+      } else {
+        // 从本地cookie拿取
+        var cookie = _.cookie.get(this.cookie_name);
+        if (cookie) {
+          this.channel_params = _.JSONDecode(cookie);
+        }
+      }
+    }
+    // 得到url上推广的参数信息
+
+  }, {
+    key: '_url_channel_params',
+    value: function _url_channel_params() {
+      var channel_keywords = 'utm_source utm_medium utm_campaign utm_content utm_term promotional_id'.split(' ');
+      var val = '';
+      var params = {};
+      _.each(channel_keywords, function (key) {
+        val = _.getQueryParam(document.URL, key);
+        if (val) {
+          params[key] = val;
+        }
+      });
+      return params;
+    }
+    // 检测是否为渠道推广
+
+  }, {
+    key: '_check_chennel',
+    value: function _check_chennel() {
+      var params = this._url_channel_params();
+      var is_channel = false;
+      if (params.utm_source && params.utm_medium && params.utm_campaign && params.promotional_id) {
+        is_channel = true;
+      }
+      return is_channel;
+    }
+    // 将推广参数值保存到客户端本地的cookie，30天后失效
+
+  }, {
+    key: '_save',
+    value: function _save() {
+      if (this._check_chennel()) {
+        _.cookie.set(this.cookie_name, _.JSONEncode(this.channel_params), 30, this.instance._get_config('local_storage').cross_subdomain_cookie);
+      }
+    }
+    // 检测是否要上报广告点击事件
+    // 条件： 1. 必须是渠道推广；2. 必须有 referrer；3. 当前打开的页面url必须是对外推广的url（有短链和长链）, 表现为当前url上的参数无 t_re(turn_redirect) 字段值；
+    // 其它说明：一般情况下对外推广的链接是短链（不一定跟落地页域名一致），但有些渠道不支持，那么只能使用长链（落地页url+ 推广参数）
+
+  }, {
+    key: 'check_ad_click',
+    value: function check_ad_click() {
+      var is_ad_click = false;
+      var t_re = _.getQueryParam(document.URL, 't_re');
+      if (this._check_chennel()) {
+        if (document.referrer && !t_re) {
+          is_ad_click = true;
+        }
+      }
+      return is_ad_click;
+    }
+    // 返回参数
+
+  }, {
+    key: 'get_channel_params',
+    value: function get_channel_params() {
+      this._set_channel_params();
+      var params = {
+        utmSource: this.channel_params.utm_source,
+        utmMedium: this.channel_params.utm_medium,
+        promotionalID: this.channel_params.promotional_id,
+        utmCampaign: this.channel_params.utm_campaign,
+        utmContent: this.channel_params.utm_content,
+        utmTerm: this.channel_params.utm_term
+      };
+      return _.deleteEmptyProperty(params);
+    }
+  }]);
+  return CHANNEL;
+}();
+
+/**
+ * 远程拉取js插件，包含：可视化埋点（圈选）元素、热力图展示、可视化实验（样式配置）、debug展示
+ * 
+ * 按需拉取插件规则（根据当前页的url上参数确定拉取）：
+ * 
+ * 1.可视化埋点圈选元素：当前页url 上含有 'smart_auto_visualization_token' 字段且值存在（该token是保存信息的凭证）
+ * 2. 其它待定
+ */
+
+var LOAD_CONTROL_JS = function () {
+  function LOAD_CONTROL_JS(instance) {
+    classCallCheck(this, LOAD_CONTROL_JS);
+
+    this.instance = instance;
+    this._load_js();
+  }
+
+  createClass(LOAD_CONTROL_JS, [{
+    key: '_load_js',
+    value: function _load_js() {}
+    // 拉取可视化埋点（圈选）插件
+
+  }, {
+    key: '_load_visualization',
+    value: function _load_visualization() {}
+  }, {
+    key: 'is_visualization',
+    value: function is_visualization() {}
+  }]);
+  return LOAD_CONTROL_JS;
+}();
+
+var SMARTLib = function () {
+  /**
+   *
+   * @param {String} token 上报数据凭证
+   * @param {Object} config sdk客户端配置
+   */
+  function SMARTLib(token, config) {
+    classCallCheck(this, SMARTLib);
+
+    this["__loaded"] = true;
+    this._ = _;
+    this["config"] = {};
+    this._set_config(_.extend({}, DEFAULT_CONFIG, CONFIG, config, { token: token }));
+    this["local_storage"] = new LOCAL_STORAGE(this["config"]);
+    // 运行钩子函数
+    this._loaded();
+    // 实例化拉取远程库对象（按需加载）
+    this["load_control_js"] = new LOAD_CONTROL_JS(this);
+    // 实例化事件对象
+    this["event"] = new EVENT_TRACK(this);
+    // 实例化用户对象
+    this["user"] = new USER_TRACK(this);
+    // 实例化渠道跟踪对象
+    this["channel"] = new CHANNEL(this);
+    // 设置设备凭证
+    this._set_device_id();
+
+    // 上报广告点击事件
+    if (this["channel"].check_ad_click()) {
+      this._ad_click();
+    }
+
+    this._track_pv();
+
+    // persistedTime 首次访问应用时间
+    this["local_storage"].register_once({ persistedTime: new Date().getTime() }, "");
+    // 单页面
+    if (this._get_config("SPA").is) {
+      this._SPA();
+    }
+  }
+  // 广告点击事件
+
+
+  createClass(SMARTLib, [{
+    key: "_ad_click",
+    value: function _ad_click() {
+      this.track_event("smart_ad_click");
+    }
+    // 内部使用的PV方法
+
+  }, {
+    key: "_track_pv",
+    value: function _track_pv(properties, callback) {
+      // 配置为自动触发PV事件
+      if (this._get_config("pageview")) {
+        this["event"].track_pv(properties, callback);
+      } else {
+        // 若没有自动触发事件，还需检测session (说明：当触发PV 时，实际已经检测了session)
+        this["event"]._session();
+      }
+    }
+    // 单页面应用（影响PV）
+
+  }, {
+    key: "_SPA",
+    value: function _SPA() {
+      var _this = this;
+
+      SPA.init({
+        mode: this._get_config("SPA").mode,
+        callback_fn: function callback_fn() {
+          _this._track_pv();
+        }
+      });
+    }
+    /**
+     * 设置配置
+     * @param {Object} config
+     */
+
+  }, {
+    key: "_set_config",
+    value: function _set_config(config) {
+      if (_.isObject(config)) {
+        this["config"] = _.extend(this["config"], config);
+        CONFIG.DEBUG = CONFIG.DEBUG || this._get_config("debug");
+      }
+    }
+    /**
+     * 获取某个配置
+     * @param {String} prop_name
+     * @returns {*}
+     */
+
+  }, {
+    key: "_get_config",
+    value: function _get_config(prop_name) {
+      return this["config"][prop_name];
+    }
+    // sdk初始化之前触发的钩子函数，该方法必须在初始化子模块前以及上报数据前使用
+
+  }, {
+    key: "_loaded",
+    value: function _loaded() {
+      try {
+        this._get_config("loaded")(this);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    /**
+     * 设置本地设备凭证
+     * 若是首次访问（本地无设备凭证），上报用户首次访问网站事件
+     */
+
+  }, {
+    key: "_set_device_id",
+    value: function _set_device_id() {
+      var track_data = {};
+      if (!this.get_device_id()) {
+        this["local_storage"].register_once({ deviceId: _.UUID() }, "");
+        track_data = this.track_event("smart_activate");
+      }
+      return track_data;
+    }
+
+    // 获取唯一凭证（设备标记）
+
+  }, {
+    key: "get_device_id",
+    value: function get_device_id() {
+      return this.get_property("deviceId");
+    }
+    // 获取指定本地存储属性（缓存和本地）
+
+  }, {
+    key: "get_property",
+    value: function get_property(prop_name) {
+      console.log(this["local_storage"]);
+      return this["local_storage"]["props"][prop_name];
+    }
+    /**
+     * 设置一个指定事件的耗时监听器
+     * @param {String} event_name
+     */
+
+  }, {
+    key: "time_event",
+    value: function time_event(event_name) {
+      this["event"].time_event(event_name);
+    }
+    /**
+     * 发送PV事件，在此之前检测session
+     * @param {Object} properties  pv属性
+     * @param {*} callback
+     */
+
+  }, {
+    key: "track_pv",
+    value: function track_pv(properties, callback) {
+      this["event"].track_pv(properties, callback);
+    }
+    /**
+     * 追踪事件（上报用户事件触发数据）
+     * @param {String} event_name 事件名称（必须）
+     * @param {Object} properties 事件属性
+     * @param {Function} callback 上报后的回调方法
+     * @param {String} event_type 自定义事件类型
+     * @returns {Object} track_data 上报的数据
+     */
+
+  }, {
+    key: "track_event",
+    value: function track_event(event_name, properties, callback, event_type) {
+      this["event"].track(event_name, properties, callback, event_type);
+    }
+    /**
+     * 设置事件自定义通用属性
+     * 成功设置事件通用属性后，再通过 track_event: 追踪事件时，事件通用属性会被添加进每个事件中。
+     * 重复调用 register_event_super_properties: 会覆盖之前已设置的通用属性。
+     */
+
+  }, {
+    key: "register_event_super_properties",
+    value: function register_event_super_properties(prop, to) {
+      var set_props = {};
+      var super_properties = this.get_property("superProperties");
+      if (_.isObject(prop)) {
+        _.each(prop, function (v, k) {
+          set_props[k] = v;
+        });
+      } else {
+        set_props[prop] = to;
+      }
+      // 注意合并顺序
+      super_properties = _.extend({}, super_properties, set_props);
+      this["local_storage"].register({
+        superProperties: super_properties
+      });
+    }
+    /**
+     * 设置事件自定义通用属性
+     * 成功设置事件通用属性后，再通过 track_event: 追踪事件时，事件通用属性会被添加进每个事件中。
+     * 不覆盖之前已经设定的通用属性。
+     */
+
+  }, {
+    key: "register_event_super_properties_once",
+    value: function register_event_super_properties_once(prop, to) {
+      var set_props = {};
+      var super_properties = this.get_property("superProperties");
+      if (_.isObject(prop)) {
+        _.each(prop, function (v, k) {
+          set_props[k] = v;
+        });
+      } else {
+        set_props[prop] = to;
+      }
+      // 注意合并顺序
+      super_properties = _.extend({}, set_props, super_properties);
+      this["local_storage"].register({
+        superProperties: super_properties
+      });
+    }
+    /**
+     * 删除指定通用事件属性
+     * @param {String} prop_name
+     */
+
+  }, {
+    key: "unregister_event_super_properties",
+    value: function unregister_event_super_properties(prop_name) {
+      if (_.isString(prop_name)) {
+        var super_properties = this.get_property("superProperties");
+        if (_.isObject(super_properties)) {
+          delete super_properties[prop_name];
+          this["local_storage"].register({
+            superProperties: super_properties
+          });
+        }
+      }
+    }
+    /**
+     * 清除本地已设置的通用事件属性
+     */
+
+  }, {
+    key: "clear_event_super_properties",
+    value: function clear_event_super_properties() {
+      this["local_storage"].register({
+        superProperties: {}
+      });
+    }
+    /**
+     * 查看当前已设置的通用事件属性
+     */
+
+  }, {
+    key: "current_event_super_properties",
+    value: function current_event_super_properties() {
+      return this.get_property("superProperties");
+    }
+    /**
+     * 用户登录和注册时调用
+     * @param {String} user_id
+     */
+
+  }, {
+    key: "login",
+    value: function login(user_id) {
+      this["event"].login(user_id);
+    }
+    // 清除本地用户信息，退出用户（选则调用）,建议平台网站不必调用（无需匿名用户的平台）
+
+  }, {
+    key: "logout",
+    value: function logout() {
+      this["event"].logout();
+    }
+  }]);
+  return SMARTLib;
+}();
+
+var LoaderSync = function () {
+  function LoaderSync() {
+    classCallCheck(this, LoaderSync);
+
+    window["smart"] = {
+      instance: this
+    };
+  }
+
+  createClass(LoaderSync, [{
+    key: "init",
+    value: function init(token, config) {
+      if (this["__loaded"]) {
+        return;
+      }
+      console.log(this);
+      this.instance = new SMARTLib(token, config);
+      this.instance.init = this["init"];
+      window["smart"]["instance"] = this.instance;
+    }
+  }]);
+  return LoaderSync;
+}();
+
+var index = new LoaderSync();
+
+module.exports = index;
 //# sourceMappingURL=index.js.map

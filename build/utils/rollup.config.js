@@ -30,7 +30,7 @@ const plugins = [
   babel({
     exclude: "node_modules/**" // 仅仅转译我们的源码
   }),
-  uglify()
+//   uglify()
 ];
 
 module.exports = {

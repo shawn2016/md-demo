@@ -165,7 +165,7 @@ const _ = {
     }
 
     _.each(formdata, function(val, key) {
-        use_val = encodeURIComponent(val.toString());
+        use_val = encodeURIComponent(val&&val.toString());
         use_key = encodeURIComponent(key);
         tmp_arr[tmp_arr.length] = use_key + '=' + use_val;
     });
