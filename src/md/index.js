@@ -1,4 +1,3 @@
-/*eslint-disable */
 import { CONFIG, DEFAULT_CONFIG } from "./config";
 
 import { _, console } from "./utils";
