@@ -140,7 +140,6 @@ class LOCAL_STORAGE {
    * @returns {Boolean} 返回true表示成功
    */
   register(props, days) {
-      console.log('注册')
     if (_.isObject(props)) {
       this.expire_days = ( typeof days === 'undefined' ) ? this.default_expiry : days;
       _.extend(this['props'], props);

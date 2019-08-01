@@ -127,7 +127,6 @@ class SMARTLib {
   }
   // 获取指定本地存储属性（缓存和本地）
   get_property(prop_name) {
-      console.log(this["local_storage"])
     return this["local_storage"]["props"][prop_name];
   }
   /**
@@ -239,12 +238,9 @@ class SMARTLib {
     this["event"].logout();
   }
 }
-
 class LoaderSync {
   constructor() {
-    window["smart"] = {
-      instance: this
-    };
+    window["smart"] = this.instance;
   }
   init(token, config) {
     if (this["__loaded"]) {
@@ -253,8 +249,7 @@ class LoaderSync {
     console.log(this);
     this.instance = new SMARTLib(token, config);
     this.instance.init = this["init"];
-    window["smart"]["instance"] = this.instance;
+    window["smart"] = this.instance;
   }
 }
-
 export default new LoaderSync();
