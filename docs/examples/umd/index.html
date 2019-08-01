@@ -14,8 +14,9 @@
                 is: true,
                 mode: 'hash'
             },
-            // pageview: false,
+            pageview: true,
             debug: true,
+            isBpoint: true,
             loaded: function (sdk) {
                 sdk.register_event_super_properties({ test: '事件通用属性' });
             }

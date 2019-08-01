@@ -1081,21 +1081,21 @@ detector = parse(userAgent$1 + " " + appVersion + " " + vendor);
 var detector$1 = detector;
 
 var win = void 0;
-if (typeof window === 'undefined') {
+if (typeof window === "undefined") {
   win = {
     navigator: {
-      userAgent: ''
+      userAgent: ""
     },
     location: {
-      pathname: '',
-      href: ''
+      pathname: "",
+      href: ""
     },
     document: {
-      URL: ''
+      URL: ""
     },
     screen: {
-      width: '',
-      height: ''
+      width: "",
+      height: ""
     }
   };
 } else {
@@ -1144,7 +1144,7 @@ var _ = {
     return obj === void 0;
   },
   isArguments: function isArguments(obj) {
-    return !!(obj && hasOwnProperty.call(obj, 'callee'));
+    return !!(obj && hasOwnProperty.call(obj, "callee"));
   },
   toArray: function toArray(iterable) {
     if (!iterable) {
@@ -1186,14 +1186,14 @@ var _ = {
     try {
       return JSON.stringify(json);
     } catch (error) {
-      return '';
+      return "";
     }
   },
 
   // 判断类型是否为function
   isFunction: function isFunction(fn) {
     var bool = false;
-    if (typeof fn === 'function') {
+    if (typeof fn === "function") {
       bool = true;
     }
     return bool;
@@ -1202,13 +1202,13 @@ var _ = {
     return base64Encode(str);
   },
   sha1: function sha1$$1(str) {
-    return '';
+    return "";
   },
 
   // 对象的字段值截取
   truncate: function truncate(obj, length) {
     var ret = void 0;
-    if (typeof obj === 'string') {
+    if (typeof obj === "string") {
       ret = obj.slice(0, length);
     } else if (_.isArray(obj)) {
       ret = [];
@@ -1226,10 +1226,10 @@ var _ = {
     return ret;
   },
   isNumber: function isNumber(obj) {
-    return Object.prototype.toString.call(obj) == '[object Number]';
+    return Object.prototype.toString.call(obj) == "[object Number]";
   },
   isString: function isString(str) {
-    return Object.prototype.toString.call(str) == '[object String]';
+    return Object.prototype.toString.call(str) == "[object String]";
   },
   HTTPBuildQuery: function HTTPBuildQuery(formdata, arg_separator) {
     var use_val = void 0,
@@ -1237,13 +1237,13 @@ var _ = {
         tmp_arr = [];
 
     if (_.isUndefined(arg_separator)) {
-      arg_separator = '&';
+      arg_separator = "&";
     }
 
     _.each(formdata, function (val, key) {
       use_val = encodeURIComponent(val && val.toString());
       use_key = encodeURIComponent(key);
-      tmp_arr[tmp_arr.length] = use_key + '=' + use_val;
+      tmp_arr[tmp_arr.length] = use_key + "=" + use_val;
     });
 
     return tmp_arr.join(arg_separator);
@@ -1272,7 +1272,7 @@ var _ = {
   // 返回指定url的域名
   // 若不传入url，返回当前网页的域名
   getHost: function getHost(url) {
-    var host = '';
+    var host = "";
     if (!url) {
       url = document.URL;
     }
@@ -1286,14 +1286,14 @@ var _ = {
 
   // 获取url上指定参数的值
   getQueryParam: function getQueryParam(url, param) {
-    var target = param.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
-    var regexS = '[\\?&]' + target + '=([^&#]*)';
+    var target = param.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regexS = "[\\?&]" + target + "=([^&#]*)";
     var regex = new RegExp(regexS);
     var results = regex.exec(url);
-    if (results === null || results && typeof results[1] !== 'string' && results[1].length) {
-      return '';
+    if (results === null || results && typeof results[1] !== "string" && results[1].length) {
+      return "";
     } else {
-      return decodeURIComponent(results[1]).replace(/\+/g, ' ');
+      return decodeURIComponent(results[1]).replace(/\+/g, " ");
     }
   },
 
@@ -1313,7 +1313,7 @@ var _ = {
   }
 };
 _.isArray = Array.isArray || function (obj) {
-  return Object.prototype.toString.apply(obj) === '[object Array]';
+  return Object.prototype.toString.apply(obj) === "[object Array]";
 };
 
 _.loadScript = function (para) {
@@ -1321,25 +1321,25 @@ _.loadScript = function (para) {
     success: function success() {},
     error: function error() {},
     appendCall: function appendCall(g) {
-      document.getElementsByTagName('head')[0].appendChild(g);
+      document.getElementsByTagName("head")[0].appendChild(g);
     }
   }, para);
 
   var g = null;
-  if (para.type === 'css') {
-    g = document.createElement('link');
-    g.rel = 'stylesheet';
+  if (para.type === "css") {
+    g = document.createElement("link");
+    g.rel = "stylesheet";
     g.href = para.url;
   }
-  if (para.type === 'js') {
-    g = document.createElement('script');
-    g.async = 'async';
-    g.setAttribute('charset', 'UTF-8');
+  if (para.type === "js") {
+    g = document.createElement("script");
+    g.async = "async";
+    g.setAttribute("charset", "UTF-8");
     g.src = para.url;
-    g.type = 'text/javascript';
+    g.type = "text/javascript";
   }
   g.onload = g.onreadystatechange = function () {
-    if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+    if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
       para.success();
       g.onload = g.onreadystatechange = null;
     }
@@ -1369,14 +1369,14 @@ _.register_event = function () {
    */
   var register_event = function register_event(element, type, handler, oldSchool, useCapture) {
     if (!element) {
-      console.error('No valid element provided to register_event');
+      console.error("No valid element provided to register_event");
       return;
     }
 
     if (element.addEventListener && !oldSchool) {
       element.addEventListener(type, handler, !!useCapture);
     } else {
-      var ontype = 'on' + type;
+      var ontype = "on" + type;
       var old_handler = element[ontype]; // can be undefined
       element[ontype] = makeHandler(element, handler, old_handler);
     }
@@ -1431,22 +1431,22 @@ _.register_event = function () {
 }();
 
 _.register_hash_event = function (callback) {
-  _.register_event(window, 'hashchange', callback);
+  _.register_event(window, "hashchange", callback);
 };
 
 // 客户端基本属性
 _.info = {
   domain: function domain(referrer) {
-    var split = referrer.split('/');
+    var split = referrer.split("/");
     if (split.length >= 3) {
       return split[2];
     }
-    return '';
+    return "";
   },
 
   // 设备型号
   deviceModel: function deviceModel() {
-    var deviceModel = '';
+    var deviceModel = "";
     if (device.android()) {
       var sss = win.navigator.userAgent.split(";");
       var i = sss.indexOf("Build/");
@@ -1455,26 +1455,26 @@ _.info = {
       }
     } else if (device.ios()) {
       if (device.iphone()) {
-        deviceModel = 'iPhone';
+        deviceModel = "iPhone";
       }
     }
     return deviceModel;
   },
   properties: function properties() {
     var windowsOs = {
-      '5.0': 'Win2000',
-      '5.1': 'WinXP',
-      '5.2': 'Win2003',
-      '6.0': 'WindowsVista',
-      '6.1': 'Win7',
-      '6.2': 'Win8',
-      '6.3': 'Win8.1',
-      '10.0': 'Win10'
+      "5.0": "Win2000",
+      "5.1": "WinXP",
+      "5.2": "Win2003",
+      "6.0": "WindowsVista",
+      "6.1": "Win7",
+      "6.2": "Win8",
+      "6.3": "Win8.1",
+      "10.0": "Win10"
     };
     var devicePlatform = device.type;
     var deviceModel = _.trim(this.deviceModel());
     var isWindows = device.windows();
-    var deviceOsVersion = detector$1.os.name + ' ' + detector$1.os.fullVersion;
+    var deviceOsVersion = detector$1.os.name + " " + detector$1.os.fullVersion;
     if (isWindows) {
       if (windowsOs[detector$1.os.fullVersion]) {
         deviceOsVersion = windowsOs[detector$1.os.fullVersion];
@@ -1494,9 +1494,9 @@ _.info = {
       // 浏览器版本
       browserVersion: detector$1.browser.fullVersion,
       // 页面标题
-      title: win.document.title || '',
+      title: win.document.title || "",
       // 页面路径
-      urlPath: win.location.pathname || '',
+      urlPath: win.location.pathname || "",
       // 页面url
       currentUrl: document.URL,
       // 域名
@@ -1506,7 +1506,7 @@ _.info = {
       // referrer 域名
       referringDomain: this.domain(win.document.referrer),
       // 本地语言
-      language: win.navigator.language || '',
+      language: win.navigator.language || "",
       // 客户端分辨率 width
       screenWidth: win.screen.width,
       // 客户端分辨率 height
@@ -1520,6 +1520,7 @@ _.innerEvent = {
   /**
    * 订阅
    *  */
+
   on: function on(key, fn) {
     if (!this._list) {
       this._list = {};
@@ -1550,7 +1551,7 @@ _.innerEvent = {
       return;
     }
     for (var i = 0; i < arrFn.length; i++) {
-      if (typeof arrFn[i] == 'function') {
+      if (typeof arrFn[i] == "function") {
         arrFn[i].apply(this, args);
       }
     }
@@ -1559,10 +1560,10 @@ _.innerEvent = {
 
 // 发送数据
 _.sendRequest = function (url, type, data, callback) {
-  data['_'] = new Date().getTime().toString();
-  if (type === 'img') {
-    url += '?' + _.HTTPBuildQuery(data);
-    var img = document.createElement('img');
+  data["_"] = new Date().getTime().toString();
+  if (type === "img") {
+    url += "?" + _.HTTPBuildQuery(data);
+    var img = document.createElement("img");
     img.src = url;
     img.width = 1;
     img.height = 1;
@@ -1578,10 +1579,10 @@ _.sendRequest = function (url, type, data, callback) {
     img.onabort = function () {
       this.onabort = null;
     };
-  } else if (type === 'get') {
-    url += '?' + _.HTTPBuildQuery(data);
+  } else if (type === "get") {
+    url += "?" + _.HTTPBuildQuery(data);
     _.ajax.get(url, callback);
-  } else if (type === 'post') {
+  } else if (type === "post") {
     _.ajax.get(url, data, callback);
   }
 };
@@ -1592,18 +1593,22 @@ _.ajax = {
     that.callback = callback || function (params) {};
     try {
       var req = new XMLHttpRequest();
-      req.open('POST', url, true);
+      req.open("POST", url, true);
       req.setRequestHeader("Content-type", "application/json");
       req.withCredentials = true;
       req.ontimeout = function () {
-        that.callback({ status: 0, error: true, message: 'request ' + url + ' time out' });
+        that.callback({
+          status: 0,
+          error: true,
+          message: "request " + url + " time out"
+        });
       };
       req.onreadystatechange = function () {
         if (req.readyState === 4) {
           if (req.status === 200) {
             that.callback(_.JSONDecode(req.responseText));
           } else {
-            var message = 'Bad HTTP status: ' + req.status + ' ' + req.statusText;
+            var message = "Bad HTTP status: " + req.status + " " + req.statusText;
             that.callback({ status: 0, error: true, message: message });
           }
         }
@@ -1615,7 +1620,7 @@ _.ajax = {
   get: function get(url, callback) {
     try {
       var req = new XMLHttpRequest();
-      req.open('GET', url, true);
+      req.open("GET", url, true);
       req.withCredentials = true;
       req.onreadystatechange = function () {
         if (req.readyState === 4) {
@@ -1625,7 +1630,7 @@ _.ajax = {
             }
           } else {
             if (callback) {
-              var message = 'Bad HTTP status: ' + req.status + ' ' + req.statusText;
+              var message = "Bad HTTP status: " + req.status + " " + req.statusText;
               callback({ status: 0, error: true, message: message });
             }
           }
@@ -1647,7 +1652,7 @@ _.UUID = function () {
     return d.toString(16) + i.toString(16);
   };
   var R = function R() {
-    return Math.random().toString(16).replace('.', '');
+    return Math.random().toString(16).replace(".", "");
   };
   var UA = function UA(n) {
     var ua = navigator.userAgent,
@@ -1667,7 +1672,7 @@ _.UUID = function () {
 
     for (i = 0; i < ua.length; i++) {
       ch = ua.charCodeAt(i);
-      buffer.unshift(ch & 0xFF);
+      buffer.unshift(ch & 0xff);
       if (buffer.length >= 4) {
         ret = xor(ret, buffer);
         buffer = [];
@@ -1687,9 +1692,9 @@ _.UUID = function () {
     if (se && /\d{5,}/.test(se)) {
       se = se.toString(16);
     } else {
-      se = String(Math.random() * 31242).replace('.', '').slice(0, 8);
+      se = String(Math.random() * 31242).replace(".", "").slice(0, 8);
     }
-    var val = T() + '-' + R() + '-' + UA() + '-' + se + '-' + T();
+    var val = T() + "-" + R() + "-" + UA() + "-" + se + "-" + T();
     if (val) {
       return val;
     } else {
@@ -1701,7 +1706,7 @@ _.UUID = function () {
 // 存储方法封装 localStorage  cookie
 _.localStorage = {
   error: function error(msg) {
-    console.error('localStorage error: ' + msg);
+    console.error("localStorage error: " + msg);
   },
 
   get: function get(name) {
@@ -1740,11 +1745,11 @@ _.localStorage = {
 };
 _.cookie = {
   get: function get(name) {
-    var nameEQ = name + '=';
-    var ca = document.cookie.split(';');
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(";");
     for (var i = 0; i < ca.length; i++) {
       var c = ca[i];
-      while (c.charAt(0) == ' ') {
+      while (c.charAt(0) == " ") {
         c = c.substring(1, c.length);
       }
       if (c.indexOf(nameEQ) === 0) {
@@ -1765,59 +1770,59 @@ _.cookie = {
   },
 
   set_seconds: function set_seconds(name, value, seconds, cross_subdomain, is_secure) {
-    var cdomain = '',
-        expires = '',
-        secure = '';
+    var cdomain = "",
+        expires = "",
+        secure = "";
 
     if (cross_subdomain) {
       var matches = document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),
-          domain = matches ? matches[0] : '';
+          domain = matches ? matches[0] : "";
 
-      cdomain = domain ? '; domain=.' + domain : '';
+      cdomain = domain ? "; domain=." + domain : "";
     }
 
     if (seconds) {
       var date = new Date();
       date.setTime(date.getTime() + seconds * 1000);
-      expires = '; expires=' + date.toGMTString();
+      expires = "; expires=" + date.toGMTString();
     }
 
     if (is_secure) {
-      secure = '; secure';
+      secure = "; secure";
     }
 
-    document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/' + cdomain + secure;
+    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain + secure;
   },
 
   set: function set(name, value, days, cross_subdomain, is_secure) {
-    var cdomain = '',
-        expires = '',
-        secure = '';
+    var cdomain = "",
+        expires = "",
+        secure = "";
 
     if (cross_subdomain) {
       var matches = document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),
-          domain = matches ? matches[0] : '';
+          domain = matches ? matches[0] : "";
 
-      cdomain = domain ? '; domain=.' + domain : '';
+      cdomain = domain ? "; domain=." + domain : "";
     }
 
     if (days) {
       var date = new Date();
       date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = '; expires=' + date.toGMTString();
+      expires = "; expires=" + date.toGMTString();
     }
 
     if (is_secure) {
-      secure = '; secure';
+      secure = "; secure";
     }
 
-    var new_cookie_val = name + '=' + encodeURIComponent(value) + expires + '; path=/' + cdomain + secure;
+    var new_cookie_val = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain + secure;
     document.cookie = new_cookie_val;
     return new_cookie_val;
   },
 
   remove: function remove(name, cross_subdomain) {
-    _.cookie.set(name, '', -1, cross_subdomain);
+    _.cookie.set(name, "", -1, cross_subdomain);
   }
 };
 
@@ -1838,7 +1843,7 @@ var console = {
   /** @type {function(...[*])} */
   error: function error() {
     if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
-      var args = ['DATracker error:'].concat(_.toArray(arguments));
+      var args = ["DATracker error:"].concat(_.toArray(arguments));
       try {
         windowConsole.error.apply(windowConsole, args);
       } catch (err) {
@@ -1848,6 +1853,29 @@ var console = {
       }
     }
   }
+};
+/**
+    字符串加密
+    简单的加密方法
+  */
+_.compile = function (code) {
+  var c = String.fromCharCode(code.charCodeAt(0) + code.length);
+  for (var i = 1; i < code.length; i++) {
+    c += String.fromCharCode(code.charCodeAt(i) + code.charCodeAt(i - 1));
+  }
+  return c;
+};
+
+/**
+    字符串解谜
+    对应上面的字符串加密方法
+  */
+_.uncompile = function (code) {
+  var c = String.fromCharCode(code.charCodeAt(0) - code.length);
+  for (var i = 1; i < code.length; i++) {
+    c += String.fromCharCode(code.charCodeAt(i) - c.charCodeAt(i - 1));
+  }
+  return c;
 };
 
 var USER_TRACK = function () {
@@ -2278,10 +2306,18 @@ var EVENT_TRACK = function () {
         url += "track.gif";
       }
       if (this.instance._get_config("isBpoint")) {
-        this.instance["bpoint"].push(truncated_data);
+        try {
+          this.instance["bpoint"].push(truncated_data);
+        } catch (error) {
+          _.sendRequest(url, track_type, {
+            data: _.base64Encode(_.JSONEncode(truncated_data)),
+            token: this.instance._get_config("token")
+          }, callback_fn);
+        }
       } else {
+        console.log("========", [truncated_data]);
         _.sendRequest(url, track_type, {
-          data: _.base64Encode(_.JSONEncode(truncated_data)),
+          data: _.base64Encode(_.JSONEncode([truncated_data])),
           token: this.instance._get_config("token")
         }, callback_fn);
       }
@@ -2788,7 +2824,7 @@ var BPOINT = function () {
 
     this._queueSending = false; //是否在队列递归发送栈帧
 
-    this._infoConf = { ver: "0.1.3" }; //环境信息
+    // this._infoConf = { ver: "0.1.3" }; //环境信息
 
     this._scanStackIntervalId = null; //stack 扫描定时器的id
 
@@ -2804,17 +2840,17 @@ var BPOINT = function () {
   createClass(BPOINT, [{
     key: "_oldDataCheck",
     value: function _oldDataCheck() {
-      var oldData = _.localStorage.set("_bp_wqueue");
+      var oldData = _.localStorage.get("_bp_wqueue");
       if (oldData != null && oldData != "") {
         try {
           oldData = eval("(" + oldData + ")");
-          if (oldData instanceof Array && oldData.length > 0) {
+          if (_.isArray(oldData) && oldData.length > 0) {
             var sendData = {};
-            sendData.ic = _.localStorage.set("_bp_infoConf");
-            sendData.ic = eval("(" + sendData.ic + ")");
+            sendData = _.localStorage.set("_bp_infoConf");
+            sendData = eval("(" + sendData + ")");
 
             for (; oldData.length > 0;) {
-              sendData.il = oldData.pop();
+              sendData = oldData.pop();
               //数据发送
               //发送栈帧+环境配置信息
               this._sendByImg(sendData);
@@ -2842,7 +2878,6 @@ var BPOINT = function () {
           clearInterval(this._scanStackIntervalId);
         }
         this._scanStackIntervalId = setInterval(function () {
-          console.log("开始扫描--scanStack");
           _this.stack2queue();
         }, t * 1000);
       } else {
@@ -2884,8 +2919,7 @@ var BPOINT = function () {
       console.log("send stack(queue pop):");
 
       var sendData = {};
-      sendData.ic = this._infoConf;
-      sendData.il = stack;
+      sendData = stack;
 
       //数据发送
       //发送栈帧+环境配置信息
@@ -2894,6 +2928,7 @@ var BPOINT = function () {
   }, {
     key: "_sendByImg",
     value: function _sendByImg(truncated_data) {
+      console.log("truncated_data", truncated_data);
       var url = this.instance._get_config("track_url");
       var track_type = this.instance._get_config("track_type");
       if (track_type === "img") {
@@ -2932,6 +2967,7 @@ var BPOINT = function () {
   }, {
     key: "stack2queue",
     value: function stack2queue() {
+      console.log("开始扫描--scanStack");
       var is = this._infoStack;
       // if (window._sxfmt && window._sxfmt.length > 0) {
       //   console.log("_sxfmt.length=" + _sxfmt.length);
@@ -2947,6 +2983,7 @@ var BPOINT = function () {
         this._queueSave(is);
         this._infoStack = [];
       } else {
+        console.log("关闭扫描--_scanStackInterval");
         clearInterval(this._scanStackIntervalId);
       }
     }
@@ -2973,7 +3010,6 @@ var BPOINT = function () {
     key: "send",
     value: function send() {
       if (this._waitSendQueue.length == 0 || this._queueSending) {
-        clearInterval(this._scanWaitSendQqueueIntervalId);
         return;
       }
 
@@ -2991,6 +3027,7 @@ var BPOINT = function () {
       console.log("start send");
       console.log("waitSendQueue length=" + this._waitSendQueue.length);
       if (this._waitSendQueue.length == 0) {
+        console.log("关闭等待发送--_scanWaitSendQqueueInterval");
         clearInterval(this._scanWaitSendQqueueIntervalId);
         this._queueSending = false;
         return;
@@ -3063,6 +3100,13 @@ var LOAD_CONTROL_JS = function () {
   return LOAD_CONTROL_JS;
 }();
 
+// 用户属性追踪
+// 用户事件追踪
+// 本地存储
+// 单页面
+// 渠道跟踪
+// 断点发送
+// 远程拉取js文件（插件，具体内容请查看该文件）
 var SMARTLib = function () {
   /**
    *
@@ -3361,7 +3405,7 @@ var LoaderSync = function () {
   function LoaderSync() {
     classCallCheck(this, LoaderSync);
 
-    window["smart"] = this.instance;
+    window["smart"] = this;
   }
 
   createClass(LoaderSync, [{

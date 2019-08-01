@@ -10,7 +10,7 @@ class BPOINT {
 
     this._queueSending = false; //是否在队列递归发送栈帧
 
-    this._infoConf = { ver: "0.1.3" }; //环境信息
+    // this._infoConf = { ver: "0.1.3" }; //环境信息
 
     this._scanStackIntervalId = null; //stack 扫描定时器的id
 
@@ -22,17 +22,17 @@ class BPOINT {
    * @private
    */
   _oldDataCheck() {
-    var oldData = _.localStorage.set("_bp_wqueue");
+    var oldData = _.localStorage.get("_bp_wqueue");
     if (oldData != null && oldData != "") {
       try {
         oldData = eval("(" + oldData + ")");
-        if (oldData instanceof Array && oldData.length > 0) {
+        if (_.isArray(oldData) && oldData.length > 0) {
           var sendData = {};
-          sendData.ic = _.localStorage.set("_bp_infoConf");
-          sendData.ic = eval("(" + sendData.ic + ")");
+          sendData = _.localStorage.set("_bp_infoConf");
+          sendData = eval("(" + sendData + ")");
 
           for (; oldData.length > 0; ) {
-            sendData.il = oldData.pop();
+            sendData = oldData.pop();
             //数据发送
             //发送栈帧+环境配置信息
             this._sendByImg(sendData);
@@ -55,7 +55,6 @@ class BPOINT {
         clearInterval(this._scanStackIntervalId);
       }
       this._scanStackIntervalId = setInterval(() => {
-        console.log("开始扫描--scanStack");
         this.stack2queue();
       }, t * 1000);
     } else {
@@ -90,14 +89,14 @@ class BPOINT {
     console.log("send stack(queue pop):");
 
     var sendData = {};
-    sendData.ic = this._infoConf;
-    sendData.il = stack;
+    sendData = stack;
 
     //数据发送
     //发送栈帧+环境配置信息
     this._sendByImg(sendData);
   }
   _sendByImg(truncated_data) {
+    console.log("truncated_data", truncated_data);
     let url = this.instance._get_config("track_url");
     const track_type = this.instance._get_config("track_type");
     if (track_type === "img") {
@@ -135,6 +134,7 @@ class BPOINT {
    * 栈帧入队列  等待被发送
    */
   stack2queue() {
+    console.log("开始扫描--scanStack");
     var is = this._infoStack;
     // if (window._sxfmt && window._sxfmt.length > 0) {
     //   console.log("_sxfmt.length=" + _sxfmt.length);
@@ -150,6 +150,7 @@ class BPOINT {
       this._queueSave(is);
       this._infoStack = [];
     } else {
+      console.log("关闭扫描--_scanStackInterval");
       clearInterval(this._scanStackIntervalId);
     }
   }
@@ -170,7 +171,6 @@ class BPOINT {
   }
   send() {
     if (this._waitSendQueue.length == 0 || this._queueSending) {
-      clearInterval(this._scanWaitSendQqueueIntervalId);
       return;
     }
 
@@ -183,6 +183,7 @@ class BPOINT {
     console.log("start send");
     console.log("waitSendQueue length=" + this._waitSendQueue.length);
     if (this._waitSendQueue.length == 0) {
+      console.log("关闭等待发送--_scanWaitSendQqueueInterval");
       clearInterval(this._scanWaitSendQqueueIntervalId);
       this._queueSending = false;
       return;

@@ -253,7 +253,7 @@ class SMARTLib {
 }
 class LoaderSync {
   constructor() {
-    window["smart"] = this.instance;
+    window["smart"] = this;
   }
   init(token, config) {
     if (this["__loaded"]) {
