@@ -20,7 +20,7 @@ class Test extends React.Component {
       },
       pageview: true,
       debug: true,
-      isBpoint: false,
+      isBpoint: true,
       loaded: function(sdk) {
         sdk.register_event_super_properties({ test: "事件通用属性" });
       }
@@ -33,7 +33,6 @@ class Test extends React.Component {
         <input
           id="userId"
           onChange={e => {
-            console.log(e);
             this.setState({
               user_id: e.target.value
             });
@@ -54,8 +53,31 @@ class Test extends React.Component {
         >
           测试退出
         </h1>
-        <h2>测试用户自定义事件</h2>
-        <p>设置用户自定义属性</p>
+        <h2
+          onClick={() => {
+            Smart.instance.track_event("buy", {
+              price: "￥123",
+              id: "xxxx-xxxx-xxxx"
+            });
+          }}
+        >
+          测试用户自定义事件
+        </h2>
+        <p
+          onClick={() => {
+            Smart.instance.user.set({
+              name: "汪洋",
+              country: "中国",
+              province: "浙江省",
+              city: "杭州市",
+              age: "100",
+              gender: "男",
+              niu: "自定义用户属性"
+            });
+          }}
+        >
+          设置用户自定义属性
+        </p>
         <a href="#22">单页面1（hash）</a>
         <a href="#33">单页面2（hash）</a>
       </div>

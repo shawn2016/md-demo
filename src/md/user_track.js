@@ -59,7 +59,7 @@ class USER_TRACK {
       truncated_data = _.truncate(data, truncateLength);
     }
 
-    console.log('上报的数据（截取后）:', JSON.stringify(truncated_data,null,"  ")); 
+    console.log(JSON.stringify(truncated_data,null,"  ")); 
     const callback_fn = (response) => {
       callback(response, data);
     };

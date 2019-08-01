@@ -309,15 +309,19 @@ class EVENT_TRACK {
     if (track_type === "img") {
       url += "track.gif";
     }
-    _.sendRequest(
-      url,
-      track_type,
-      {
-        data: _.base64Encode(_.JSONEncode(truncated_data)),
-        token: this.instance._get_config("token")
-      },
-      callback_fn
-    );
+    if (this.instance._get_config("isBpoint")) {
+      this.instance["bpoint"].push(truncated_data);
+    } else {
+      _.sendRequest(
+        url,
+        track_type,
+        {
+          data: _.base64Encode(_.JSONEncode(truncated_data)),
+          token: this.instance._get_config("token")
+        },
+        callback_fn
+      );
+    }
 
     // 当触发的事件不是这些事件(smart_session_start,smart_session_close,smart_activate)时，触发检测 session 方法
     if (

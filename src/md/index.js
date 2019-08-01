@@ -259,7 +259,6 @@ class LoaderSync {
     if (this["__loaded"]) {
       return;
     }
-    console.log(this);
     this.instance = new SMARTLib(token, config);
     this.instance.init = this["init"];
     window["smart"] = this.instance;

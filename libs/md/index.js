@@ -1912,7 +1912,7 @@ var USER_TRACK = function () {
         truncated_data = _.truncate(data, truncateLength);
       }
 
-      console.log('上报的数据（截取后）:', JSON.stringify(truncated_data, null, "  "));
+      console.log(JSON.stringify(truncated_data, null, "  "));
       var callback_fn = function callback_fn(response) {
         callback(response, data);
       };
@@ -2277,10 +2277,14 @@ var EVENT_TRACK = function () {
       if (track_type === "img") {
         url += "track.gif";
       }
-      _.sendRequest(url, track_type, {
-        data: _.base64Encode(_.JSONEncode(truncated_data)),
-        token: this.instance._get_config("token")
-      }, callback_fn);
+      if (this.instance._get_config("isBpoint")) {
+        this.instance["bpoint"].push(truncated_data);
+      } else {
+        _.sendRequest(url, track_type, {
+          data: _.base64Encode(_.JSONEncode(truncated_data)),
+          token: this.instance._get_config("token")
+        }, callback_fn);
+      }
 
       // 当触发的事件不是这些事件(smart_session_start,smart_session_close,smart_activate)时，触发检测 session 方法
       if (["smart_session_start", "smart_session_close", "smart_activate"].indexOf(event_name) === -1) {
@@ -2774,9 +2778,10 @@ var CHANNEL = function () {
 }();
 
 var BPOINT = function () {
-  function BPOINT() {
+  function BPOINT(instance) {
     classCallCheck(this, BPOINT);
 
+    this.instance = instance;
     this._infoStack = []; //信息存储栈 收集的信息将暂存到这里 等待打包移动到待发送队列
 
     this._waitSendQueue = []; //待发送队列，存储多个信息存储栈帧 等待被发送给后台
@@ -2788,7 +2793,6 @@ var BPOINT = function () {
     this._scanStackIntervalId = null; //stack 扫描定时器的id
 
     this._scanWaitSendQqueueIntervalId = null; //WaitSendQqueue 扫描定时器的id
-
     this._loadFN = []; //用于存储调用者需要在插件load时的执行的fn
   }
   /**
@@ -2813,7 +2817,7 @@ var BPOINT = function () {
               sendData.il = oldData.pop();
               //数据发送
               //发送栈帧+环境配置信息
-              //   _sendByImg({ data: sendData });
+              this._sendByImg(sendData);
             }
           }
         } catch (e) {}
@@ -2833,16 +2837,14 @@ var BPOINT = function () {
       var _this = this;
 
       if (t != null && t >= 1) {
-        var id = this._scanStackIntervalId;
-        if (id != null) {
+        if (this._scanStackIntervalId != null) {
           //如果已经存在定时器 需要先删除此定时，再创建新的定时器，防止出现重复定时器创建，最终导致内存泄露
-          clearInterval(id);
+          clearInterval(this._scanStackIntervalId);
         }
-        id = setInterval(function () {
-          console.log("scanStack", 4);
+        this._scanStackIntervalId = setInterval(function () {
+          console.log("开始扫描--scanStack");
           _this.stack2queue();
         }, t * 1000);
-        this._scanStackIntervalId = id;
       } else {
         console.log("埋点内置对象丢失,栈扫描器创建失败", 1);
         throw new ReferenceError("埋点内置对象丢失,栈扫描器创建失败");
@@ -2854,37 +2856,18 @@ var BPOINT = function () {
       var _this2 = this;
 
       if (t != null && t >= 1) {
-        var id = this._scanWaitSendQqueueIntervalId;
-        if (id != null) {
+        if (this._scanWaitSendQqueueIntervalId != null) {
           //如果已经存在定时器 需要先删除此定时，再创建新的定时器，防止出现重复定时器创建，最终导致内存泄露
-          clearInterval(id);
+          clearInterval(this._scanWaitSendQqueueIntervalId);
         }
-        id = setInterval(function () {
-          console.log("scanWaitSendQqueue", 4);
+        this._scanWaitSendQqueueIntervalId = setInterval(function () {
+          console.log("scanWaitSendQqueue");
           _this2.send();
         }, t * 1000);
       } else {
         console.log("埋点内置对象丢失,队列扫描器创建失败", 1);
         throw new ReferenceError("埋点内置对象丢失,队列扫描器创建失败");
       }
-    }
-  }, {
-    key: "_send",
-    value: function _send() {
-      var _this3 = this;
-
-      console.log("start send");
-      console.log("waitSendQueue length=" + this._waitSendQueue.length);
-      if (this._waitSendQueue.length == 0) {
-        this._queueSending = false;
-        return;
-      }
-
-      this._queueSending = true;
-      setTimeout(function () {
-        _this3.sendOldestStack();
-        _this3._send();
-      }, 500);
     }
     /**
      * 发送队列里最老的栈帧
@@ -2895,11 +2878,10 @@ var BPOINT = function () {
     value: function sendOldestStack() {
       var stack = this._waitSendQueue.pop();
       if (_.localStorage) {
-        _.localStorage.setItem("_bp_wqueue", JSON.stringify(this._waitSendQueue));
+        _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
       }
 
       console.log("send stack(queue pop):");
-      console.log(stack);
 
       var sendData = {};
       sendData.ic = this._infoConf;
@@ -2907,7 +2889,20 @@ var BPOINT = function () {
 
       //数据发送
       //发送栈帧+环境配置信息
-      _sendByImg({ data: sendData });
+      this._sendByImg(sendData);
+    }
+  }, {
+    key: "_sendByImg",
+    value: function _sendByImg(truncated_data) {
+      var url = this.instance._get_config("track_url");
+      var track_type = this.instance._get_config("track_type");
+      if (track_type === "img") {
+        url += "track.gif";
+      }
+      _.sendRequest(url, track_type, {
+        data: _.base64Encode(_.JSONEncode(truncated_data)),
+        token: this.instance._get_config("token")
+      }, function () {});
     }
     /**
      * 设置存在埋点信息的栈的大小
@@ -2938,13 +2933,12 @@ var BPOINT = function () {
     key: "stack2queue",
     value: function stack2queue() {
       var is = this._infoStack;
-
-      if (window._sxfmt && window._sxfmt.length > 0) {
-        console.log("_sxfmt.length=" + _sxfmt.length);
-        console.log(_sxfmt);
-        is = is.concat(_sxfmt);
-        window._sxfmt = [];
-      }
+      // if (window._sxfmt && window._sxfmt.length > 0) {
+      //   console.log("_sxfmt.length=" + _sxfmt.length);
+      //   console.log(_sxfmt);
+      //   is = is.concat(_sxfmt);
+      //   window._sxfmt = [];
+      // }
 
       console.log("infoStack length=" + is.length);
       if (is.length > 0) {
@@ -2952,6 +2946,17 @@ var BPOINT = function () {
 
         this._queueSave(is);
         this._infoStack = [];
+      } else {
+        clearInterval(this._scanStackIntervalId);
+      }
+    }
+  }, {
+    key: "_queueSave",
+    value: function _queueSave(is) {
+      this._waitSendQueue.push(is);
+
+      if (_.localStorage) {
+        _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
       }
     }
   }, {
@@ -2959,7 +2964,7 @@ var BPOINT = function () {
     value: function _stackSave(infoObj) {
       this._infoStack.push(infoObj);
       //检查信息栈是否已经满了
-      if (this._infoStack.length >= this._option.stackSize) {
+      if (this._infoStack.length >= CONFIG.stackSize) {
         // 如果已经满了 则送入待发送队列
         this.stack2queue();
       }
@@ -2968,6 +2973,7 @@ var BPOINT = function () {
     key: "send",
     value: function send() {
       if (this._waitSendQueue.length == 0 || this._queueSending) {
+        clearInterval(this._scanWaitSendQqueueIntervalId);
         return;
       }
 
@@ -2980,19 +2986,20 @@ var BPOINT = function () {
   }, {
     key: "_send",
     value: function _send() {
-      var _this4 = this;
+      var _this3 = this;
 
       console.log("start send");
       console.log("waitSendQueue length=" + this._waitSendQueue.length);
       if (this._waitSendQueue.length == 0) {
+        clearInterval(this._scanWaitSendQqueueIntervalId);
         this._queueSending = false;
         return;
       }
 
       this._queueSending = true;
       setTimeout(function () {
-        _this4.sendOldestStack();
-        _this4._send();
+        _this3.sendOldestStack();
+        _this3._send();
       }, 500);
     }
 
@@ -3014,8 +3021,9 @@ var BPOINT = function () {
     value: function push(infoObj) {
       if (infoObj) {
         infoObj.dateTime = new Date().getTime();
-        console.log("push success", 3);
         console.log(infoObj);
+        this._scanStack(CONFIG.stackTime);
+        this._scanWaitSendQqueue(CONFIG.queueTime);
         this._stackSave(infoObj);
       }
     }
@@ -3055,13 +3063,6 @@ var LOAD_CONTROL_JS = function () {
   return LOAD_CONTROL_JS;
 }();
 
-// 用户属性追踪
-// 用户事件追踪
-// 本地存储
-// 单页面
-// 渠道跟踪
-// 断点发送
-// 远程拉取js文件（插件，具体内容请查看该文件）
 var SMARTLib = function () {
   /**
    *
@@ -3369,7 +3370,6 @@ var LoaderSync = function () {
       if (this["__loaded"]) {
         return;
       }
-      console.log(this);
       this.instance = new SMARTLib(token, config);
       this.instance.init = this["init"];
       window["smart"] = this.instance;

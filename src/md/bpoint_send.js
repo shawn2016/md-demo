@@ -1,8 +1,9 @@
-import { CHANNEL_PARAMS } from "./config";
+import { CHANNEL_PARAMS, CONFIG } from "./config";
 import { _, console } from "./utils";
 
 class BPOINT {
-  constructor() {
+  constructor(instance) {
+    this.instance = instance;
     this._infoStack = []; //信息存储栈 收集的信息将暂存到这里 等待打包移动到待发送队列
 
     this._waitSendQueue = []; //待发送队列，存储多个信息存储栈帧 等待被发送给后台
@@ -14,7 +15,6 @@ class BPOINT {
     this._scanStackIntervalId = null; //stack 扫描定时器的id
 
     this._scanWaitSendQqueueIntervalId = null; //WaitSendQqueue 扫描定时器的id
-
     this._loadFN = []; //用于存储调用者需要在插件load时的执行的fn
   }
   /**
@@ -35,7 +35,7 @@ class BPOINT {
             sendData.il = oldData.pop();
             //数据发送
             //发送栈帧+环境配置信息
-            //   _sendByImg({ data: sendData });
+            this._sendByImg(sendData);
           }
         }
       } catch (e) {}
@@ -50,16 +50,14 @@ class BPOINT {
    */
   _scanStack(t) {
     if (t != null && t >= 1) {
-      var id = this._scanStackIntervalId;
-      if (id != null) {
+      if (this._scanStackIntervalId != null) {
         //如果已经存在定时器 需要先删除此定时，再创建新的定时器，防止出现重复定时器创建，最终导致内存泄露
-        clearInterval(id);
+        clearInterval(this._scanStackIntervalId);
       }
-      id = setInterval(() => {
-        console.log("scanStack", 4);
+      this._scanStackIntervalId = setInterval(() => {
+        console.log("开始扫描--scanStack");
         this.stack2queue();
       }, t * 1000);
-      this._scanStackIntervalId = id;
     } else {
       console.log("埋点内置对象丢失,栈扫描器创建失败", 1);
       throw new ReferenceError("埋点内置对象丢失,栈扫描器创建失败");
@@ -67,13 +65,12 @@ class BPOINT {
   }
   _scanWaitSendQqueue(t) {
     if (t != null && t >= 1) {
-      var id = this._scanWaitSendQqueueIntervalId;
-      if (id != null) {
+      if (this._scanWaitSendQqueueIntervalId != null) {
         //如果已经存在定时器 需要先删除此定时，再创建新的定时器，防止出现重复定时器创建，最终导致内存泄露
-        clearInterval(id);
+        clearInterval(this._scanWaitSendQqueueIntervalId);
       }
-      id = setInterval(() => {
-        console.log("scanWaitSendQqueue", 4);
+      this._scanWaitSendQqueueIntervalId = setInterval(() => {
+        console.log("scanWaitSendQqueue");
         this.send();
       }, t * 1000);
     } else {
@@ -81,31 +78,16 @@ class BPOINT {
       throw new ReferenceError("埋点内置对象丢失,队列扫描器创建失败");
     }
   }
-  _send() {
-    console.log("start send");
-    console.log("waitSendQueue length=" + this._waitSendQueue.length);
-    if (this._waitSendQueue.length == 0) {
-      this._queueSending = false;
-      return;
-    }
-
-    this._queueSending = true;
-    setTimeout(() => {
-      this.sendOldestStack();
-      this._send();
-    }, 500);
-  }
   /**
    * 发送队列里最老的栈帧
    */
   sendOldestStack() {
     var stack = this._waitSendQueue.pop();
     if (_.localStorage) {
-      _.localStorage.setItem("_bp_wqueue", JSON.stringify(this._waitSendQueue));
+      _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
     }
 
     console.log("send stack(queue pop):");
-    console.log(stack);
 
     var sendData = {};
     sendData.ic = this._infoConf;
@@ -113,7 +95,23 @@ class BPOINT {
 
     //数据发送
     //发送栈帧+环境配置信息
-    _sendByImg({ data: sendData });
+    this._sendByImg(sendData);
+  }
+  _sendByImg(truncated_data) {
+    let url = this.instance._get_config("track_url");
+    const track_type = this.instance._get_config("track_type");
+    if (track_type === "img") {
+      url += "track.gif";
+    }
+    _.sendRequest(
+      url,
+      track_type,
+      {
+        data: _.base64Encode(_.JSONEncode(truncated_data)),
+        token: this.instance._get_config("token")
+      },
+      () => {}
+    );
   }
   /**
    * 设置存在埋点信息的栈的大小
@@ -138,13 +136,12 @@ class BPOINT {
    */
   stack2queue() {
     var is = this._infoStack;
-
-    if (window._sxfmt && window._sxfmt.length > 0) {
-      console.log("_sxfmt.length=" + _sxfmt.length);
-      console.log(_sxfmt);
-      is = is.concat(_sxfmt);
-      window._sxfmt = [];
-    }
+    // if (window._sxfmt && window._sxfmt.length > 0) {
+    //   console.log("_sxfmt.length=" + _sxfmt.length);
+    //   console.log(_sxfmt);
+    //   is = is.concat(_sxfmt);
+    //   window._sxfmt = [];
+    // }
 
     console.log("infoStack length=" + is.length);
     if (is.length > 0) {
@@ -152,19 +149,28 @@ class BPOINT {
 
       this._queueSave(is);
       this._infoStack = [];
+    } else {
+      clearInterval(this._scanStackIntervalId);
     }
   }
+  _queueSave(is) {
+    this._waitSendQueue.push(is);
 
+    if (_.localStorage) {
+      _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
+    }
+  }
   _stackSave(infoObj) {
     this._infoStack.push(infoObj);
     //检查信息栈是否已经满了
-    if (this._infoStack.length >= this._option.stackSize) {
+    if (this._infoStack.length >= CONFIG.stackSize) {
       // 如果已经满了 则送入待发送队列
       this.stack2queue();
     }
   }
   send() {
     if (this._waitSendQueue.length == 0 || this._queueSending) {
+      clearInterval(this._scanWaitSendQqueueIntervalId);
       return;
     }
 
@@ -177,6 +183,7 @@ class BPOINT {
     console.log("start send");
     console.log("waitSendQueue length=" + this._waitSendQueue.length);
     if (this._waitSendQueue.length == 0) {
+      clearInterval(this._scanWaitSendQqueueIntervalId);
       this._queueSending = false;
       return;
     }
@@ -203,8 +210,9 @@ class BPOINT {
   push(infoObj) {
     if (infoObj) {
       infoObj.dateTime = new Date().getTime();
-      console.log("push success", 3);
       console.log(infoObj);
+      this._scanStack(CONFIG.stackTime);
+      this._scanWaitSendQqueue(CONFIG.queueTime);
       this._stackSave(infoObj);
     }
   }
