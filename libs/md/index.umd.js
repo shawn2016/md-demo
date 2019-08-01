@@ -7,111 +7,123 @@
 // 默认配置
 var DEFAULT_CONFIG = {
   // 上报服务器域名配置
-  'track_url': 'http://localhost:3300/',
+  track_url: "http://localhost:3300/",
   // debug启动配置
-  'debug': false,
+  debug: false,
   // 本地存储配置
-  'local_storage': {
+  local_storage: {
     // 存储方式  localStorage || cookie
-    'type': 'localStorage',
+    type: "localStorage",
     // 存储名称
-    'name': '',
+    name: "",
     // 关闭存储功能
-    'disable': false,
+    disable: false,
     // cookie存储时，采用安全的存储方式，即：
     //当secure属性设置为true时，cookie只有在https协议下才能上传到服务器，而在http协议下是没法上传的，所以也不会被窃听
-    'secure_cookie': false,
+    secure_cookie: false,
     // cookie存储时，跨主域名存储配置
-    'cross_subdomain_cookie': false,
+    cross_subdomain_cookie: false,
     // cookie方法存储时，配置保存过期时间
-    'cookie_expiration': 1000
+    cookie_expiration: 1000
   },
   // 初始化sdk时触发的方法
-  'loaded': function loaded() {},
+  loaded: function loaded() {},
   // 上报数据实现形式  post, get, img
-  'track_type': 'img',
+  track_type: "img",
   // 单页面应用配置
-  'SPA': {
+  SPA: {
     // 开启SPA配置
-    'is': false,
+    is: false,
     // SPA 实现类型，hash || history
-    'mode': 'hash'
+    mode: "hash"
   },
   // PV指标自动触发配置
-  'pageview': true,
+  pageview: true,
   // 上报数据前，每个字段长度截取配置，默认不截取
-  'truncateLength': -1,
+  truncateLength: -1,
   // 会话超时时长，默认30分钟
-  'session_interval_mins': 30,
+  session_interval_mins: 30,
+  isBpoint: false, // 是否开启断点发送，默认不开启
   // 远程拉取可视化圈选插件地址
-  'auto_visualization_src': 'http://localhost:3300/build/plugins/auto_visualization/main.js'
+  auto_visualization_src: "http://localhost:3300/build/plugins/auto_visualization/main.js",
+  stackSize: 10, //信息存储栈大小 栈满 则打包 转存到待发送队列
+  stackTime: 3, //信息存储栈时间（单位 秒） 定时扫描，栈有数据就发
+
+  queueSize: 20, //待发送队列大小
+  queueTime: 5 //待发送队列 自动扫描发送时间
 };
 
 // 配置
 var CONFIG = {
   DEBUG: false,
-  LIB_VERSION: '0.1.0'
+  LIB_VERSION: "0.1.0",
+  isBpoint: false, // 是否开启断点发送，默认不开启
+  stackSize: 10, //信息存储栈大小 栈满 则打包 转存到待发送队列
+  stackTime: 3, //信息存储栈时间（单位 秒） 定时扫描，栈有数据就发
+
+  queueSize: 20, //待发送队列大小
+  queueTime: 5 //待发送队列 自动扫描发送时间
 };
 
 // 系统事件类型（事件分为：系统事件和业务事件）
-var SYSTEM_EVENT_TYPE = 'se';
+var SYSTEM_EVENT_TYPE = "se";
 
 // 业务事件类型
-var BUSSINESS_EVENT_TYPE = 'be';
+var BUSSINESS_EVENT_TYPE = "be";
 
 // 系统事件列表
 var SYSTEM_EVENT_OBJECT = {
   // 会话开始事件
-  'smart_session_start': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_session_start: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 会话结束事件
-  'smart_session_close': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_session_close: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // PV事件
-  'smart_pv': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_pv: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 广告点击事件
-  'smart_ad_click': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_ad_click: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 用户首次访问网站事件
-  'smart_activate': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_activate: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // A/B 测试事件
-  'smart_abtest': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_abtest: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 异常错误事件
-  'smart_error': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_error: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 用户注册事件
-  'smart_u_signup': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_u_signup: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 用户登录事件
-  'smart_u_login': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_u_login: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 用户登出事件
-  'smart_u_logout': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_u_logout: {
+    data_type: SYSTEM_EVENT_TYPE
   },
   // 用户属性设置事件
-  'smart_u_property': {
-    'data_type': SYSTEM_EVENT_TYPE
+  smart_u_property: {
+    data_type: SYSTEM_EVENT_TYPE
   }
 };
 
 // People类系统保留属性，用户设置这些属性将无法成功
-var PEOPLE_RESERVED_PROPERTY = ['$deviceUdid', '$toekn'];
+var PEOPLE_RESERVED_PROPERTY = ["$deviceUdid", "$toekn"];
 
 // People类属性事件id，全局唯一
-var PEOPLE_PROPERTY_ID = 'smart_user_property';
+var PEOPLE_PROPERTY_ID = "smart_user_property";
 
 // 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
 // 若url上推广的参数不一致，请修改对应右边的值（一一对应）
@@ -2765,6 +2777,256 @@ var CHANNEL = function () {
   return CHANNEL;
 }();
 
+var BPOINT = function () {
+  function BPOINT() {
+    classCallCheck(this, BPOINT);
+
+    this._infoStack = []; //信息存储栈 收集的信息将暂存到这里 等待打包移动到待发送队列
+
+    this._waitSendQueue = []; //待发送队列，存储多个信息存储栈帧 等待被发送给后台
+
+    this._queueSending = false; //是否在队列递归发送栈帧
+
+    this._infoConf = { ver: "0.1.3" }; //环境信息
+
+    this._scanStackIntervalId = null; //stack 扫描定时器的id
+
+    this._scanWaitSendQqueueIntervalId = null; //WaitSendQqueue 扫描定时器的id
+
+    this._loadFN = []; //用于存储调用者需要在插件load时的执行的fn
+  }
+  /**
+   * 上一个页面的历史数据提交
+   * @private
+   */
+
+
+  createClass(BPOINT, [{
+    key: "_oldDataCheck",
+    value: function _oldDataCheck() {
+      var oldData = _.localStorage.set("_bp_wqueue");
+      if (oldData != null && oldData != "") {
+        try {
+          oldData = eval("(" + oldData + ")");
+          if (oldData instanceof Array && oldData.length > 0) {
+            var sendData = {};
+            sendData.ic = _.localStorage.set("_bp_infoConf");
+            sendData.ic = eval("(" + sendData.ic + ")");
+
+            for (; oldData.length > 0;) {
+              sendData.il = oldData.pop();
+              //数据发送
+              //发送栈帧+环境配置信息
+              //   _sendByImg({ data: sendData });
+            }
+          }
+        } catch (e) {}
+
+        _.localStorage.remove("_bp_wqueue");
+      }
+    }
+    /**
+     * 扫描信息栈中是否有数据 有数据 则将数据栈移入队列
+     * @param t
+     * @private
+     */
+
+  }, {
+    key: "_scanStack",
+    value: function _scanStack(t) {
+      var _this = this;
+
+      if (t != null && t >= 1) {
+        var id = this._scanStackIntervalId;
+        if (id != null) {
+          //如果已经存在定时器 需要先删除此定时，再创建新的定时器，防止出现重复定时器创建，最终导致内存泄露
+          clearInterval(id);
+        }
+        id = setInterval(function () {
+          console.log("scanStack", 4);
+          _this.stack2queue();
+        }, t * 1000);
+        this._scanStackIntervalId = id;
+      } else {
+        console.log("埋点内置对象丢失,栈扫描器创建失败", 1);
+        throw new ReferenceError("埋点内置对象丢失,栈扫描器创建失败");
+      }
+    }
+  }, {
+    key: "_scanWaitSendQqueue",
+    value: function _scanWaitSendQqueue(t) {
+      var _this2 = this;
+
+      if (t != null && t >= 1) {
+        var id = this._scanWaitSendQqueueIntervalId;
+        if (id != null) {
+          //如果已经存在定时器 需要先删除此定时，再创建新的定时器，防止出现重复定时器创建，最终导致内存泄露
+          clearInterval(id);
+        }
+        id = setInterval(function () {
+          console.log("scanWaitSendQqueue", 4);
+          _this2.send();
+        }, t * 1000);
+      } else {
+        console.log("埋点内置对象丢失,队列扫描器创建失败", 1);
+        throw new ReferenceError("埋点内置对象丢失,队列扫描器创建失败");
+      }
+    }
+  }, {
+    key: "_send",
+    value: function _send() {
+      var _this3 = this;
+
+      console.log("start send");
+      console.log("waitSendQueue length=" + this._waitSendQueue.length);
+      if (this._waitSendQueue.length == 0) {
+        this._queueSending = false;
+        return;
+      }
+
+      this._queueSending = true;
+      setTimeout(function () {
+        _this3.sendOldestStack();
+        _this3._send();
+      }, 500);
+    }
+    /**
+     * 发送队列里最老的栈帧
+     */
+
+  }, {
+    key: "sendOldestStack",
+    value: function sendOldestStack() {
+      var stack = this._waitSendQueue.pop();
+      if (_.localStorage) {
+        _.localStorage.setItem("_bp_wqueue", JSON.stringify(this._waitSendQueue));
+      }
+
+      console.log("send stack(queue pop):");
+      console.log(stack);
+
+      var sendData = {};
+      sendData.ic = this._infoConf;
+      sendData.il = stack;
+
+      //数据发送
+      //发送栈帧+环境配置信息
+      _sendByImg({ data: sendData });
+    }
+    /**
+     * 设置存在埋点信息的栈的大小
+     * 调用此方法，如果栈的数据量>stackSize，则触发栈帧入待发送队列
+     * @param stackSize 栈的大小 大于0的整数 如果是小数或者字符串，将先使用parseInt处理
+     */
+
+  }, {
+    key: "setStackSize",
+    value: function setStackSize(stackSize) {
+      stackSize = parseInt(stackSize);
+      if (stackSize < 1) {
+        return;
+      }
+      this._option.stackSize = stackSize;
+
+      if (this._infoStack.length >= stackSize) {
+        // 如果已经满了 则送入待发送队列
+        this.stack2queue();
+      }
+    }
+
+    /**
+     * 栈帧入队列  等待被发送
+     */
+
+  }, {
+    key: "stack2queue",
+    value: function stack2queue() {
+      var is = this._infoStack;
+
+      if (window._sxfmt && window._sxfmt.length > 0) {
+        console.log("_sxfmt.length=" + _sxfmt.length);
+        console.log(_sxfmt);
+        is = is.concat(_sxfmt);
+        window._sxfmt = [];
+      }
+
+      console.log("infoStack length=" + is.length);
+      if (is.length > 0) {
+        console.log(is);
+
+        this._queueSave(is);
+        this._infoStack = [];
+      }
+    }
+  }, {
+    key: "_stackSave",
+    value: function _stackSave(infoObj) {
+      this._infoStack.push(infoObj);
+      //检查信息栈是否已经满了
+      if (this._infoStack.length >= this._option.stackSize) {
+        // 如果已经满了 则送入待发送队列
+        this.stack2queue();
+      }
+    }
+  }, {
+    key: "send",
+    value: function send() {
+      if (this._waitSendQueue.length == 0 || this._queueSending) {
+        return;
+      }
+
+      this._send();
+    }
+    /**
+     * 将队列的栈帧都间隔递归发送出去
+     */
+
+  }, {
+    key: "_send",
+    value: function _send() {
+      var _this4 = this;
+
+      console.log("start send");
+      console.log("waitSendQueue length=" + this._waitSendQueue.length);
+      if (this._waitSendQueue.length == 0) {
+        this._queueSending = false;
+        return;
+      }
+
+      this._queueSending = true;
+      setTimeout(function () {
+        _this4.sendOldestStack();
+        _this4._send();
+      }, 500);
+    }
+
+    /**
+     * 收集的信息入栈
+     * @param infoObj
+     *
+     *  {
+     *      oc : //业务编码 opeCode
+     *      ac ：//行为编码 actionCode
+     *      v ：//行为结果 value 例如 输入框产生的值
+     *      ed:  //扩展信息 json
+     *  }
+     *
+     */
+
+  }, {
+    key: "push",
+    value: function push(infoObj) {
+      if (infoObj) {
+        infoObj.dateTime = new Date().getTime();
+        console.log("push success", 3);
+        console.log(infoObj);
+        this._stackSave(infoObj);
+      }
+    }
+  }]);
+  return BPOINT;
+}();
+
 /**
  * 远程拉取js插件，包含：可视化埋点（圈选）元素、热力图展示、可视化实验（样式配置）、debug展示
  * 
@@ -2802,6 +3064,7 @@ var LOAD_CONTROL_JS = function () {
 // 本地存储
 // 单页面
 // 渠道跟踪
+// 断点发送
 // 远程拉取js文件（插件，具体内容请查看该文件）
 var SMARTLib = function () {
   /**
@@ -2815,7 +3078,9 @@ var SMARTLib = function () {
     this["__loaded"] = true;
     this._ = _;
     this["config"] = {};
-    this._set_config(_.extend({}, DEFAULT_CONFIG, CONFIG, config, { token: token }));
+    this._set_config(_.extend({}, DEFAULT_CONFIG, CONFIG, config, {
+      token: token
+    }));
     this["local_storage"] = new LOCAL_STORAGE(this["config"]);
     // 运行钩子函数
     this._loaded();
@@ -2827,8 +3092,16 @@ var SMARTLib = function () {
     this["user"] = new USER_TRACK(this);
     // 实例化渠道跟踪对象
     this["channel"] = new CHANNEL(this);
+    // 断点发送对象
     // 设置设备凭证
     this._set_device_id();
+    // 开启是否断点发送
+    if (this._get_config("isBpoint")) {
+      this["bpoint"] = new BPOINT(this);
+      this["bpoint"]._oldDataCheck();
+      this["bpoint"]._scanStack(CONFIG.stackTime);
+      this["bpoint"]._scanWaitSendQqueue(CONFIG.queueTime);
+    }
 
     // 上报广告点击事件
     if (this["channel"].check_ad_click()) {
@@ -2890,6 +3163,7 @@ var SMARTLib = function () {
       if (_.isObject(config)) {
         this["config"] = _.extend(this["config"], config);
         CONFIG.DEBUG = CONFIG.DEBUG || this._get_config("debug");
+        CONFIG.isBpoint = CONFIG.isBpoint || this._get_config("isBpoint");
       }
     }
     /**

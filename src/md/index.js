@@ -12,6 +12,8 @@ import LOCAL_STORAGE from "./local_storage";
 import SPA from "./spa";
 // 渠道跟踪
 import CHANNEL from "./channel";
+// 断点发送
+import BPOINT from "./bpoint_send";
 // 远程拉取js文件（插件，具体内容请查看该文件）
 import LOAD_CONTROL_JS from "./load_control_js";
 
@@ -26,7 +28,9 @@ class SMARTLib {
     this._ = _;
     this["config"] = {};
     this._set_config(
-      _.extend({}, DEFAULT_CONFIG, CONFIG, config, { token: token })
+      _.extend({}, DEFAULT_CONFIG, CONFIG, config, {
+        token: token
+      })
     );
     this["local_storage"] = new LOCAL_STORAGE(this["config"]);
     // 运行钩子函数
@@ -39,8 +43,16 @@ class SMARTLib {
     this["user"] = new USER_TRACK(this);
     // 实例化渠道跟踪对象
     this["channel"] = new CHANNEL(this);
+    // 断点发送对象
     // 设置设备凭证
     this._set_device_id();
+    // 开启是否断点发送
+    if (this._get_config("isBpoint")) {
+      this["bpoint"] = new BPOINT(this);
+      this["bpoint"]._oldDataCheck();
+      this["bpoint"]._scanStack(CONFIG.stackTime);
+      this["bpoint"]._scanWaitSendQqueue(CONFIG.queueTime);
+    }
 
     // 上报广告点击事件
     if (this["channel"].check_ad_click()) {
@@ -90,6 +102,7 @@ class SMARTLib {
     if (_.isObject(config)) {
       this["config"] = _.extend(this["config"], config);
       CONFIG.DEBUG = CONFIG.DEBUG || this._get_config("debug");
+      CONFIG.isBpoint = CONFIG.isBpoint || this._get_config("isBpoint");
     }
   }
   /**
