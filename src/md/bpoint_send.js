@@ -10,8 +10,6 @@ class BPOINT {
 
     this._queueSending = false; //是否在队列递归发送栈帧
 
-    // this._infoConf = { ver: "0.1.3" }; //环境信息
-
     this._scanStackIntervalId = null; //stack 扫描定时器的id
 
     this._scanWaitSendQqueueIntervalId = null; //WaitSendQqueue 扫描定时器的id
@@ -69,7 +67,7 @@ class BPOINT {
         clearInterval(this._scanWaitSendQqueueIntervalId);
       }
       this._scanWaitSendQqueueIntervalId = setInterval(() => {
-        console.log("scanWaitSendQqueue");
+        console.log("开启等待发送--scanWaitSendQqueue");
         this.send();
       }, t * 1000);
     } else {

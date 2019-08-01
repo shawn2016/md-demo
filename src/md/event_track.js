@@ -309,7 +309,22 @@ class EVENT_TRACK {
     if (track_type === "img") {
       url += "track.gif";
     }
-    if (this.instance._get_config("isBpoint")) {
+    if (
+      !this.instance._get_config("isBpoint") ||
+      (user_set_properties &&
+        user_set_properties.smartConfig &&
+        !user_set_properties.smartConfig.isBpoint)
+    ) {
+      _.sendRequest(
+        url,
+        track_type,
+        {
+          data: _.base64Encode(_.JSONEncode(truncated_data)),
+          token: this.instance._get_config("token")
+        },
+        callback_fn
+      );
+    } else {
       try {
         this.instance["bpoint"].push(truncated_data);
       } catch (error) {
@@ -323,17 +338,6 @@ class EVENT_TRACK {
           callback_fn
         );
       }
-    } else {
-      console.log("========", [truncated_data]);
-      _.sendRequest(
-        url,
-        track_type,
-        {
-          data: _.base64Encode(_.JSONEncode([truncated_data])),
-          token: this.instance._get_config("token")
-        },
-        callback_fn
-      );
     }
 
     // 当触发的事件不是这些事件(smart_session_start,smart_session_close,smart_activate)时，触发检测 session 方法

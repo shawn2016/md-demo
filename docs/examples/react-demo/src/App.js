@@ -56,6 +56,9 @@ class Test extends React.Component {
         <h2
           onClick={() => {
             Smart.instance.track_event("buy", {
+              smartConfig: {
+                isBpoint: false
+              },
               price: "￥123",
               id: "xxxx-xxxx-xxxx"
             });
@@ -80,6 +83,7 @@ class Test extends React.Component {
         </p>
         <a href="#22">单页面1（hash）</a>
         <a href="#33">单页面2（hash）</a>
+        <input data-stat="{key:'111', act: 'click'}" placeholder="请输入" />
       </div>
     );
   }

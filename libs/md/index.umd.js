@@ -43,7 +43,7 @@ var DEFAULT_CONFIG = {
   truncateLength: -1,
   // 会话超时时长，默认30分钟
   session_interval_mins: 30,
-  isBpoint: false, // 是否开启断点发送，默认不开启
+  isBpoint: true, // 是否开启断点发送，默认开启
   // 远程拉取可视化圈选插件地址
   auto_visualization_src: "http://localhost:3300/build/plugins/auto_visualization/main.js",
   stackSize: 10, //信息存储栈大小 栈满 则打包 转存到待发送队列
@@ -57,7 +57,7 @@ var DEFAULT_CONFIG = {
 var CONFIG = {
   DEBUG: false,
   LIB_VERSION: "0.1.0",
-  isBpoint: false, // 是否开启断点发送，默认不开启
+  isBpoint: true, // 是否开启断点发送，默认开启
   stackSize: 10, //信息存储栈大小 栈满 则打包 转存到待发送队列
   stackTime: 3, //信息存储栈时间（单位 秒） 定时扫描，栈有数据就发
 
@@ -2309,7 +2309,12 @@ var EVENT_TRACK = function () {
       if (track_type === "img") {
         url += "track.gif";
       }
-      if (this.instance._get_config("isBpoint")) {
+      if (!this.instance._get_config("isBpoint") || user_set_properties && user_set_properties.smartConfig && !user_set_properties.smartConfig.isBpoint) {
+        _.sendRequest(url, track_type, {
+          data: _.base64Encode(_.JSONEncode(truncated_data)),
+          token: this.instance._get_config("token")
+        }, callback_fn);
+      } else {
         try {
           this.instance["bpoint"].push(truncated_data);
         } catch (error) {
@@ -2318,12 +2323,6 @@ var EVENT_TRACK = function () {
             token: this.instance._get_config("token")
           }, callback_fn);
         }
-      } else {
-        console.log("========", [truncated_data]);
-        _.sendRequest(url, track_type, {
-          data: _.base64Encode(_.JSONEncode([truncated_data])),
-          token: this.instance._get_config("token")
-        }, callback_fn);
       }
 
       // 当触发的事件不是这些事件(smart_session_start,smart_session_close,smart_activate)时，触发检测 session 方法
@@ -2828,8 +2827,6 @@ var BPOINT = function () {
 
     this._queueSending = false; //是否在队列递归发送栈帧
 
-    // this._infoConf = { ver: "0.1.3" }; //环境信息
-
     this._scanStackIntervalId = null; //stack 扫描定时器的id
 
     this._scanWaitSendQqueueIntervalId = null; //WaitSendQqueue 扫描定时器的id
@@ -2900,7 +2897,7 @@ var BPOINT = function () {
           clearInterval(this._scanWaitSendQqueueIntervalId);
         }
         this._scanWaitSendQqueueIntervalId = setInterval(function () {
-          console.log("scanWaitSendQqueue");
+          console.log("开启等待发送--scanWaitSendQqueue");
           _this2.send();
         }, t * 1000);
       } else {
@@ -3104,13 +3101,6 @@ var LOAD_CONTROL_JS = function () {
   return LOAD_CONTROL_JS;
 }();
 
-// 用户属性追踪
-// 用户事件追踪
-// 本地存储
-// 单页面
-// 渠道跟踪
-// 断点发送
-// 远程拉取js文件（插件，具体内容请查看该文件）
 var SMARTLib = function () {
   /**
    *

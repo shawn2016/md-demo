@@ -37,7 +37,7 @@ const DEFAULT_CONFIG = {
   truncateLength: -1,
   // 会话超时时长，默认30分钟
   session_interval_mins: 30,
-  isBpoint: false, // 是否开启断点发送，默认不开启
+  isBpoint: true, // 是否开启断点发送，默认开启
   // 远程拉取可视化圈选插件地址
   auto_visualization_src:
     "http://localhost:3300/build/plugins/auto_visualization/main.js",
@@ -52,7 +52,7 @@ const DEFAULT_CONFIG = {
 const CONFIG = {
   DEBUG: false,
   LIB_VERSION: "0.1.0",
-  isBpoint: false, // 是否开启断点发送，默认不开启
+  isBpoint: true, // 是否开启断点发送，默认开启
   stackSize: 10, //信息存储栈大小 栈满 则打包 转存到待发送队列
   stackTime: 3, //信息存储栈时间（单位 秒） 定时扫描，栈有数据就发
 
