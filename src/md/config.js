@@ -69,47 +69,47 @@ const BUSSINESS_EVENT_TYPE = "be";
 // 系统事件列表
 const SYSTEM_EVENT_OBJECT = {
   // 会话开始事件
-  smart_session_start: {
+  sxfData_session_start: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 会话结束事件
-  smart_session_close: {
+  sxfData_session_close: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // PV事件
-  smart_pv: {
+  sxfData_pv: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 广告点击事件
-  smart_ad_click: {
+  sxfData_ad_click: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 用户首次访问网站事件
-  smart_activate: {
+  sxfData_activate: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // A/B 测试事件
-  smart_abtest: {
+  sxfData_abtest: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 异常错误事件
-  smart_error: {
+  sxfData_error: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 用户注册事件
-  smart_u_signup: {
+  sxfData_u_signup: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 用户登录事件
-  smart_u_login: {
+  sxfData_u_login: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 用户登出事件
-  smart_u_logout: {
+  sxfData_u_logout: {
     data_type: SYSTEM_EVENT_TYPE
   },
   // 用户属性设置事件
-  smart_u_property: {
+  sxfData_u_property: {
     data_type: SYSTEM_EVENT_TYPE
   }
 };
@@ -118,7 +118,7 @@ const SYSTEM_EVENT_OBJECT = {
 const PEOPLE_RESERVED_PROPERTY = ["$deviceUdid", "$toekn"];
 
 // People类属性事件id，全局唯一
-const PEOPLE_PROPERTY_ID = "smart_user_property";
+const PEOPLE_PROPERTY_ID = "sxfData_user_property";
 
 // 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
 // 若url上推广的参数不一致，请修改对应右边的值（一一对应）

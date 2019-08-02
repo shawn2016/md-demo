@@ -9,7 +9,7 @@ class CHANNEL {
     this.instance = instance;
     // 渠道推广的参数信息
     this.channel_params = {};
-    this.cookie_name = 'smart_' + this.instance._get_config('token') + '_c';
+    this.cookie_name = 'sxfData_' + this.instance._get_config('token') + '_c';
     this._set_channel_params();
   }
   // 转变参数(TODO)

@@ -2,31 +2,31 @@
  * 异步引入sdk方式的引导代码(页面添加代码片段方式)
  * 代码说明参考： https://blog.csdn.net/ihaveahappyfamily/article/details/80085404
  */
-(function(document, smart, root){  
+(function(document, sxfData, root){  
 
   function loadJsSDK() {
       var script, first_script;
       script = document.createElement("script");
       script.type = "text/javascript";
       script.async = true;
-      script.src = 'http://localhost:8111/build/0.1.0/smart.globals.js';
+      script.src = 'http://localhost:8111/build/0.1.0/sxfData.globals.js';
       first_script = document.getElementsByTagName("script")[0];
       first_script.parentNode.insertBefore(script, first_script);
   };
   
   
-  if (!smart['__SV']) {
+  if (!sxfData['__SV']) {
       var win = window;
 
-      var gen_fn, functions, i, lib_name = "smart";
-      window[lib_name] = smart;
+      var gen_fn, functions, i, lib_name = "sxfData";
+      window[lib_name] = sxfData;
 
-      smart['_i'] = [];
+      sxfData['_i'] = [];
 
-      smart['init'] = function (token, config, name) {
-          var target = smart;
+      sxfData['init'] = function (token, config, name) {
+          var target = sxfData;
           if (typeof(name) !== 'undefined') {
-              target = smart[name] = [];
+              target = sxfData[name] = [];
           } else {
               name = lib_name;
           }
@@ -63,11 +63,11 @@
               _set_and_defer(target, functions[i]);
           }
 
-          smart['_i'].push([token, config, name]);
+          sxfData['_i'].push([token, config, name]);
       };
 
-      smart['__SV'] = 1.0;
+      sxfData['__SV'] = 1.0;
       loadJsSDK();
   }
   
-})(document, window['smart'] || [], window);
+})(document, window['sxfData'] || [], window);

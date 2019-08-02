@@ -62,7 +62,7 @@ class EVENT_TRACK {
       sessionUuid: _.UUID(),
       sessionStartTime: new Date().getTime()
     });
-    this.track("smart_session_start");
+    this.track("sxfData_session_start");
   }
   /**
    * TODO
@@ -82,7 +82,7 @@ class EVENT_TRACK {
     }
     const sessionTotalLength = time - sessionStartTime;
     if (sessionTotalLength >= 0) {
-      this.track("smart_session_close", {
+      this.track("sxfData_session_close", {
         sessionCloseTime: time,
         sessionTotalLength: sessionTotalLength
       });
@@ -138,7 +138,7 @@ class EVENT_TRACK {
       if (anonymous_id) {
         this.logout();
       }
-      this.track("smart_u_signup", {
+      this.track("sxfData_u_signup", {
         anonymousId: anonymous_id,
         newUserId: user_id
       });
@@ -166,7 +166,7 @@ class EVENT_TRACK {
    */
   track_pv(properties, callback) {
     this._session(() => {
-      this.track("smart_pv", _.extend({}, properties), callback);
+      this.track("sxfData_pv", _.extend({}, properties), callback);
     });
   }
   /**
@@ -220,7 +220,7 @@ class EVENT_TRACK {
     // 会话有时间差
     // 触发的事件若是会话结束，触发时间要重新设置
     // 若事件id为会话关闭，需要删除传入的自定义属性
-    if (event_name === "smart_session_close") {
+    if (event_name === "sxfData_session_close") {
       time = properties.sessionCloseTime;
       delete user_set_properties["sessionCloseTime"];
       delete user_set_properties["sessionTotalLength"];
@@ -280,7 +280,7 @@ class EVENT_TRACK {
       }
     }
     if (!this.instance._get_config("SPA").is) {
-      if (["smart_activate", "smart_session_close"].indexOf(event_name) > 0) {
+      if (["sxfData_activate", "sxfData_session_close"].indexOf(event_name) > 0) {
         this["local_storage"].register({
           sessionReferrer: document.URL
         });
@@ -316,8 +316,8 @@ class EVENT_TRACK {
     if (
       !this.instance._get_config("isBpoint") ||
       (user_set_properties &&
-        user_set_properties.smartConfig &&
-        !user_set_properties.smartConfig.isBpoint)
+        user_set_properties.sxfDataConfig &&
+        !user_set_properties.sxfDataConfig.isBpoint)
     ) {
       _.sendRequest(
         url,
@@ -344,9 +344,9 @@ class EVENT_TRACK {
       }
     }
 
-    // 当触发的事件不是这些事件(smart_session_start,smart_session_close,smart_activate)时，触发检测 session 方法
+    // 当触发的事件不是这些事件(sxfData_session_start,sxfData_session_close,sxfData_activate)时，触发检测 session 方法
     if (
-      ["smart_session_start", "smart_session_close", "smart_activate"].indexOf(
+      ["sxfData_session_start", "sxfData_session_close", "sxfData_activate"].indexOf(
         event_name
       ) === -1
     ) {
@@ -355,7 +355,7 @@ class EVENT_TRACK {
 
     // 保存最后一次用户触发事件（除了会话事件以外）的事件id以及时间，通过这个时间确定会话关闭时的时间
     if (
-      ["smart_session_start", "smart_session_close"].indexOf(event_name) === -1
+      ["sxfData_session_start", "sxfData_session_close"].indexOf(event_name) === -1
     ) {
       this["local_storage"].register({
         LASTEVENT: {
@@ -372,12 +372,12 @@ class EVENT_TRACK {
   login(user_id) {
     this._signup(user_id);
     this["local_storage"].register({ userId: user_id });
-    this.track("smart_u_login");
+    this.track("sxfData_u_login");
   }
   // 清除本地用户信息，退出用户（选则调用）
   logout() {
     this["local_storage"].unregister("userId");
-    this.track("smart_u_logout");
+    this.track("sxfData_u_logout");
   }
 }
 

@@ -20,7 +20,7 @@ import LOAD_CONTROL_JS from "./load_control_js";
 // import { autotrack } from './autotrack';
 
 import INPUTLISTEN from "./input_listen";
-class SMARTLib {
+class SxfDataLib {
   /**
    *
    * @param {String} token 上报数据凭证
@@ -79,7 +79,7 @@ class SMARTLib {
 
   // 广告点击事件
   _ad_click() {
-    this.track_event("smart_ad_click");
+    this.track_event("sxfData_ad_click");
   }
   // 内部使用的PV方法
   _track_pv(properties, callback) {
@@ -135,7 +135,7 @@ class SMARTLib {
     let track_data = {};
     if (!this.get_device_id()) {
       this["local_storage"].register_once({ deviceId: _.UUID() }, "");
-      track_data = this.track_event("smart_activate");
+      track_data = this.track_event("sxfData_activate");
     }
     return track_data;
   }
@@ -266,15 +266,15 @@ class SMARTLib {
 }
 class LoaderSync {
   constructor() {
-    window["smart"] = this;
+    window["sxfData"] = this;
   }
   init(token, config) {
     if (this["__loaded"]) {
       return;
     }
-    this.instance = new SMARTLib(token, config);
+    this.instance = new SxfDataLib(token, config);
     this.instance.init = this["init"];
-    window["smart"] = this.instance;
+    window["sxfData"] = this.instance;
   }
 }
 export default new LoaderSync();

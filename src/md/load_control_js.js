@@ -3,7 +3,7 @@
  * 
  * 按需拉取插件规则（根据当前页的url上参数确定拉取）：
  * 
- * 1.可视化埋点圈选元素：当前页url 上含有 'smart_auto_visualization_token' 字段且值存在（该token是保存信息的凭证）
+ * 1.可视化埋点圈选元素：当前页url 上含有 'sxfData_auto_visualization_token' 字段且值存在（该token是保存信息的凭证）
  * 2. 其它待定
  */
 
