@@ -36,7 +36,7 @@ const DEFAULT_CONFIG = {
   // 上报数据前，每个字段长度截取配置，默认不截取
   truncateLength: -1,
   // 会话超时时长，默认30分钟
-  session_interval_mins: 30,
+  session_interval_mins: 0.05,
   isBpoint: true, // 是否开启断点发送，默认开启
   // 远程拉取可视化圈选插件地址
   auto_visualization_src:

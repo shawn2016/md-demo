@@ -16,7 +16,10 @@ import CHANNEL from "./channel";
 import BPOINT from "./bpoint_send";
 // 远程拉取js文件（插件，具体内容请查看该文件）
 import LOAD_CONTROL_JS from "./load_control_js";
+// 全面点
+// import { autotrack } from './autotrack';
 
+import INPUTLISTEN from "./input_listen";
 class SMARTLib {
   /**
    *
@@ -43,6 +46,8 @@ class SMARTLib {
     this["user"] = new USER_TRACK(this);
     // 实例化渠道跟踪对象
     this["channel"] = new CHANNEL(this);
+
+    this["inputlisten"] = new INPUTLISTEN(this);
     // 断点发送对象
     // 设置设备凭证
     this._set_device_id();
@@ -59,6 +64,7 @@ class SMARTLib {
     }
 
     this._track_pv();
+    // this._autotrack();
 
     // persistedTime 首次访问应用时间
     this["local_storage"].register_once(
@@ -70,6 +76,7 @@ class SMARTLib {
       this._SPA();
     }
   }
+
   // 广告点击事件
   _ad_click() {
     this.track_event("smart_ad_click");
@@ -145,6 +152,10 @@ class SMARTLib {
    * 设置一个指定事件的耗时监听器
    * @param {String} event_name
    */
+  // 监听事件
+  _addlisten(id) {
+    this["inputlisten"]._addDomEventHandlers(id);
+  }
   time_event(event_name) {
     this["event"].time_event(event_name);
   }
@@ -249,6 +260,9 @@ class SMARTLib {
   logout() {
     this["event"].logout();
   }
+  //   _autotrack(){
+  //     autotrack.init(this);
+  //   }
 }
 class LoaderSync {
   constructor() {

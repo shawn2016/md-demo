@@ -5,7 +5,10 @@ import device from "./device";
 import { base64Encode } from "./coding";
 
 import detector from "./useragent";
-
+var ArrayProto = Array.prototype,
+  FuncProto = Function.prototype,
+  slice = ArrayProto.slice;
+var nativeBind = FuncProto.bind;
 // 兼容单元测试环境
 let win;
 if (typeof window === "undefined") {
@@ -287,10 +290,6 @@ _.loadScript = function(para) {
 };
 
 _.register_event = (function() {
-  // written by Dean Edwards, 2005
-  // with input from Tino Zijdel - crisp@xs4all.nl
-  // with input from Carl Sverre - mail@carlsverre.com
-  // with input from DATracker
   // http://dean.edwards.name/weblog/2005/10/add-event/
   // https://gist.github.com/1930440
 
@@ -320,11 +319,11 @@ _.register_event = (function() {
     var handler = function(event) {
       event = event || fixEvent(window.event);
 
-      // this basically happens in firefox whenever another script
-      // overwrites the onload callback and doesn't pass the event
-      // object to previously defined callbacks.  All the browsers
-      // that don't define window.event implement addEventListener
-      // so the dom_loaded handler will still be fired as usual.
+      //这基本上发生在firefox中的其他脚本中
+      //覆盖onload回调函数，不传递事件
+      // 对象指向以前定义的回调。所有的浏览器
+      //没有定义窗口。事件实现addEventListener
+      //因此，dom_loaded处理程序仍然会像往常一样被触发。
       if (!event) {
         return undefined;
       }
@@ -368,6 +367,10 @@ _.register_hash_event = function(callback) {
   _.register_event(window, "hashchange", callback);
 };
 
+_.getHashParam = function(hash, param) {
+  var matches = hash.match(new RegExp(param + "=([^&]*)"));
+  return matches ? matches[1] : null;
+};
 // 客户端基本属性
 _.info = {
   domain(referrer) {
@@ -813,6 +816,19 @@ const console = {
         });
       }
     }
+  },
+  /** @type {function(...*)} */
+  critical: function() {
+    if (!_.isUndefined(windowConsole) && windowConsole) {
+      var args = ["error:"].concat(_.toArray(arguments));
+      try {
+        windowConsole.error.apply(windowConsole, args);
+      } catch (err) {
+        _.each(args, function(arg) {
+          windowConsole.error(arg);
+        });
+      }
+    }
   }
 };
 /**
@@ -837,6 +853,74 @@ _.uncompile = function(code) {
     c += String.fromCharCode(code.charCodeAt(i) - c.charCodeAt(i - 1));
   }
   return c;
+};
+
+// UNDERSCORE
+// Embed part of the Underscore Library
+_.bind = function(func, context) {
+  var args, bound;
+  if (nativeBind && func.bind === nativeBind) {
+    return nativeBind.apply(func, slice.call(arguments, 1));
+  }
+  if (!_.isFunction(func)) {
+    throw new TypeError();
+  }
+  args = slice.call(arguments, 2);
+  bound = function() {
+    if (!(this instanceof bound)) {
+      return func.apply(context, args.concat(slice.call(arguments)));
+    }
+    var ctor = {};
+    ctor.prototype = func.prototype;
+    var self = new ctor();
+    ctor.prototype = null;
+    var result = func.apply(self, args.concat(slice.call(arguments)));
+    if (Object(result) === result) {
+      return result;
+    }
+    return self;
+  };
+  return bound;
+};
+
+_.bindInstanceMethods = function(obj) {
+  for (var func in obj) {
+    if (typeof obj[func] === "function") {
+      obj[func] = _.bind(obj[func], obj);
+    }
+  }
+};
+
+_.safewrap = function(f) {
+  return function() {
+    try {
+      return f.apply(this, arguments);
+    } catch (e) {
+      console.log(
+        "Implementation error. Please turn on debug and contact support@mixpanel.com."
+      );
+      if (CONFIG.DEBUG) {
+        console.log(e);
+      }
+    }
+  };
+};
+
+_.safewrap_class = function(klass, functions) {
+  for (var i = 0; i < functions.length; i++) {
+    klass.prototype[functions[i]] = _.safewrap(klass.prototype[functions[i]]);
+  }
+};
+
+_.safewrapInstanceMethods = function(obj) {
+  for (var func in obj) {
+    if (typeof obj[func] === "function") {
+      obj[func] = _.safewrap(obj[func]);
+    }
+  }
+};
+_.getById = function(id) {
+  return document.getElementById(id);
 };
 
 export { _, console };

@@ -25,6 +25,7 @@ class EVENT_TRACK {
     let mark_page_url = document.URL;
     // 单页面触发PV事件时，设置 referrer
     _.innerEvent.on("singlePage:change", (eventName, urlParams) => {
+        console.log('订阅')
       this["local_storage"].register({
         sessionReferrer: mark_page_url
       });
@@ -107,6 +108,7 @@ class EVENT_TRACK {
           60 * this.instance._get_config("session_interval_mins") ||
       other_channel_Bool
     ) {
+        console.log(session_start_time)
       // 当会话首次开始时，不用发送会话关闭事件
       if (session_start_time === 0) {
         // 新打开一个会话

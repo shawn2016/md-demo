@@ -1,10 +1,10 @@
 /**
  * 单页面模块
  */
-import {_} from './utils'
+import { _ } from "./utils";
 
 function on(obj, event, callFn) {
-  if(obj[event]) {
+  if (obj[event]) {
     const fn = obj[event];
     obj[event] = function() {
       const args = Array.prototype.slice.call(arguments);
@@ -25,27 +25,27 @@ function getPath() {
 
 const SPA = {
   config: {
-    mode: 'hash',
+    mode: "hash",
     track_replace_state: false,
     callback_fn: () => {}
   },
   init(config) {
     this.config = _.extend(this.config, config || {});
     this.path = getPath();
-    this.url= document.URL;
+    this.url = document.URL;
     this.event();
   },
   event() {
-    if(this.config.mode === 'history') {
-      if(!history.pushState || !window.addEventListener) return;
-      on(history, 'pushState', this.pushStateOverride.bind(this) );
-      on(history, 'replaceState', this.replaceStateOverride.bind(this) );
-      window.addEventListener('popstate', this.handlePopState.bind(this));
-    } else if(this.config.mode === 'hash') {
-      _.register_hash_event( this.handleHashState.bind(this) );
+    if (this.config.mode === "history") {
+      if (!history.pushState || !window.addEventListener) return;
+      on(history, "pushState", this.pushStateOverride.bind(this));
+      on(history, "replaceState", this.replaceStateOverride.bind(this));
+      window.addEventListener("popstate", this.handlePopState.bind(this));
+    } else if (this.config.mode === "hash") {
+      _.register_hash_event(this.handleHashState.bind(this));
     }
   },
-  pushStateOverride(){
+  pushStateOverride() {
     this.handleUrlChange(true);
   },
   replaceStateOverride() {
@@ -59,24 +59,26 @@ const SPA = {
   },
   handleUrlChange(historyDidUpdate) {
     setTimeout(() => {
-      if(this.config.mode === 'hash') {
-        if(_.isFunction(this.config.callback_fn)) {
+      if (this.config.mode === "hash") {
+        if (_.isFunction(this.config.callback_fn)) {
           this.config.callback_fn.call();
-          _.innerEvent.trigger('singlePage:change', {
+          console.log("推送");
+          _.innerEvent.trigger("singlePage:change", {
             oldUrl: this.url,
             nowUrl: document.URL
           });
           this.url = document.URL;
         }
-      } else if( this.config.mode === 'history' ) {
+      } else if (this.config.mode === "history") {
         const oldPath = this.path;
         const newPath = getPath();
-        if(oldPath != newPath && this.shouldTrackUrlChange(newPath, oldPath)) {
+        if (oldPath != newPath && this.shouldTrackUrlChange(newPath, oldPath)) {
           this.path = newPath;
-          if(historyDidUpdate || this.config.track_replace_state) {
-            if(typeof this.config.callback_fn === 'function') {
+          if (historyDidUpdate || this.config.track_replace_state) {
+            if (typeof this.config.callback_fn === "function") {
               this.config.callback_fn.call();
-              _.innerEvent.trigger('singlePage:change', {
+              console.log("推送");
+              _.innerEvent.trigger("singlePage:change", {
                 oldUrl: this.url,
                 nowUrl: document.URL
               });

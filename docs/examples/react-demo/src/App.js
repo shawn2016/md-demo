@@ -9,6 +9,9 @@ class Test extends React.Component {
     };
     this.init();
   }
+  componentDidMount() {
+    Smart.instance._addlisten("test");
+  }
   init = () => {
     Smart.init("xxx", {
       local_storage: {
@@ -25,7 +28,7 @@ class Test extends React.Component {
         sdk.register_event_super_properties({ test: "事件通用属性" });
       }
     });
-    Smart.instance.time_event('buy');
+    Smart.instance.time_event("buy");
   };
 
   render() {
@@ -84,7 +87,7 @@ class Test extends React.Component {
         </p>
         <a href="#22">单页面1（hash）</a>
         <a href="#33">单页面2（hash）</a>
-        <input data-stat="{key:'111', act: 'click'}" placeholder="请输入" />
+        <input id="test" data-stat="{key:'111', act: 'click'}" placeholder="请输入" />
       </div>
     );
   }
