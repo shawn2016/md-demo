@@ -154,7 +154,7 @@ class BPOINT {
   }
   _queueSave(is) {
     this._waitSendQueue.push(is);
-
+    this._scanWaitSendQqueue(CONFIG.queueTime);
     if (_.localStorage) {
       _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
     }
@@ -211,7 +211,6 @@ class BPOINT {
       infoObj.dateTime = new Date().getTime();
       console.log(infoObj);
       this._scanStack(CONFIG.stackTime);
-      this._scanWaitSendQqueue(CONFIG.queueTime);
       this._stackSave(infoObj);
     }
   }

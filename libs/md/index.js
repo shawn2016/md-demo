@@ -2988,7 +2988,7 @@ var BPOINT = function () {
     key: "_queueSave",
     value: function _queueSave(is) {
       this._waitSendQueue.push(is);
-
+      this._scanWaitSendQqueue(CONFIG.queueTime);
       if (_.localStorage) {
         _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
       }
@@ -3057,7 +3057,6 @@ var BPOINT = function () {
         infoObj.dateTime = new Date().getTime();
         console.log(infoObj);
         this._scanStack(CONFIG.stackTime);
-        this._scanWaitSendQqueue(CONFIG.queueTime);
         this._stackSave(infoObj);
       }
     }
@@ -3097,6 +3096,13 @@ var LOAD_CONTROL_JS = function () {
   return LOAD_CONTROL_JS;
 }();
 
+// 用户属性追踪
+// 用户事件追踪
+// 本地存储
+// 单页面
+// 渠道跟踪
+// 断点发送
+// 远程拉取js文件（插件，具体内容请查看该文件）
 var SMARTLib = function () {
   /**
    *
@@ -3131,7 +3137,6 @@ var SMARTLib = function () {
       this["bpoint"] = new BPOINT(this);
       this["bpoint"]._oldDataCheck();
       this["bpoint"]._scanStack(CONFIG.stackTime);
-      this["bpoint"]._scanWaitSendQqueue(CONFIG.queueTime);
     }
 
     // 上报广告点击事件

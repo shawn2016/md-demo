@@ -51,7 +51,6 @@ class SMARTLib {
       this["bpoint"] = new BPOINT(this);
       this["bpoint"]._oldDataCheck();
       this["bpoint"]._scanStack(CONFIG.stackTime);
-      this["bpoint"]._scanWaitSendQqueue(CONFIG.queueTime);
     }
 
     // 上报广告点击事件
