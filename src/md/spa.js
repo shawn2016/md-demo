@@ -62,7 +62,6 @@ const SPA = {
       if (this.config.mode === "hash") {
         if (_.isFunction(this.config.callback_fn)) {
           this.config.callback_fn.call();
-          console.log("推送");
           _.innerEvent.trigger("singlePage:change", {
             oldUrl: this.url,
             nowUrl: document.URL
@@ -77,7 +76,6 @@ const SPA = {
           if (historyDidUpdate || this.config.track_replace_state) {
             if (typeof this.config.callback_fn === "function") {
               this.config.callback_fn.call();
-              console.log("推送");
               _.innerEvent.trigger("singlePage:change", {
                 oldUrl: this.url,
                 nowUrl: document.URL

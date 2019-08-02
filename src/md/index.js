@@ -11,11 +11,11 @@ import LOCAL_STORAGE from "./local_storage";
 // 单页面
 import SPA from "./spa";
 // 渠道跟踪
-import CHANNEL from "./channel";
+// import CHANNEL from "./channel";
 // 断点发送
 import BPOINT from "./bpoint_send";
 // 远程拉取js文件（插件，具体内容请查看该文件）
-import LOAD_CONTROL_JS from "./load_control_js";
+// import LOAD_CONTROL_JS from "./load_control_js";
 // 全面点
 // import { autotrack } from './autotrack';
 
@@ -39,13 +39,13 @@ class SxfDataLib {
     // 运行钩子函数
     this._loaded();
     // 实例化拉取远程库对象（按需加载）
-    this["load_control_js"] = new LOAD_CONTROL_JS(this);
+    // this["load_control_js"] = new LOAD_CONTROL_JS(this);
     // 实例化事件对象
     this["event"] = new EVENT_TRACK(this);
     // 实例化用户对象
     this["user"] = new USER_TRACK(this);
     // 实例化渠道跟踪对象
-    this["channel"] = new CHANNEL(this);
+    // this["channel"] = new CHANNEL(this);
 
     this["inputlisten"] = new INPUTLISTEN(this);
     // 断点发送对象
@@ -59,9 +59,9 @@ class SxfDataLib {
     }
 
     // 上报广告点击事件
-    if (this["channel"].check_ad_click()) {
-      this._ad_click();
-    }
+    // if (this["channel"].check_ad_click()) {
+    //   this._ad_click();
+    // }
 
     this._track_pv();
     // this._autotrack();
