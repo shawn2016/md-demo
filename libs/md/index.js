@@ -2200,6 +2200,7 @@ var EVENT_TRACK = function () {
       var start_listen_timestamp = this["local_storage"].remove_event_timer(event_name);
       if (!_.isUndefined(start_listen_timestamp)) {
         costTime = new Date().getTime() - start_listen_timestamp;
+        console.log('事件耗时', costTime, event_name);
       }
       // 事件类型设置
       var data_type = BUSSINESS_EVENT_TYPE;
@@ -2245,6 +2246,7 @@ var EVENT_TRACK = function () {
         pageOpenScene: "Browser",
         // 应用凭证
         token: this.instance._get_config("token"),
+        // 监听事件耗时
         costTime: costTime,
         // 当前关闭的会话时长
         sessionTotalLength: properties.sessionTotalLength,
@@ -3096,13 +3098,6 @@ var LOAD_CONTROL_JS = function () {
   return LOAD_CONTROL_JS;
 }();
 
-// 用户属性追踪
-// 用户事件追踪
-// 本地存储
-// 单页面
-// 渠道跟踪
-// 断点发送
-// 远程拉取js文件（插件，具体内容请查看该文件）
 var SMARTLib = function () {
   /**
    *

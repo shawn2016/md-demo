@@ -25,6 +25,7 @@ class Test extends React.Component {
         sdk.register_event_super_properties({ test: "事件通用属性" });
       }
     });
+    Smart.instance.time_event('buy');
   };
 
   render() {
