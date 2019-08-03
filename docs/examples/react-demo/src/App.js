@@ -115,6 +115,19 @@ class Test extends React.Component {
           })}
           placeholder="请输入"
         />
+
+        <button
+          data-sxf-props={JSON.stringify({
+            type: "button",
+            eventList: [
+              {
+                type: "click"
+              }
+            ]
+          })}
+        >
+          测试点击
+        </button>
       </div>
     );
   }

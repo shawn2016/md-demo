@@ -39,7 +39,7 @@ const DEFAULT_CONFIG = {
   // 上报数据前，每个字段长度截取配置，默认不截取
   truncateLength: -1,
   // 会话超时时长，默认30分钟
-  session_interval_mins: 0.05,
+  session_interval_mins: 30,
   isBpoint: true, // 是否开启断点发送，默认开启
   // 远程拉取可视化圈选插件地址
   auto_visualization_src:
@@ -122,10 +122,6 @@ const PEOPLE_RESERVED_PROPERTY = ["$deviceUdid", "$toekn"];
 
 // People类属性事件id，全局唯一
 const PEOPLE_PROPERTY_ID = "sxfData_user_property";
-
-// 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
-// 若url上推广的参数不一致，请修改对应右边的值（一一对应）
-// 注意：系统暂时未支持自定义配置（TODO）,若要改动，请到文件 src/channel.js 修改。
 
 // Save the previous value of the device variable.
 var previousDevice = window.device;
@@ -3081,106 +3077,37 @@ class INPUTLISTEN {
   constructor(instance) {
     this.instance = instance;
   }
-  _addDomEventHandlers(id) {
-    var rcidom = _.getPropsDom(document, "data-sxf-props");
-
-    rcidom.forEach(domItem => {
-      const eventItem = JSON.parse(domItem.getAttribute("data-sxf-props"));
-      const eventType = eventItem.type;
-      const eventList = eventItem.eventList;
-      let data = {};
-
-      eventList.forEach(eventItem => {
-        _.register_event(
-          domItem,
-          eventItem.type,
-          e => {
-            if (eventType === "input") {
-              data = {
-                input_value: e.target.value
-              };
-            }
-            this.instance["event"].track(
-              `sxfData_${eventType}_${eventItem.type}`,
-              data
-            );
-          },
-          false,
-          true
-        );
+  _addDomEventHandlers() {
+    try {
+      var rcidom = _.getPropsDom(document, "data-sxf-props");
+      rcidom.forEach(domItem => {
+        const eventItem = JSON.parse(domItem.getAttribute("data-sxf-props"));
+        const eventType = eventItem.type;
+        const eventList = eventItem.eventList;
+        let data = {};
+        eventList.forEach(eventItem => {
+          _.register_event(
+            domItem,
+            eventItem.type,
+            e => {
+              if (eventType === "input") {
+                data = {
+                  input_value: e.target.value
+                };
+              }
+              this.instance["event"].track(
+                `sxfData_${eventType}_${eventItem.type}`,
+                data
+              );
+            },
+            false,
+            true
+          );
+        });
       });
-    });
-
-    // this.bind(rcidom, {
-    //   focus: v => {
-    //     console.log("focus", v);
-    //     this.instance.time_event("input_blur");
-    //     this.instance["event"].track("input_focus", {
-    //       input_value: v.target.value
-    //     });
-    //   },
-    //   blur: v => {
-    //     console.log("blur", v);
-
-    //     this.instance["event"].track("input_blur", {
-    //       input_value: v.target.value
-    //     });
-    //   },
-    //   keydown: v => {
-    //     console.log("keydown", v);
-    //     this.instance.time_event("input_keyup");
-    //     this.instance["event"].track("input_keydown", {
-    //       input_value: v.target.value
-    //     });
-    //   },
-    //   keyup: v => {
-    //     if (v.keyCode === 8) {
-    //       this.instance["event"].track("input_delete", {
-    //         input_value: v.target.value
-    //       });
-    //     } else {
-    //       this.instance["event"].track("input_keyup", {
-    //         input_value: v.target.value
-    //       });
-    //     }
-    //   },
-    //   change: v => {
-    //     console.log("change", v);
-    //     this.instance["event"].track("input_change", {
-    //       input_value: v.target.value
-    //     });
-    //   },
-    //   click: v => {
-    //     console.log("click", v);
-    //     this.instance["event"].track("input_click", {
-    //       input_value: v.target.value
-    //     });
-    //   },
-    //   select: v => {
-    //     console.log("select", v);
-    //     this.instance["event"].track("input_select", {
-    //       input_value: v.target.value
-    //     });
-    //   },
-    //   input: v => {
-    //     console.log("input", v);
-    //     this.instance["event"].track("input_input", {
-    //       input_value: v.target.value
-    //     });
-    //   },
-    //   paste: v => {
-    //     console.log("paste", v);
-    //     this.instance["event"].track("input_input", {
-    //       input_value: v.target.value
-    //     });
-    //   }
-    //   //   keypress: v => {
-    //   //     console.log("keypress", v);
-    //   //     this.instance["event"].track("input_keypress", {
-    //   //       input_value: v.target.value
-    //   //     });
-    //   //   }
-    // });
+    } catch (error) {
+      console.error("自动添加监听事件失败,请校验语法是否有误！");
+    }
   }
   bind(dom, kve) {
     if (dom && kve) {

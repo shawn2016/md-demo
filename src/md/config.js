@@ -36,7 +36,7 @@ const DEFAULT_CONFIG = {
   // 上报数据前，每个字段长度截取配置，默认不截取
   truncateLength: -1,
   // 会话超时时长，默认30分钟
-  session_interval_mins: 0.05,
+  session_interval_mins: 30,
   isBpoint: true, // 是否开启断点发送，默认开启
   // 远程拉取可视化圈选插件地址
   auto_visualization_src:
@@ -137,7 +137,6 @@ const CHANNEL_PARAMS = {
   // 广告id(必须字段)
   promotional_id: "promotional_id"
 };
-
 export {
   CONFIG,
   DEFAULT_CONFIG,
@@ -147,5 +146,6 @@ export {
   PEOPLE_RESERVED_PROPERTY,
   PEOPLE_PROPERTY_ID,
   CHANNEL_PARAMS,
-  BPOINT_CONFIG
+  BPOINT_CONFIG,
+  ALLEVENT
 };

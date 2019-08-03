@@ -1,4 +1,4 @@
-import { CONFIG } from "./config";
+import { CONFIG,ALLEVENT } from "./config";
 
 import device from "./device";
 
