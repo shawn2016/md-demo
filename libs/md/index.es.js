@@ -1,9 +1,3 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.md = factory());
-}(this, (function () { 'use strict';
-
 // 默认配置
 const DEFAULT_CONFIG = {
   // 上报服务器域名配置
@@ -3419,7 +3413,5 @@ class SxfDataLib {
 }
 let sxfData = new SxfDataLib();
 
-return sxfData;
-
-})));
-//# sourceMappingURL=index.umd.js.map
+export default sxfData;
+//# sourceMappingURL=index.es.js.map

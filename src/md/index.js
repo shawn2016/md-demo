@@ -26,8 +26,13 @@ class SxfDataLib {
    * @param {String} token 上报数据凭证
    * @param {Object} config sdk客户端配置
    */
-  constructor(token, config) {
+  constructor() {}
+  init(token, config) {
+    if (this["__loaded"]) {
+      return;
+    }
     this["__loaded"] = true;
+
     this._ = _;
     this["config"] = {};
     this._set_config(
@@ -65,7 +70,6 @@ class SxfDataLib {
 
     this._track_pv();
     // this._autotrack();
-
     // persistedTime 首次访问应用时间
     this["local_storage"].register_once(
       { persistedTime: new Date().getTime() },
@@ -264,17 +268,8 @@ class SxfDataLib {
   //     autotrack.init(this);
   //   }
 }
-class LoaderSync {
-  constructor() {
-    window["sxfData"] = this;
-  }
-  init(token, config) {
-    if (this["__loaded"]) {
-      return;
-    }
-    this.instance = new SxfDataLib(token, config);
-    this.instance.init = this["init"];
-    window["sxfData"] = this.instance;
-  }
+let sxfData = new SxfDataLib();
+if (sxf_Data_format === "iife") {
+  window.sxfData = sxfData;
 }
-export default new LoaderSync();
+export default sxfData;

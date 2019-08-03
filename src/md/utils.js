@@ -408,6 +408,7 @@ _.info = {
       "10.0": "Win10"
     };
     const devicePlatform = device.type;
+
     const deviceModel = _.trim(this.deviceModel());
     const isWindows = device.windows();
     let deviceOsVersion = detector.os.name + " " + detector.os.fullVersion;
@@ -923,4 +924,4 @@ _.getById = function(id) {
   return document.getElementById(id);
 };
 
-export { _, console };
+export { _, console, win };

@@ -1,8 +1,4 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.md = factory());
-}(this, (function () { 'use strict';
+'use strict';
 
 // 默认配置
 const DEFAULT_CONFIG = {
@@ -3419,7 +3415,5 @@ class SxfDataLib {
 }
 let sxfData = new SxfDataLib();
 
-return sxfData;
-
-})));
-//# sourceMappingURL=index.umd.js.map
+module.exports = sxfData;
+//# sourceMappingURL=index.cjs.js.map

@@ -2,7 +2,7 @@ const commonjs = require("rollup-plugin-commonjs");
 const babel = require("rollup-plugin-babel");
 const resolve = require("rollup-plugin-node-resolve");
 const uglify = require("rollup-plugin-uglify");
-
+const env = process.env.BUILD;
 // const postcss = require('rollup-plugin-postcss')
 // const simplevars = require('postcss-simple-vars')
 // const nested = require('postcss-nested')
@@ -29,9 +29,23 @@ const plugins = [
   commonjs(),
   babel({
     exclude: "node_modules/**" // 仅仅转译我们的源码
-  }),
-  uglify()
+  })
+  //   uglify()
 ];
+
+if (env === "production") {
+  plugins.push(
+    uglify({
+      compress: {
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true
+      }
+    })
+  );
+}
+
+
 
 module.exports = {
   plugins: plugins,

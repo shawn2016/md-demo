@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import Smart from "../../../../libs/md/index.js";
+import SxfData from "../../../../libs/md/index.es.js";
 class Test extends React.Component {
   constructor(props) {
     super(props);
@@ -10,10 +10,11 @@ class Test extends React.Component {
     this.init();
   }
   componentDidMount() {
-    Smart.instance._addlisten("test");
+    SxfData._addlisten("test");
   }
   init = () => {
-    Smart.init("xxx", {
+      console.log(SxfData)
+    SxfData.init("xxx", {
       local_storage: {
         type: "localStorage"
       },
@@ -28,7 +29,7 @@ class Test extends React.Component {
         sdk.register_event_super_properties({ test: "事件通用属性" });
       }
     });
-    Smart.instance.time_event("buy");
+    SxfData.time_event("buy");
   };
 
   render() {
@@ -45,21 +46,21 @@ class Test extends React.Component {
         />
         <h1
           onClick={() => {
-            Smart.instance.login(this.state.user_id);
+            SxfData.login(this.state.user_id);
           }}
         >
           测试登录
         </h1>
         <h1
           onClick={() => {
-            Smart.instance.logout();
+            SxfData.logout();
           }}
         >
           测试退出
         </h1>
         <h2
           onClick={() => {
-            Smart.instance.track_event("buy", {
+            SxfData.track_event("buy", {
               smartConfig: {
                 isBpoint: false
               },
@@ -72,7 +73,7 @@ class Test extends React.Component {
         </h2>
         <p
           onClick={() => {
-            Smart.instance.user.set({
+            SxfData.user.set({
               name: "汪洋",
               country: "中国",
               province: "浙江省",
