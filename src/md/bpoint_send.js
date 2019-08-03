@@ -143,7 +143,6 @@ class BPOINT {
 
     console.log("infoStack length=" + is.length);
     if (is.length > 0) {
-      console.log(is);
 
       this._queueSave(is);
       this._infoStack = [];

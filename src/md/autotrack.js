@@ -139,7 +139,6 @@ var autotrack = {
   },
 
   _trackEvent: function(e, instance) {
-    console.log("------------");
     /*** 如果不运行IE8测试，不要乱动这段代码 ***/
     var target = this._getEventTarget(e);
     if (isTextNode(target)) {

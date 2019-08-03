@@ -126,6 +126,10 @@ const PEOPLE_RESERVED_PROPERTY = ["$deviceUdid", "$toekn"];
 // People类属性事件id，全局唯一
 const PEOPLE_PROPERTY_ID = "sxfData_user_property";
 
+// 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
+// 若url上推广的参数不一致，请修改对应右边的值（一一对应）
+// 注意：系统暂时未支持自定义配置（TODO）,若要改动，请到文件 src/channel.js 修改。
+
 // Save the previous value of the device variable.
 var previousDevice = window.device;
 
@@ -2091,6 +2095,10 @@ _.getById = function(id) {
   return document.getElementById(id);
 };
 
+_.getPropsDom = function(parentNode, propsName) {
+    return parentNode.querySelectorAll(`[${propsName}]`)
+};
+
 class USER_TRACK {
   constructor(instance) {
     this.instance = instance;
@@ -2284,7 +2292,6 @@ class EVENT_TRACK {
           60 * this.instance._get_config("session_interval_mins") ||
       other_channel_Bool
     ) {
-        console.log(session_start_time);
       // 当会话首次开始时，不用发送会话关闭事件
       if (session_start_time === 0) {
         // 新打开一个会话
@@ -2378,7 +2385,6 @@ class EVENT_TRACK {
     );
     if (!_.isUndefined(start_listen_timestamp)) {
       costTime = new Date().getTime() - start_listen_timestamp;
-      console.log('事件耗时',costTime,event_name);
     }
     // 事件类型设置
     let data_type = BUSSINESS_EVENT_TYPE;
@@ -3002,7 +3008,6 @@ class BPOINT {
 
     console.log("infoStack length=" + is.length);
     if (is.length > 0) {
-      console.log(is);
 
       this._queueSave(is);
       this._infoStack = [];
@@ -3080,71 +3085,105 @@ class INPUTLISTEN {
     this.instance = instance;
   }
   _addDomEventHandlers(id) {
-    var rcidom = _.getById(id);
-    this.bind(rcidom, {
-      focus: v => {
-        console.log("focus", v);
-        this.instance.time_event("input_blur");
-        this.instance["event"].track("input_focus", {
-          input_value: v.target.value
-        });
-      },
-      blur: v => {
-        console.log("blur", v);
+    var rcidom = _.getPropsDom(document, "data-sxf-props");
 
-        this.instance["event"].track("input_blur", {
-          input_value: v.target.value
-        });
-      },
-      keydown: v => {
-        console.log("keydown", v);
-        this.instance.time_event("input_keyup");
-        this.instance["event"].track("input_keydown", {
-          input_value: v.target.value
-        });
-      },
-      keyup: v => {
-        if (v.keyCode === 8) {
-          this.instance["event"].track("input_delete", {
-            input_value: v.target.value
-          });
-        }else{
-            this.instance["event"].track("input_keyup", {
-                input_value: v.target.value
-              });
-        }
-      },
-      change: v => {
-        console.log("change", v);
-        this.instance["event"].track("input_change", {
-          input_value: v.target.value
-        });
-      },
-      click: v => {
-        console.log("click", v);
-        this.instance["event"].track("input_click", {
-          input_value: v.target.value
-        });
-      },
-      select: v => {
-        console.log("select", v);
-        this.instance["event"].track("input_select", {
-          input_value: v.target.value
-        });
-      },
-      input: v => {
-        console.log("input", v);
-        this.instance["event"].track("input_input", {
-          input_value: v.target.value
-        });
-      },
-      paste: v => {
-        console.log("paste", v);
-        this.instance["event"].track("input_input", {
-          input_value: v.target.value
-        });
-      }
+    rcidom.forEach(domItem => {
+      const eventItem = JSON.parse(domItem.getAttribute("data-sxf-props"));
+      const eventType = eventItem.type;
+      const eventList = eventItem.eventList;
+      let data = {};
+
+      eventList.forEach(eventItem => {
+        _.register_event(
+          domItem,
+          eventItem.type,
+          e => {
+            if (eventType === "input") {
+              data = {
+                input_value: e.target.value
+              };
+            }
+            this.instance["event"].track(
+              `sxfData_${eventType}_${eventItem.type}`,
+              data
+            );
+          },
+          false,
+          true
+        );
+      });
     });
+
+    // this.bind(rcidom, {
+    //   focus: v => {
+    //     console.log("focus", v);
+    //     this.instance.time_event("input_blur");
+    //     this.instance["event"].track("input_focus", {
+    //       input_value: v.target.value
+    //     });
+    //   },
+    //   blur: v => {
+    //     console.log("blur", v);
+
+    //     this.instance["event"].track("input_blur", {
+    //       input_value: v.target.value
+    //     });
+    //   },
+    //   keydown: v => {
+    //     console.log("keydown", v);
+    //     this.instance.time_event("input_keyup");
+    //     this.instance["event"].track("input_keydown", {
+    //       input_value: v.target.value
+    //     });
+    //   },
+    //   keyup: v => {
+    //     if (v.keyCode === 8) {
+    //       this.instance["event"].track("input_delete", {
+    //         input_value: v.target.value
+    //       });
+    //     } else {
+    //       this.instance["event"].track("input_keyup", {
+    //         input_value: v.target.value
+    //       });
+    //     }
+    //   },
+    //   change: v => {
+    //     console.log("change", v);
+    //     this.instance["event"].track("input_change", {
+    //       input_value: v.target.value
+    //     });
+    //   },
+    //   click: v => {
+    //     console.log("click", v);
+    //     this.instance["event"].track("input_click", {
+    //       input_value: v.target.value
+    //     });
+    //   },
+    //   select: v => {
+    //     console.log("select", v);
+    //     this.instance["event"].track("input_select", {
+    //       input_value: v.target.value
+    //     });
+    //   },
+    //   input: v => {
+    //     console.log("input", v);
+    //     this.instance["event"].track("input_input", {
+    //       input_value: v.target.value
+    //     });
+    //   },
+    //   paste: v => {
+    //     console.log("paste", v);
+    //     this.instance["event"].track("input_input", {
+    //       input_value: v.target.value
+    //     });
+    //   }
+    //   //   keypress: v => {
+    //   //     console.log("keypress", v);
+    //   //     this.instance["event"].track("input_keypress", {
+    //   //       input_value: v.target.value
+    //   //     });
+    //   //   }
+    // });
   }
   bind(dom, kve) {
     if (dom && kve) {
@@ -3156,18 +3195,6 @@ class INPUTLISTEN {
     }
   }
 }
-
-// 用户属性追踪
-// 用户事件追踪
-// 本地存储
-// 单页面
-// 渠道跟踪
-// import CHANNEL from "./channel";
-// 断点发送
-// 远程拉取js文件（插件，具体内容请查看该文件）
-// import LOAD_CONTROL_JS from "./load_control_js";
-// 全面点
-// import { autotrack } from './autotrack';
 
 class SxfDataLib {
   /**

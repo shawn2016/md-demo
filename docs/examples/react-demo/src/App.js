@@ -13,7 +13,7 @@ class Test extends React.Component {
     SxfData._addlisten("test");
   }
   init = () => {
-      console.log(SxfData)
+    console.log(SxfData);
     SxfData.init("xxx", {
       local_storage: {
         type: "localStorage"
@@ -88,7 +88,33 @@ class Test extends React.Component {
         </p>
         <a href="#22">单页面1（hash）</a>
         <a href="#33">单页面2（hash）</a>
-        <input id="test" data-stat="{key:'111', act: 'click'}" placeholder="请输入" />
+        <label>输入框1：</label>
+        <input
+          data-sxf-props={JSON.stringify({
+            type: "input",
+            eventList: [
+              {
+                type: "keyup"
+              }
+            ]
+          })}
+          placeholder="请输入"
+        />
+        <label>输入框1：</label>
+        <input
+          data-sxf-props={JSON.stringify({
+            type: "input",
+            eventList: [
+              {
+                type: "keyup"
+              },
+              {
+                type: "change"
+              }
+            ]
+          })}
+          placeholder="请输入"
+        />
       </div>
     );
   }

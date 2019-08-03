@@ -924,4 +924,8 @@ _.getById = function(id) {
   return document.getElementById(id);
 };
 
+_.getPropsDom = function(parentNode, propsName) {
+    return parentNode.querySelectorAll(`[${propsName}]`)
+};
+
 export { _, console, win };

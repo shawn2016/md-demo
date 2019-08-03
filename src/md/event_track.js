@@ -107,7 +107,6 @@ class EVENT_TRACK {
           60 * this.instance._get_config("session_interval_mins") ||
       other_channel_Bool
     ) {
-        console.log(session_start_time)
       // 当会话首次开始时，不用发送会话关闭事件
       if (session_start_time === 0) {
         // 新打开一个会话
@@ -201,7 +200,6 @@ class EVENT_TRACK {
     );
     if (!_.isUndefined(start_listen_timestamp)) {
       costTime = new Date().getTime() - start_listen_timestamp;
-      console.log('事件耗时',costTime,event_name)
     }
     // 事件类型设置
     let data_type = BUSSINESS_EVENT_TYPE;
