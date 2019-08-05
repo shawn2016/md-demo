@@ -126,10 +126,6 @@ const PEOPLE_RESERVED_PROPERTY = ["$deviceUdid", "$toekn"];
 // People类属性事件id，全局唯一
 const PEOPLE_PROPERTY_ID = "sxfData_user_property";
 
-// 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
-// 若url上推广的参数不一致，请修改对应右边的值（一一对应）
-// 注意：系统暂时未支持自定义配置（TODO）,若要改动，请到文件 src/channel.js 修改。
-
 // Save the previous value of the device variable.
 var previousDevice = window.device;
 
@@ -3126,6 +3122,18 @@ class INPUTLISTEN {
     }
   }
 }
+
+// 用户属性追踪
+// 用户事件追踪
+// 本地存储
+// 单页面
+// 渠道跟踪
+// import CHANNEL from "./channel";
+// 断点发送
+// 远程拉取js文件（插件，具体内容请查看该文件）
+// import LOAD_CONTROL_JS from "./load_control_js";
+// 全面点
+// import { autotrack } from './autotrack';
 
 class SxfDataLib {
   /**

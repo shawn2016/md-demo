@@ -4,13 +4,13 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 
-app.use("/docs/examples/umd", express.static(__dirname + "/docs/examples/umd"));
+app.use("/examples/umd", express.static(__dirname + "/examples/umd"));
 app.use("/track/track.gif", express.static(__dirname));
 
 app.use(express.static(__dirname));
 
 app.get("/", function(req, res) {
-  res.redirect(301, "/docs/");
+  res.redirect(301, "/examples/");
 });
 
 app.get("/track", function(req, res) {
