@@ -6,8 +6,7 @@ import {
   SYSTEM_EVENT_OBJECT
 } from "./config";
 
-import { _, console } from "./utils";
-
+import { _, console, win } from "./utils";
 class EVENT_TRACK {
   constructor(instance) {
     this.instance = instance;
@@ -259,7 +258,7 @@ class EVENT_TRACK {
       attributes: user_set_properties
     };
     // 合并客户端信息
-    data = _.extend({}, data, _.info.properties());
+    data = _.extend({}, data, _.info.properties(event_name));
 
     // 合并渠道推广信息
     // data = _.extend({}, data, this.instance["channel"].get_channel_params());
@@ -277,7 +276,9 @@ class EVENT_TRACK {
       }
     }
     if (!this.instance._get_config("SPA").is) {
-      if (["sxfData_activate", "sxfData_session_close"].indexOf(event_name) > 0) {
+      if (
+        ["sxfData_activate", "sxfData_session_close"].indexOf(event_name) > 0
+      ) {
         this["local_storage"].register({
           sessionReferrer: document.URL
         });
@@ -343,16 +344,19 @@ class EVENT_TRACK {
 
     // 当触发的事件不是这些事件(sxfData_session_start,sxfData_session_close,sxfData_activate)时，触发检测 session 方法
     if (
-      ["sxfData_session_start", "sxfData_session_close", "sxfData_activate"].indexOf(
-        event_name
-      ) === -1
+      [
+        "sxfData_session_start",
+        "sxfData_session_close",
+        "sxfData_activate"
+      ].indexOf(event_name) === -1
     ) {
       this._session();
     }
 
     // 保存最后一次用户触发事件（除了会话事件以外）的事件id以及时间，通过这个时间确定会话关闭时的时间
     if (
-      ["sxfData_session_start", "sxfData_session_close"].indexOf(event_name) === -1
+      ["sxfData_session_start", "sxfData_session_close"].indexOf(event_name) ===
+      -1
     ) {
       this["local_storage"].register({
         LASTEVENT: {

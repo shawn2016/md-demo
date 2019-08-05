@@ -1,10 +1,11 @@
-import { CONFIG,ALLEVENT } from "./config";
+import { CONFIG, ALLEVENT } from "./config";
 
 import device from "./device";
 
 import { base64Encode } from "./coding";
 
 import detector from "./useragent";
+let pageId = "";
 var ArrayProto = Array.prototype,
   FuncProto = Function.prototype,
   slice = ArrayProto.slice;
@@ -296,7 +297,7 @@ _.register_event = (function() {
   /**
    * @param {Object} element
    * @param {string} type
-   * @param {function(...[*])} handler
+   * @param {function} handler
    * @param {boolean=} oldSchool
    * @param {boolean=} useCapture
    */
@@ -396,7 +397,7 @@ _.info = {
     }
     return deviceModel;
   },
-  properties() {
+  properties(event_name) {
     const windowsOs = {
       "5.0": "Win2000",
       "5.1": "WinXP",
@@ -417,7 +418,21 @@ _.info = {
         deviceOsVersion = windowsOs[detector.os.fullVersion];
       }
     }
+    // 生成唯一pageId
+    if (event_name === "sxfData_pv") {
+      pageId =
+        new Date().getTime().toString() +
+        "_" +
+        win.location.pathname +
+        `${
+          win.location.hash.indexOf("?") > -1
+            ? win.location.hash.split("?")[0]
+            : win.location.hash
+        }`;
+    }
     return {
+      // 页面唯一Id
+      pageId: pageId,
       // 设备型号
       deviceModel: deviceModel,
       // 操作系统
@@ -793,7 +808,6 @@ _.cookie = {
 
 const windowConsole = win.console;
 const console = {
-  /** @type {function(...[*])} */
   log: function() {
     if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
       try {
@@ -805,7 +819,6 @@ const console = {
       }
     }
   },
-  /** @type {function(...[*])} */
   error: function() {
     if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
       var args = ["DATracker error:"].concat(_.toArray(arguments));
@@ -818,7 +831,6 @@ const console = {
       }
     }
   },
-  /** @type {function(...*)} */
   critical: function() {
     if (!_.isUndefined(windowConsole) && windowConsole) {
       var args = ["error:"].concat(_.toArray(arguments));
@@ -925,7 +937,7 @@ _.getById = function(id) {
 };
 
 _.getPropsDom = function(parentNode, propsName) {
-    return parentNode.querySelectorAll(`[${propsName}]`)
+  return parentNode.querySelectorAll(`[${propsName}]`);
 };
 
 export { _, console, win };

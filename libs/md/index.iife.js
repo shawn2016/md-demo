@@ -123,6 +123,10 @@ const PEOPLE_RESERVED_PROPERTY = ["$deviceUdid", "$toekn"];
 // People类属性事件id，全局唯一
 const PEOPLE_PROPERTY_ID = "sxfData_user_property";
 
+// 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
+// 若url上推广的参数不一致，请修改对应右边的值（一一对应）
+// 注意：系统暂时未支持自定义配置（TODO）,若要改动，请到文件 src/channel.js 修改。
+
 // Save the previous value of the device variable.
 var previousDevice = window.device;
 
@@ -1169,6 +1173,7 @@ detector = parse(userAgent$1 + " " + appVersion + " " + vendor);
 
 var detector$1 = detector;
 
+let pageId = "";
 var ArrayProto = Array.prototype;
 var FuncProto = Function.prototype;
 var slice = ArrayProto.slice;
@@ -1460,7 +1465,7 @@ _.register_event = (function() {
   /**
    * @param {Object} element
    * @param {string} type
-   * @param {function(...[*])} handler
+   * @param {function} handler
    * @param {boolean=} oldSchool
    * @param {boolean=} useCapture
    */
@@ -1560,7 +1565,7 @@ _.info = {
     }
     return deviceModel;
   },
-  properties() {
+  properties(event_name) {
     const windowsOs = {
       "5.0": "Win2000",
       "5.1": "WinXP",
@@ -1581,7 +1586,21 @@ _.info = {
         deviceOsVersion = windowsOs[detector$1.os.fullVersion];
       }
     }
+    // 生成唯一pageId
+    if (event_name === "sxfData_pv") {
+      pageId =
+        new Date().getTime().toString() +
+        "_" +
+        win.location.pathname +
+        `${
+          win.location.hash.indexOf("?") > -1
+            ? win.location.hash.split("?")[0]
+            : win.location.hash
+        }`;
+    }
     return {
+      // 页面唯一Id
+      pageId: pageId,
       // 设备型号
       deviceModel: deviceModel,
       // 操作系统
@@ -1957,7 +1976,6 @@ _.cookie = {
 
 const windowConsole = win.console;
 const console = {
-  /** @type {function(...[*])} */
   log: function() {
     if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
       try {
@@ -1969,7 +1987,6 @@ const console = {
       }
     }
   },
-  /** @type {function(...[*])} */
   error: function() {
     if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
       var args = ["DATracker error:"].concat(_.toArray(arguments));
@@ -1982,7 +1999,6 @@ const console = {
       }
     }
   },
-  /** @type {function(...*)} */
   critical: function() {
     if (!_.isUndefined(windowConsole) && windowConsole) {
       var args = ["error:"].concat(_.toArray(arguments));
@@ -2089,7 +2105,7 @@ _.getById = function(id) {
 };
 
 _.getPropsDom = function(parentNode, propsName) {
-    return parentNode.querySelectorAll(`[${propsName}]`)
+  return parentNode.querySelectorAll(`[${propsName}]`);
 };
 
 class USER_TRACK {
@@ -2437,7 +2453,7 @@ class EVENT_TRACK {
       attributes: user_set_properties
     };
     // 合并客户端信息
-    data = _.extend({}, data, _.info.properties());
+    data = _.extend({}, data, _.info.properties(event_name));
 
     // 合并渠道推广信息
     // data = _.extend({}, data, this.instance["channel"].get_channel_params());
@@ -2455,7 +2471,9 @@ class EVENT_TRACK {
       }
     }
     if (!this.instance._get_config("SPA").is) {
-      if (["sxfData_activate", "sxfData_session_close"].indexOf(event_name) > 0) {
+      if (
+        ["sxfData_activate", "sxfData_session_close"].indexOf(event_name) > 0
+      ) {
         this["local_storage"].register({
           sessionReferrer: document.URL
         });
@@ -2521,16 +2539,19 @@ class EVENT_TRACK {
 
     // 当触发的事件不是这些事件(sxfData_session_start,sxfData_session_close,sxfData_activate)时，触发检测 session 方法
     if (
-      ["sxfData_session_start", "sxfData_session_close", "sxfData_activate"].indexOf(
-        event_name
-      ) === -1
+      [
+        "sxfData_session_start",
+        "sxfData_session_close",
+        "sxfData_activate"
+      ].indexOf(event_name) === -1
     ) {
       this._session();
     }
 
     // 保存最后一次用户触发事件（除了会话事件以外）的事件id以及时间，通过这个时间确定会话关闭时的时间
     if (
-      ["sxfData_session_start", "sxfData_session_close"].indexOf(event_name) === -1
+      ["sxfData_session_start", "sxfData_session_close"].indexOf(event_name) ===
+      -1
     ) {
       this["local_storage"].register({
         LASTEVENT: {
@@ -3082,6 +3103,7 @@ class INPUTLISTEN {
       var rcidom = _.getPropsDom(document, "data-sxf-props");
       rcidom.forEach(domItem => {
         const eventItem = JSON.parse(domItem.getAttribute("data-sxf-props"));
+        const eventName = eventItem.name;
         const eventType = eventItem.type;
         const eventList = eventItem.eventList;
         let data = {};
@@ -3092,11 +3114,11 @@ class INPUTLISTEN {
             e => {
               if (eventType === "input") {
                 data = {
-                  input_value: e.target.value
+                  input_value: e.target.value,
                 };
               }
               this.instance["event"].track(
-                `sxfData_${eventType}_${eventItem.type}`,
+                `sxfDataListen__${eventName}__${eventItem.type}`,
                 data
               );
             },
@@ -3120,18 +3142,6 @@ class INPUTLISTEN {
   }
 }
 
-// 用户属性追踪
-// 用户事件追踪
-// 本地存储
-// 单页面
-// 渠道跟踪
-// import CHANNEL from "./channel";
-// 断点发送
-// 远程拉取js文件（插件，具体内容请查看该文件）
-// import LOAD_CONTROL_JS from "./load_control_js";
-// 全面点
-// import { autotrack } from './autotrack';
-
 class SxfDataLib {
   /**
    *
@@ -3139,6 +3149,16 @@ class SxfDataLib {
    * @param {Object} config sdk客户端配置
    */
   constructor() {}
+  /**
+   * sxfData初始化
+   *
+   * ### 用法:
+   *
+   * SxfData.init(token, config)
+   *
+   * @param {String} token 用户
+   * @param {object} config 配置
+   */
   init(token, config) {
     if (this["__loaded"]) {
       return;
@@ -3381,9 +3401,6 @@ class SxfDataLib {
   //   }
 }
 let sxfData = new SxfDataLib();
-{
-  window.sxfData = sxfData;
-}
 
 return sxfData;
 

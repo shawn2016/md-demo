@@ -27,6 +27,16 @@ class SxfDataLib {
    * @param {Object} config sdk客户端配置
    */
   constructor() {}
+  /**
+   * sxfData初始化
+   *
+   * ### 用法:
+   *
+   * SxfData.init(token, config)
+   *
+   * @param {String} token 用户
+   * @param {object} config 配置
+   */
   init(token, config) {
     if (this["__loaded"]) {
       return;

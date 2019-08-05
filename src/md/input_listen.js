@@ -9,6 +9,7 @@ class INPUTLISTEN {
       var rcidom = _.getPropsDom(document, "data-sxf-props");
       rcidom.forEach(domItem => {
         const eventItem = JSON.parse(domItem.getAttribute("data-sxf-props"));
+        const eventName = eventItem.name;
         const eventType = eventItem.type;
         const eventList = eventItem.eventList;
         let data = {};
@@ -19,11 +20,11 @@ class INPUTLISTEN {
             e => {
               if (eventType === "input") {
                 data = {
-                  input_value: e.target.value
+                  input_value: e.target.value,
                 };
               }
               this.instance["event"].track(
-                `sxfData_${eventType}_${eventItem.type}`,
+                `sxfDataListen__${eventName}__${eventItem.type}`,
                 data
               );
             },
