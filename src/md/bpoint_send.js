@@ -79,12 +79,12 @@ class BPOINT {
    * 发送队列里最老的栈帧
    */
   sendOldestStack() {
-    var stack = this._waitSendQueue.pop();
+    var stack = this._waitSendQueue.shift();
     if (_.localStorage) {
       _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
     }
 
-    console.log("send stack(queue pop):");
+    console.log("send stack(queue shift):");
 
     var sendData = {};
     sendData = stack;

@@ -120,6 +120,10 @@ const PEOPLE_RESERVED_PROPERTY = ["$deviceUdid", "$toekn"];
 // People类属性事件id，全局唯一
 const PEOPLE_PROPERTY_ID = "sxfData_user_property";
 
+// 渠道推广参数全局配置, 左边sdk内部使用的参数，右边实际url上的参数
+// 若url上推广的参数不一致，请修改对应右边的值（一一对应）
+// 注意：系统暂时未支持自定义配置（TODO）,若要改动，请到文件 src/channel.js 修改。
+
 // Save the previous value of the device variable.
 var previousDevice = window.device;
 
@@ -2934,12 +2938,12 @@ class BPOINT {
    * 发送队列里最老的栈帧
    */
   sendOldestStack() {
-    var stack = this._waitSendQueue.pop();
+    var stack = this._waitSendQueue.shift();
     if (_.localStorage) {
       _.localStorage.set("_bp_wqueue", JSON.stringify(this._waitSendQueue));
     }
 
-    console.log("send stack(queue pop):");
+    console.log("send stack(queue shift):");
 
     var sendData = {};
     sendData = stack;
