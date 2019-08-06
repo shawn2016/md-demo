@@ -62,6 +62,8 @@ const SPA = {
       if (this.config.mode === "hash") {
         if (_.isFunction(this.config.callback_fn)) {
           this.config.callback_fn.call();
+          console.log('----离开页面')
+          console.log(this.url)
           _.innerEvent.trigger("singlePage:change", {
             oldUrl: this.url,
             nowUrl: document.URL

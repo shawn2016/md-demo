@@ -32,7 +32,6 @@ const plugins = [
   })
   //   uglify()
 ];
-
 if (env === "production") {
   plugins.push(
     uglify({

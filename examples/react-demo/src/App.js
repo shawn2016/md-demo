@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import SxfData from "../../../libs/md/index.es.js";
+import SxfData from "../../../libs/md/index.cjs.js";
 class Test extends React.Component {
   constructor(props) {
     super(props);
@@ -13,8 +13,8 @@ class Test extends React.Component {
     SxfData._addlisten("test");
   }
   init = () => {
-    console.log(SxfData);
-    SxfData.init("xxx", {
+    SxfData.init({
+      track_url: "http://localhost:3000/",
       local_storage: {
         type: "localStorage"
       },
@@ -92,7 +92,7 @@ class Test extends React.Component {
         <input
           data-sxf-props={JSON.stringify({
             type: "input",
-            name:'input_1',
+            name: "input_1",
             eventList: [
               {
                 type: "keyup"
@@ -105,7 +105,7 @@ class Test extends React.Component {
         <input
           data-sxf-props={JSON.stringify({
             type: "input",
-            name:'input_2',
+            name: "input_2",
             eventList: [
               {
                 type: "keyup"
@@ -121,7 +121,7 @@ class Test extends React.Component {
         <button
           data-sxf-props={JSON.stringify({
             type: "button",
-            name:'button_1',
+            name: "button_1",
             eventList: [
               {
                 type: "click"

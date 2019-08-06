@@ -9,7 +9,7 @@ class LOCAL_STORAGE {
   constructor(config) {
     const local_storage = config['local_storage'];
     if (_.isObject(local_storage)) {
-      this['name'] = local_storage['name'] || ('sxfData_' + config['token'] + '_sdk');
+      this['name'] = local_storage['name'] || ('sxfData_' + '20190815' + '_sdk');
       let storage_type = local_storage['type'] || 'cookie';
 
       // 判断是否支持 localStorage

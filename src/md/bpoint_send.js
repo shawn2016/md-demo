@@ -1,6 +1,6 @@
 import { CHANNEL_PARAMS, CONFIG } from "./config";
 import { _, console } from "./utils";
-
+// import pako from "pako";
 class BPOINT {
   constructor(instance) {
     this.instance = instance;
@@ -75,6 +75,21 @@ class BPOINT {
       throw new ReferenceError("埋点内置对象丢失,队列扫描器创建失败");
     }
   }
+  /*计算输入的字节*/
+  strlen(str) {
+    var len = 0;
+    for (var i = 0; i < str.length; i++) {
+      // 取出单个字符
+      var c = str.charCodeAt(i);
+      //单字节加1 ，0~9，a~z
+      if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+        len++;
+      } else {
+        len += 2;
+      }
+    }
+    return len;
+  }
   /**
    * 发送队列里最老的栈帧
    */
@@ -100,12 +115,41 @@ class BPOINT {
     if (track_type === "img") {
       url += "track.gif";
     }
+    let truncated_data2 =[]
+    for (let i = 0; i < truncated_data.length; i++) {
+      let a = {};
+      let b = 0;
+      for (let it in truncated_data[i]) {
+        b = b + 1;
+        a[i + "" + b] = truncated_data[i][it];
+      }
+      truncated_data2.push(a);
+    }
+    console.log(
+      "原字符串，字节长度",
+      this.strlen(_.JSONEncode(truncated_data))
+    );
+    // console.log('key编码缩写之后',truncated_data2)
+    // console.log('key编码缩写之后，字节长度',this.strlen(_.JSONEncode(truncated_data2)))
+    // console.log(
+    //   "base64编码之后，字节长度",
+    //   this.strlen(_.base64Encode(_.JSONEncode(truncated_data)))
+    // );
+    // var binaryString = pako.deflate(JSON.stringify(truncated_data), {
+    //   to: "string"
+    // });
+    // console.log("数据压缩展示：", binaryString);
+    // console.log("数据压缩之后，字节长度", this.strlen(binaryString));
+    // var binaryString2 = JSON.parse(
+    //   pako.inflate(binaryString, { to: "string" })
+    // );
+    // console.log("数据解压之后", binaryString2);
     _.sendRequest(
       url,
       track_type,
       {
-        data: _.base64Encode(_.JSONEncode(truncated_data)),
-        token: this.instance._get_config("token")
+        data: _.base64Encode(_.JSONEncode(truncated_data))
+        // token: this.instance._get_config("token")
       },
       () => {}
     );
@@ -143,7 +187,6 @@ class BPOINT {
 
     console.log("infoStack length=" + is.length);
     if (is.length > 0) {
-
       this._queueSave(is);
       this._infoStack = [];
     } else {

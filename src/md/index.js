@@ -23,7 +23,6 @@ import INPUTLISTEN from "./input_listen";
 class SxfDataLib {
   /**
    *
-   * @param {String} token 上报数据凭证
    * @param {Object} config sdk客户端配置
    */
   constructor() {}
@@ -32,12 +31,11 @@ class SxfDataLib {
    *
    * ### 用法:
    *
-   * SxfData.init(token, config)
+   * SxfData.init(config)
    *
-   * @param {String} token 用户
    * @param {object} config 配置
    */
-  init(token, config) {
+  init(config) {
     if (this["__loaded"]) {
       return;
     }
@@ -47,7 +45,7 @@ class SxfDataLib {
     this["config"] = {};
     this._set_config(
       _.extend({}, DEFAULT_CONFIG, CONFIG, config, {
-        token: token
+        // token: token
       })
     );
     this["local_storage"] = new LOCAL_STORAGE(this["config"]);

@@ -311,6 +311,7 @@ _.register_event = (function() {
       element.addEventListener(type, handler, !!useCapture);
     } else {
       var ontype = "on" + type;
+      console.log('ontype',ontype)
       var old_handler = element[ontype]; // can be undefined
       element[ontype] = makeHandler(element, handler, old_handler);
     }
@@ -430,6 +431,15 @@ _.info = {
             : win.location.hash
         }`;
     }
+    //   var a = JSON.stringify({attr: {test: "事件通用属性",userId:'2222'},
+// bs: "chrome",
+// tAttr:{},
+// bVer: "75.0.3770.142",
+// dId: "16c6170657f7e0-016d1eae332899-37607c05-1764000-16c61706580490",
+// dOs: "macosx",
+// eId:'input_1_2',// 映射
+// pId: "1565058425083_/000#22",
+// t: 1565063994553,})
     return {
       // 页面唯一Id
       pageId: pageId,

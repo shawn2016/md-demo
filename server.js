@@ -10,11 +10,11 @@ app.use("/track/track.gif", express.static(__dirname));
 app.use(express.static(__dirname));
 
 app.get("/", function(req, res) {
-  res.redirect(301, "/examples/");
+  res.redirect(301, "/examples/umd/");
 });
 
 app.get("/track", function(req, res) {
-  //console.log('track: ' +JSON.stringify(req.query));
+  console.log('track: ' +JSON.stringify(req.query));
   console.log(
     "track: data" +
       new Buffer(JSON.stringify(req.query.data), "base64").toString()

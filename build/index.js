@@ -7,19 +7,33 @@ const notice = require("./utils/notice");
 const replace = require("rollup-plugin-replace");
 
 let cache;
-var pluginsCopy = [];
-
+let pluginsCopy = [];
+function deepCopy(obj) {
+    var result = Array.isArray(obj) ? [] : {};
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (typeof obj[key] === 'object' && obj[key]!==null) {
+          result[key] = deepCopy(obj[key]);   //递归复制
+        } else {
+          result[key] = obj[key];
+        }
+      }
+    }
+    return result;
+  }
 const build = () => {
   libs.forEach(lib => {
     // 按 UMD、CommonJS 规范构建
-    ["iife", "es", "umd", "cjs"].forEach(format => {
+    ["iife", "umd",'es',"cjs"].forEach(format => {
       pluginsCopy = [];
-      pluginsCopy = JSON.parse(JSON.stringify(plugins));
+      pluginsCopy = deepCopy(plugins);
       pluginsCopy.push(
         replace({
           sxf_Data_format: JSON.stringify(format)
         })
       );
+      //
+      console.log(pluginsCopy);
       // UMD 需要把依赖包打进目标文件
       // CommonJS 需要将依赖包申明为外部依赖
       rollup

@@ -200,16 +200,16 @@ class EVENT_TRACK {
     if (!_.isUndefined(start_listen_timestamp)) {
       costTime = new Date().getTime() - start_listen_timestamp;
     }
-    // 事件类型设置
-    let data_type = BUSSINESS_EVENT_TYPE;
-    // 事件类型设置为传入了自定义事件类型
-    if (event_type) {
-      data_type = event_type;
-    }
-    // 如果是内置事件,事件类型重新设置
-    else if (SYSTEM_EVENT_OBJECT[event_name]) {
-      data_type = SYSTEM_EVENT_OBJECT[event_name].data_type;
-    }
+    // // 事件类型设置
+    // let data_type = BUSSINESS_EVENT_TYPE;
+    // // 事件类型设置为传入了自定义事件类型
+    // if (event_type) {
+    //   data_type = event_type;
+    // }
+    // // 如果是内置事件,事件类型重新设置
+    // else if (SYSTEM_EVENT_OBJECT[event_name]) {
+    //   data_type = SYSTEM_EVENT_OBJECT[event_name].data_type;
+    // }
 
     // 事件触发时间
     let time = new Date().getTime();
@@ -231,7 +231,7 @@ class EVENT_TRACK {
 
     // 上报数据
     let data = {
-      dataType: data_type,
+    //   dataType: data_type,
       userId: this.instance.get_property("userId"),
       // sdk类型 （js，小程序、安卓、IOS、server、pc）
       sdkType: "js",
@@ -245,9 +245,9 @@ class EVENT_TRACK {
       // 客户端唯一凭证(设备凭证)
       deviceId: this.instance.get_device_id(),
       // 页面打开场景, 默认 Browser
-      pageOpenScene: "Browser",
+    //   pageOpenScene: "Browser",
       // 应用凭证
-      token: this.instance._get_config("token"),
+    //   token: this.instance._get_config("token"),
       // 监听事件耗时
       costTime: costTime,
       // 当前关闭的会话时长
@@ -267,14 +267,14 @@ class EVENT_TRACK {
     //如果不是内置事件，那么 sessionReferrer 重置
     //如果是'da_activate'，那么 sessionReferrer 重置
     //解决referrer 当是外链时，此时触发自定义事件，引起重启一个session问题。
-    if (data_type === BUSSINESS_EVENT_TYPE) {
-      // 其它渠道
-      if (this._check_channel()) {
-        this["local_storage"].register({
-          sessionReferrer: document.URL
-        });
-      }
-    }
+    // if (data_type === BUSSINESS_EVENT_TYPE) {
+    //   // 其它渠道
+    //   if (this._check_channel()) {
+    //     this["local_storage"].register({
+    //       sessionReferrer: document.URL
+    //     });
+    //   }
+    // }
     if (!this.instance._get_config("SPA").is) {
       if (
         ["sxfData_activate", "sxfData_session_close"].indexOf(event_name) > 0
@@ -309,7 +309,7 @@ class EVENT_TRACK {
     let url = this.instance._get_config("track_url");
     const track_type = this.instance._get_config("track_type");
     if (track_type === "img") {
-      url += "track.gif";
+    //   url += "/track/track.gif";
     }
     if (
       !this.instance._get_config("isBpoint") ||
@@ -322,7 +322,7 @@ class EVENT_TRACK {
         track_type,
         {
           data: _.base64Encode(_.JSONEncode(truncated_data)),
-          token: this.instance._get_config("token")
+        //   token: this.instance._get_config("token")
         },
         callback_fn
       );
@@ -335,7 +335,7 @@ class EVENT_TRACK {
           track_type,
           {
             data: _.base64Encode(_.JSONEncode(truncated_data)),
-            token: this.instance._get_config("token")
+            // token: this.instance._get_config("token")
           },
           callback_fn
         );

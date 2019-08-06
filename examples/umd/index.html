@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <meta charset="uft-8">
+    <title>示例</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <script src="../../libs/md/index.iife.js"></script>
+    <script>
+        sxfData.init({
+            local_storage: {
+                type: 'localStorage'
+            },
+            SPA: {
+                is: true,
+                mode: 'hash'
+            },
+            pageview: true,
+            debug: true,
+            isBpoint: true,
+            loaded: function (sdk) {
+                sdk.register_event_super_properties({ test: '事件通用属性' });
+            }
+        });
+
+
+        // 若关闭了 PV 自动触发，则使用下面的代码
+        // smart.track_pv();
+        // smart._.innerEvent.on('singlePage:change', function(eventName, urlParams) {
+        //   smart.track_pv();
+        //   console.log(urlParams)
+        // });
+
+        sxfData.time_event('buy');
+    </script>
+</header>
+
+<body>
+    <div style="clear:both;">
+        <input id="userId" placeholder="请输入用户名称">
+        <h1>测试登录</h1>
+        <h1>测试退出</h1>
+        <h2>测试用户自定义事件</h2>
+        <p>设置用户自定义属性</p>
+        <a href='#22'>单页面1（hash）</a>
+        <a href='#33'>单页面2（hash）</a>
+    </div>
+
+    <script>
+        document.getElementsByTagName('h1')[0].onclick = function (e) {
+            sxfData.login(document.getElementById('userId').value);
+        }
+        document.getElementsByTagName('h1')[1].onclick = function (e) {
+            sxfData.logout();
+        }
+        document.getElementsByTagName('h2')[0].onclick = function (e) {
+            sxfData.track_event("buy", { "price": "￥123", "id": 'xxxx-xxxx-xxxx' });
+        }
+        document.getElementsByTagName('p')[0].onclick = function (e) {
+            sxfData.user.set({ "name": "汪洋", "country": "中国", "province": "浙江省", "city": "杭州市", "age": "100", "gender": "男", "niu": "自定义用户属性" });
+        }
+    </script>
+</body>
+
+</html>
